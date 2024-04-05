@@ -203,7 +203,7 @@ export const EditorNavigation = ({
             <Redo2 />
           </Button>
 
-          <div className="flex flex-col gap-1 item-center mr-4">
+          {/* <div className="flex flex-col gap-1 item-center mr-4">
             <div className="flex flex-row items-center gap-2 text-sm">
               Draft
               <Switch disabled defaultChecked={true} className="scale-90" />
@@ -212,7 +212,7 @@ export const EditorNavigation = ({
             <span className="text-muted-foreground text-xs">
               Last updated: {pageDetails.updatedAt.toLocaleDateString()}
             </span>
-          </div>
+          </div> */}
 
           <Button onClick={handleOnSave} size="sm">
             Save

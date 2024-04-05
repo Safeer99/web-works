@@ -14,6 +14,7 @@ import { TabList } from "./sidebar-tabs";
 import { SettingsTab } from "./sidebar-tabs/settings-tab";
 import { MediaBucketTab } from "./sidebar-tabs/media-bucket-tab";
 import { ComponentsTab } from "./sidebar-tabs/components-tab";
+import { LayersTab } from "./sidebar-tabs/layers-tab";
 
 interface Props {
   agencyId: string;
@@ -57,6 +58,10 @@ export const EditorSidebar = ({ agencyId }: Props) => {
 
             <TabsContent className="focus-visible:ring-0" value="Media">
               <MediaBucketTab agencyId={agencyId} />
+            </TabsContent>
+
+            <TabsContent className="focus-visible:ring-0" value="Layers">
+              <LayersTab elements={state.editor.elements} level={0} />
             </TabsContent>
 
             <TabsContent className="focus-visible:ring-0" value="Components">
