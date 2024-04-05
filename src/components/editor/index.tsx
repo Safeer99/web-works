@@ -56,9 +56,9 @@ export const Editor = ({ pageId, liveMode }: Props) => {
   return (
     <div
       className={clsx(
-        "use-automation-zoom-in h-full overflow-scroll mr-[385px] bg-background transition-all rounded-md",
+        "use-automation-zoom-in h-full mt-16 mr-[320px] p-4 transition-all rounded-md",
         {
-          "!p-0 !mr-0": state.editor.previewMode || state.editor.liveMode,
+          "!p-0 !m-0": state.editor.previewMode || state.editor.liveMode,
           "!w-[850px]": state.editor.device === "Tablet",
           "!w-[420px]": state.editor.device === "Mobile",
           "!w-full": state.editor.device === "Desktop",

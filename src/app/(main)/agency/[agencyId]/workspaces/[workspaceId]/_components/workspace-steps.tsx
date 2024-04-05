@@ -7,7 +7,6 @@ import { DragDropContext, DropResult, Droppable } from "react-beautiful-dnd";
 import { Check, ExternalLink, LucideEdit } from "lucide-react";
 import { Workspace, WorkspacePage } from "@prisma/client";
 
-import { AlertDialog } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -47,6 +46,15 @@ export const WorkspaceSteps = ({
   const [clickedPage, setClickedPage] = useState<WorkspacePage | undefined>(
     pages[0]
   );
+
+  useEffect(() => {
+    if (pages.length > pagesState.length) {
+      setClickedPage(pages[pages.length - 1]);
+    } else {
+      setClickedPage(undefined);
+    }
+    setPagesState(pages);
+  }, [pages]);
 
   const onDragEnd = (dropResult: DropResult) => {
     const { destination, source } = dropResult;
@@ -149,15 +157,15 @@ export const WorkspaceSteps = ({
         </Button>
       </aside>
       <aside className="flex-[0.7] bg-muted p-4 ">
-        {!!pages.length ? (
+        {!!pages.length && !!clickedPage ? (
           <Card className="h-full flex justify-between flex-col">
             <CardHeader>
               <p className="text-sm text-muted-foreground">Page name</p>
-              <CardTitle>{clickedPage?.name}</CardTitle>
+              <CardTitle>{clickedPage.name}</CardTitle>
               <CardDescription className="flex flex-col gap-4">
                 <div className="border-2 rounded-lg sm:w-80 w-full  overflow-clip">
                   <Link
-                    href={`/agency/${agencyId}/workspaces/${workspaceId}/editor/${clickedPage?.id}`}
+                    href={`/agency/${agencyId}/workspaces/${workspaceId}/editor/${clickedPage.id}`}
                     className="relative group"
                   >
                     <div className="cursor-pointer group-hover:opacity-30 w-full">
@@ -171,14 +179,14 @@ export const WorkspaceSteps = ({
 
                   <Link
                     target="_blank"
-                    href={`${process.env.NEXT_PUBLIC_SCHEME}${workspace.subDomainName}.${process.env.NEXT_PUBLIC_DOMAIN}/${clickedPage?.pathName}`}
+                    href={`${process.env.NEXT_PUBLIC_SCHEME}${workspace.subDomainName}.${process.env.NEXT_PUBLIC_DOMAIN}/${clickedPage.pathName}`}
                     className="group flex items-center justify-start p-2 gap-2 hover:text-primary transition-colors duration-200"
                   >
                     <ExternalLink size={15} />
                     <div className="w-64 overflow-hidden overflow-ellipsis ">
                       {process.env.NEXT_PUBLIC_SCHEME}
                       {workspace.subDomainName}.{process.env.NEXT_PUBLIC_DOMAIN}
-                      /{clickedPage?.pathName}
+                      /{clickedPage.pathName}
                     </div>
                   </Link>
                 </div>

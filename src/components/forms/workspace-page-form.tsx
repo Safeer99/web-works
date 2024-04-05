@@ -81,7 +81,7 @@ export const WorkspacePageForm = ({
         order: defaultData?.order || order,
         pathName: values.pathName || "",
       })
-        .then((res) => {
+        .then(() => {
           modal.onClose();
           toast.success("Save Page details successfully.");
           router.refresh();
@@ -104,7 +104,7 @@ export const WorkspacePageForm = ({
         content: defaultData.content,
         previewImage: defaultData.previewImage,
       })
-        .then((res) => {
+        .then(() => {
           toast.success("Copied Page successfully.");
           router.refresh();
         })
@@ -116,7 +116,7 @@ export const WorkspacePageForm = ({
     if (!defaultData?.id) return;
     startTransition(() => {
       deleteWorkspacePage(defaultData.id)
-        .then((res) => {
+        .then(() => {
           toast.success("Page deleted successfully.");
           router.refresh();
         })
@@ -181,26 +181,26 @@ export const WorkspacePageForm = ({
               </Button>
 
               {defaultData?.id && (
-                <Button
-                  variant={"outline"}
-                  className="w-22 self-end border-destructive text-destructive hover:bg-destructive"
-                  disabled={isLoading}
-                  type="button"
-                  onClick={onDelete}
-                >
-                  <Trash />
-                </Button>
-              )}
-              {defaultData?.id && (
-                <Button
-                  variant={"outline"}
-                  size={"icon"}
-                  disabled={isLoading}
-                  type="button"
-                  onClick={onCopy}
-                >
-                  <CopyPlusIcon />
-                </Button>
+                <>
+                  <Button
+                    variant={"outline"}
+                    className="w-22 self-end border-red-600 text-red-600 hover:bg-red-600"
+                    disabled={isLoading}
+                    type="button"
+                    onClick={onDelete}
+                  >
+                    <Trash />
+                  </Button>
+                  <Button
+                    variant={"outline"}
+                    size={"icon"}
+                    disabled={isLoading}
+                    type="button"
+                    onClick={onCopy}
+                  >
+                    <CopyPlusIcon />
+                  </Button>
+                </>
               )}
             </div>
           </form>

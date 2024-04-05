@@ -24,7 +24,7 @@ export const Modal: React.FC<ModalProps> = ({
 
   return (
     <Dialog open={modal.isOpen} onOpenChange={() => modal.onClose()}>
-      <DialogContent className="scrollbar-hidden overflow-y-scroll md:max-h-[700px] h-screen bg-card">
+      <DialogContent className="scrollbar-hidden z-[500] overflow-y-scroll md:max-h-[700px] h-screen bg-card">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>

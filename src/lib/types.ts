@@ -1,4 +1,4 @@
-import { Associate, Role, User } from "@prisma/client";
+import { Role } from "@prisma/client";
 import * as z from "zod";
 
 export const AgencyFormSchema = z.object({
@@ -23,6 +23,11 @@ export const WorkspaceFormSchema = z.object({
 export const WorkspacePageSchema = z.object({
   name: z.string().min(1),
   pathName: z.string().optional(),
+});
+
+export const mediaFormSchema = z.object({
+  link: z.string().min(1, { message: "Media File is required" }),
+  name: z.string().min(1, { message: "Name is required" }),
 });
 
 export type MembersTable = {

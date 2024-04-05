@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider     = "mysql"
+  provider     = "postgresql"
   url          = env("DATABASE_URL")
   relationMode = "prisma"
 }
@@ -51,6 +51,7 @@ model Agency {
   associates  Associate[]
   workspaces  Workspace[]
   invitations Invitation[]
+  media       Media[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -111,7 +112,7 @@ model WorkspacePage {
   id           String  @id @default(uuid())
   name         String
   pathName     String  @default("")
-  content      String? @db.LongText
+  content      String? @db.Text
   order        Int
   previewImage String? @db.Text
 
@@ -122,4 +123,19 @@ model WorkspacePage {
   updatedAt DateTime @updatedAt
 
   @@index([workspaceId])
+}
+
+model Media {
+  id   String  @id @default(uuid())
+  type String?
+  name String
+  link String  @unique
+
+  agencyId String
+  agency   Agency @relation(fields: [agencyId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([agencyId])
 }

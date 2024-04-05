@@ -32,6 +32,7 @@ export type EditorElement = {
     | {
         href?: string;
         innerText?: string;
+        src?: string;
       };
 };
 
@@ -60,7 +61,7 @@ export const initialEditorState: EditorState["editor"] = {
       id: "__body",
       content: [],
       name: "Body",
-      styles: {},
+      styles: { ...defaultStyles },
       type: "__body",
     },
   ],

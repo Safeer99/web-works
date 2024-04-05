@@ -102,7 +102,7 @@ export const EditorNavigation = ({
     <TooltipProvider>
       <nav
         className={clsx(
-          "border-b-[1px] flex items-center justify-between p-6 gap-2 transition-all",
+          "fixed top-0 left-0 right-0 bg-background z-[999] border-b-[1px] flex items-center justify-between py-2 px-4 gap-2 transition-all",
           { "!h-0 !p-0 !overflow-hidden": state.editor.previewMode }
         )}
       >
@@ -110,13 +110,13 @@ export const EditorNavigation = ({
           <Link href={`/agency/${agencyId}/workspaces/${workspaceId}`}>
             <ArrowLeftCircle />
           </Link>
-          <div className="flex flex-col w-full ">
+          <div className="flex flex-col gap-1 w-full ">
             <Input
               defaultValue={pageDetails.name}
-              className="border-none h-5 m-0 p-0 text-lg"
+              className="border-none h-5 m-0 p-0 text-base rounded-none focus-visible:ring-0"
               onBlur={handleOnBlurTitleChange}
             />
-            <span className="text-sm text-muted-foreground">
+            <span className="text-xs text-muted-foreground">
               Path: /{pageDetails.pathName}
             </span>
           </div>
@@ -202,17 +202,21 @@ export const EditorNavigation = ({
           >
             <Redo2 />
           </Button>
+
           <div className="flex flex-col gap-1 item-center mr-4">
-            <div className="flex flex-row items-center gap-4">
+            <div className="flex flex-row items-center gap-2 text-sm">
               Draft
-              <Switch disabled defaultChecked={false} />
+              <Switch disabled defaultChecked={true} className="scale-90" />
               Publish
             </div>
-            <span className="text-muted-foreground text-sm">
+            <span className="text-muted-foreground text-xs">
               Last updated: {pageDetails.updatedAt.toLocaleDateString()}
             </span>
           </div>
-          <Button onClick={handleOnSave}>Save</Button>
+
+          <Button onClick={handleOnSave} size="sm">
+            Save
+          </Button>
         </aside>
       </nav>
     </TooltipProvider>

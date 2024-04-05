@@ -8,12 +8,13 @@ import { useEditor } from "@/components/providers/editor";
 import { EditorElement } from "@/components/providers/editor/editor-types";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
+import Link from "next/link";
 
 interface Props {
   element: EditorElement;
 }
 
-export const TextComponent = ({ element }: Props) => {
+export const LinkComponent = ({ element }: Props) => {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const [isEditMode, setIsEditMode] = useState(false);
   const { state, dispatch } = useEditor();
@@ -75,7 +76,9 @@ export const TextComponent = ({ element }: Props) => {
           </Badge>
         )}
       {(state.editor.previewMode || state.editor.liveMode || !isEditMode) && (
-        <span className="whitespace-pre">{value}</span>
+        <Link href={element.content.href || "#"} className="whitespace-pre">
+          {value}
+        </Link>
       )}
       {!state.editor.previewMode && !state.editor.liveMode && isEditMode && (
         <Textarea
