@@ -52,6 +52,7 @@ model Agency {
   workspaces  Workspace[]
   invitations Invitation[]
   media       Media[]
+  canvas      Canvas[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -130,6 +131,20 @@ model Media {
   type String?
   name String
   link String  @unique
+
+  agencyId String
+  agency   Agency @relation(fields: [agencyId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([agencyId])
+}
+
+model Canvas {
+  id       String  @id @default(uuid())
+  title    String  @default("Untitled")
+  snapshot String?
 
   agencyId String
   agency   Agency @relation(fields: [agencyId], references: [id], onDelete: Cascade)

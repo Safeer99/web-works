@@ -1,9 +1,9 @@
 import { MediaComponent } from "@/components/media";
 import { getMedia } from "@/lib/media-service";
 
-type Props = {
+interface Props {
   params: { agencyId: string };
-};
+}
 
 const MediaPage = async ({ params }: Props) => {
   const data = await getMedia(params.agencyId);
