@@ -3,7 +3,7 @@
 import { LayerType } from "@/lib/types";
 import { useStorage } from "@@/liveblocks.config";
 import { memo } from "react";
-import { Rectangle } from "./layers";
+import { Ellipse, Rectangle } from "./layers";
 
 interface Props {
   id: string;
@@ -21,6 +21,16 @@ export const LayerPreview = memo(
       case LayerType.Rectangle:
         return (
           <Rectangle
+            id={id}
+            layer={layer}
+            onPointerDown={onLayerPointerDown}
+            selectionColor={selectionColor}
+          />
+        );
+
+      case LayerType.Ellipse:
+        return (
+          <Ellipse
             id={id}
             layer={layer}
             onPointerDown={onLayerPointerDown}
