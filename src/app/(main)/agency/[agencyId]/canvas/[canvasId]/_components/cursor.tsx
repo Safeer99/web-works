@@ -1,9 +1,9 @@
 "use client";
 
-import { idToColor } from "@/lib/utils";
-import { useOther } from "@@/liveblocks.config";
-import { MousePointer2 } from "lucide-react";
 import { memo } from "react";
+import { MousePointer2 } from "lucide-react";
+import { useOther } from "@@/liveblocks.config";
+import { idToColor } from "@/lib/utils";
 
 interface CursorProps {
   connectionId: number;
