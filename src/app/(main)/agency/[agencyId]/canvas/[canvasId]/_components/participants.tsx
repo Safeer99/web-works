@@ -1,8 +1,8 @@
 "use client";
 
+import { useOthers, useSelf } from "@@/liveblocks.config";
 import { UserAvatar } from "@/components/user-avatar";
 import { idToColor } from "@/lib/utils";
-import { useOthers, useSelf } from "@@/liveblocks.config";
 
 const MAX_SHOWN_USERS = 2;
 
@@ -11,6 +11,8 @@ export const Participants = () => {
   const currentUser = useSelf();
 
   const hasMoreUsers = users.length > MAX_SHOWN_USERS;
+
+  //TODO: Add a dialog to show additional users
 
   return (
     <div className="absolute top-2 right-2 bg-white rounded-md p-3 h-12 flex items-center shadow-md">

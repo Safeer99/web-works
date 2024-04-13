@@ -32,7 +32,7 @@ const CanvasIdPage = async ({ params }: Props) => {
   if (!data) redirect(`/agency/${params.agencyId}/canvas`);
 
   return (
-    <div className="fixed w-full top-0 bottom-0 left-0 right-0  z-[100] bg-background">
+    <div className="fixed w-full top-0 bottom-0 left-0 right-0 z-[100] bg-background">
       <Room roomId={params.canvasId} fallback={<Loading />}>
         <Canvas data={data} />
       </Room>

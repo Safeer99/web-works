@@ -28,7 +28,7 @@ const EditorPage = async ({ params }: Props) => {
   }
 
   return (
-    <div className="fixed min-w-[900px] top-0 bottom-0 left-0 right-0  z-[100] bg-background">
+    <div className="fixed min-w-[900px] top-0 bottom-0 left-0 right-0 z-[100] bg-background">
       <EditorProvider
         agencyId={params.agencyId}
         workspaceId={params.workspaceId}
