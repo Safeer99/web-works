@@ -18,8 +18,6 @@ export const MediaBucketTab = ({ agencyId }: Props) => {
     fetchData();
   }, [agencyId]);
 
-  //TODO: abjust font sizes
-
   return (
     <div className="scrollbar-hidden overflow-scroll p-4">
       <MediaComponent data={data} agencyId={agencyId} />

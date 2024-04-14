@@ -65,8 +65,10 @@ export const ComponentsTab = () => {
       className="w-full"
       defaultValue={["Layout", "Elements"]}
     >
-      <AccordionItem value="Layout" className="px-6 py-0 border-y-[1px]">
-        <AccordionTrigger className="!no-underline">Layout</AccordionTrigger>
+      <AccordionItem value="Layout" className="px-6 py-0">
+        <AccordionTrigger className="!no-underline text-sm">
+          Layout
+        </AccordionTrigger>
         <AccordionContent className="flex flex-wrap gap-2">
           {elements
             .filter((element) => element.group === "layout")
@@ -82,7 +84,9 @@ export const ComponentsTab = () => {
         </AccordionContent>
       </AccordionItem>
       <AccordionItem value="Elements" className="px-6 py-0">
-        <AccordionTrigger className="!no-underline">Elements</AccordionTrigger>
+        <AccordionTrigger className="!no-underline text-sm">
+          Elements
+        </AccordionTrigger>
         <AccordionContent className="flex flex-wrap gap-2">
           {elements
             .filter((element) => element.group === "elements")

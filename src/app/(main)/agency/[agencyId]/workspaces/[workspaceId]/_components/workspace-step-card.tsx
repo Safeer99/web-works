@@ -1,7 +1,8 @@
-import { Draggable } from "react-beautiful-dnd";
-import { ArrowDown, Mail } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
 import { WorkspacePage } from "@prisma/client";
+import { Draggable } from "react-beautiful-dnd";
+import { AppWindow, ArrowDown } from "lucide-react";
+
+import { Card, CardContent } from "@/components/ui/card";
 
 interface Props {
   workspacePage: WorkspacePage;
@@ -25,7 +26,7 @@ export const WorkspaceStepCard = ({
         >
           <CardContent className="p-0 flex items-center gap-4 flex-row">
             <div className="h-14 w-14 bg-muted rounded-l flex items-center justify-center">
-              <Mail />
+              <AppWindow />
               <ArrowDown
                 size={18}
                 className="absolute -bottom-2 text-primary"

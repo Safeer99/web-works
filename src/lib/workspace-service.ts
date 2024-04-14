@@ -3,8 +3,7 @@
 import * as z from "zod";
 import { WorkspaceFormSchema } from "./types";
 import { db } from "./db";
-import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
+import { getSelf } from "./auth-service";
 
 interface UpsertWorkspaceProps {
   agencyId: string;
@@ -47,6 +46,35 @@ export const getWorkspace = async (workspaceId: string) => {
   });
 
   return workspace;
+};
+
+export const publishWorkspace = async (id: string) => {
+  const res = await db.workspace.update({
+    where: {
+      id,
+    },
+    data: {
+      published: true,
+    },
+  });
+  return res;
+};
+
+export const unPublishWorkspace = async (id: string) => {
+  const res = await db.workspace.update({
+    where: {
+      id,
+    },
+    data: {
+      published: false,
+    },
+  });
+  return res;
+};
+
+export const deleteWorkspace = async (id: string) => {
+  const res = await db.workspace.delete({ where: { id } });
+  return res;
 };
 
 interface UpsertPageProps {

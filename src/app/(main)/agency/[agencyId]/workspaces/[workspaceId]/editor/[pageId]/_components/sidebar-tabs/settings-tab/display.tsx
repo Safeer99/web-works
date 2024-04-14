@@ -32,9 +32,9 @@ export const DisplaySection = ({ onChange: handleChange, state }: Props) => {
 
   return (
     <AccordionContent>
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4 text-xs text-muted-foreground">
         <div className="flex items-center justify-between">
-          <Label htmlFor="flexbox" className="text-xs text-muted-foreground">
+          <Label htmlFor="flexbox" className="text-xs">
             Flex-box
           </Label>
           <Switch
@@ -69,7 +69,7 @@ export const DisplaySection = ({ onChange: handleChange, state }: Props) => {
               />
             </div>
 
-            <div className="text-xs space-y-1 text-muted-foreground">
+            <div className="space-y-1">
               <p>Justify Content</p>
               <ToggleGroup
                 onValueChange={(value) => {
@@ -106,7 +106,7 @@ export const DisplaySection = ({ onChange: handleChange, state }: Props) => {
               </ToggleGroup>
             </div>
 
-            <div className="text-xs space-y-1 text-muted-foreground">
+            <div className="space-y-1">
               <p>Align Items</p>
               <ToggleGroup
                 onValueChange={(value) => {

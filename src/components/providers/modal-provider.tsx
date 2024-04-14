@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Toaster } from "@/components/ui/sonner";
 import { useModal } from "@/hooks/use-modals";
 
 export const ModalProvider = () => {
@@ -14,10 +13,5 @@ export const ModalProvider = () => {
 
   if (!isMounted) return null;
 
-  return (
-    <>
-      {modal}
-      <Toaster />
-    </>
-  );
+  return <>{modal}</>;
 };

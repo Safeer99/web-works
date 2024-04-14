@@ -10,6 +10,7 @@ import { Workspace, WorkspacePage } from "@prisma/client";
 import { Button } from "@/components/ui/button";
 import {
   Card,
+  CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
@@ -51,7 +52,7 @@ export const WorkspaceSteps = ({
     if (pages.length > pagesState.length) {
       setClickedPage(pages[pages.length - 1]);
     } else {
-      setClickedPage(undefined);
+      setClickedPage(pages[0] || undefined);
     }
     setPagesState(pages);
   }, [pages]);
@@ -162,42 +163,42 @@ export const WorkspaceSteps = ({
             <CardHeader>
               <p className="text-sm text-muted-foreground">Page name</p>
               <CardTitle>{clickedPage.name}</CardTitle>
-              <CardDescription className="flex flex-col gap-4">
-                <div className="border-2 rounded-lg sm:w-80 w-full  overflow-clip">
-                  <Link
-                    href={`/agency/${agencyId}/workspaces/${workspaceId}/editor/${clickedPage.id}`}
-                    className="relative group"
-                  >
-                    <div className="cursor-pointer group-hover:opacity-30 w-full">
-                      <PagePlaceholder />
-                    </div>
-                    <LucideEdit
-                      size={50}
-                      className="!text-muted-foreground absolute top-1/2 left-1/2 opacity-0 transofrm -translate-x-1/2 -translate-y-1/2 group-hover:opacity-100 transition-all duration-100"
-                    />
-                  </Link>
-
-                  <Link
-                    target="_blank"
-                    href={`${process.env.NEXT_PUBLIC_SCHEME}${workspace.subDomainName}.${process.env.NEXT_PUBLIC_DOMAIN}/${clickedPage.pathName}`}
-                    className="group flex items-center justify-start p-2 gap-2 hover:text-primary transition-colors duration-200"
-                  >
-                    <ExternalLink size={15} />
-                    <div className="w-64 overflow-hidden overflow-ellipsis ">
-                      {process.env.NEXT_PUBLIC_SCHEME}
-                      {workspace.subDomainName}.{process.env.NEXT_PUBLIC_DOMAIN}
-                      /{clickedPage.pathName}
-                    </div>
-                  </Link>
-                </div>
-                <WorkspacePageForm
-                  defaultData={clickedPage}
-                  agencyId={agencyId}
-                  workspaceId={workspaceId}
-                  order={pagesState.length}
-                />
-              </CardDescription>
             </CardHeader>
+            <CardContent className="flex flex-col gap-4">
+              <div className="border-2 rounded-lg sm:w-80 w-full overflow-clip">
+                <Link
+                  href={`/agency/${agencyId}/workspaces/${workspaceId}/editor/${clickedPage.id}`}
+                  className="relative group"
+                >
+                  <div className="cursor-pointer group-hover:opacity-30 w-full">
+                    <PagePlaceholder />
+                  </div>
+                  <LucideEdit
+                    size={50}
+                    className="!text-muted-foreground absolute top-1/2 left-1/2 opacity-0 transofrm -translate-x-1/2 -translate-y-1/2 group-hover:opacity-100 transition-all duration-100"
+                  />
+                </Link>
+
+                <Link
+                  target="_blank"
+                  href={`${process.env.NEXT_PUBLIC_SCHEME}${workspace.subDomainName}.${process.env.NEXT_PUBLIC_DOMAIN}/${clickedPage.pathName}`}
+                  className="group flex items-center justify-start p-2 gap-2 hover:text-primary transition-colors duration-200"
+                >
+                  <ExternalLink size={15} />
+                  <div className="w-64 text-sm overflow-hidden overflow-ellipsis ">
+                    {process.env.NEXT_PUBLIC_SCHEME}
+                    {workspace.subDomainName}.{process.env.NEXT_PUBLIC_DOMAIN}/
+                    {clickedPage.pathName}
+                  </div>
+                </Link>
+              </div>
+              <WorkspacePageForm
+                defaultData={clickedPage}
+                agencyId={agencyId}
+                workspaceId={workspaceId}
+                order={pagesState.length}
+              />
+            </CardContent>
           </Card>
         ) : (
           <div className="h-[600px] flex items-center justify-center text-muted-foreground">

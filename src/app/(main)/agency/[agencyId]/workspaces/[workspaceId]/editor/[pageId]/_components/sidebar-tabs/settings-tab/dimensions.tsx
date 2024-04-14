@@ -11,6 +11,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { CustomColorInput, CustomInput } from "./custom-inputs";
+import { Hint } from "@/components/hint";
 
 interface Props {
   state: EditorState;
@@ -18,165 +19,95 @@ interface Props {
 }
 
 export const DimensionsSection = ({ state, onChange: handleChange }: Props) => {
-  const { styles } = state.editor.selectedElement;
+  const { styles, type } = state.editor.selectedElement;
   const [independentMargin, setIndependentMargin] = useState(false);
   const [independentPadding, setIndependentPadding] = useState(false);
   const [independentCorners, setIndependentCorners] = useState(false);
-  const [independentBorders, setIndependentBorders] = useState(false);
 
   return (
     <AccordionContent>
-      <div className="flex flex-col gap-4">
-        <div className="flex flex-wrap gap-4">
-          <CustomInput
-            id="width"
-            label="W"
-            onChange={handleChange}
-            value={styles.width}
-          />
-          <CustomInput
-            id="height"
-            label="H"
-            onChange={handleChange}
-            value={styles.height}
-          />
-        </div>
+      <div className="flex flex-col gap-4 text-xs text-muted-foreground">
+        {type !== "__body" && (
+          <div className="flex flex-wrap gap-4">
+            <CustomInput
+              id="width"
+              label="W"
+              onChange={handleChange}
+              value={styles.width}
+            />
+            <CustomInput
+              id="height"
+              label="H"
+              onChange={handleChange}
+              value={styles.height}
+            />
+          </div>
+        )}
 
-        <div className="flex flex-col gap-2">
-          <div className="flex justify-between items-center gap-4">
-            <p>Border Radius</p>
-            <Tooltip>
-              <TooltipTrigger>
+        {type !== "__body" && (
+          <div className="flex flex-col gap-2">
+            <div className="flex justify-between items-center gap-4">
+              <p>Border Radius</p>
+              <Hint label="Independent Corners">
                 <Scan
                   size={16}
                   className="cursor-pointer"
                   onClick={() => setIndependentCorners(!independentCorners)}
                 />
-              </TooltipTrigger>
-              <TooltipContent side="left" className="text-xs">
-                Independent corners
-              </TooltipContent>
-            </Tooltip>
+              </Hint>
+            </div>
+            {independentCorners ? (
+              <>
+                <div className="flex gap-4">
+                  <CustomInput
+                    label="TL"
+                    id="borderTopLeftRadius"
+                    onChange={handleChange}
+                    value={styles.borderTopLeftRadius}
+                  />
+                  <CustomInput
+                    label="TR"
+                    id="borderTopRightRadius"
+                    onChange={handleChange}
+                    value={styles.borderTopRightRadius}
+                  />
+                </div>
+                <div className="flex gap-4">
+                  <CustomInput
+                    label="BL"
+                    id="borderBottomLeftRadius"
+                    onChange={handleChange}
+                    value={styles.borderBottomLeftRadius}
+                  />
+                  <CustomInput
+                    label="BR"
+                    id="borderBottomRightRadius"
+                    onChange={handleChange}
+                    value={styles.borderBottomRightRadius}
+                  />
+                </div>
+              </>
+            ) : (
+              <CustomInput
+                label="B"
+                id="borderRadius"
+                onChange={handleChange}
+                value={styles.borderRadius}
+              />
+            )}
           </div>
-          {independentCorners ? (
-            <>
-              <div className="flex gap-4">
-                <CustomInput
-                  label="TL"
-                  id="borderTopLeftRadius"
-                  onChange={handleChange}
-                  value={styles.borderTopLeftRadius}
-                />
-                <CustomInput
-                  label="TR"
-                  id="borderTopRightRadius"
-                  onChange={handleChange}
-                  value={styles.borderTopRightRadius}
-                />
-              </div>
-              <div className="flex gap-4">
-                <CustomInput
-                  label="BL"
-                  id="borderBottomLeftRadius"
-                  onChange={handleChange}
-                  value={styles.borderBottomLeftRadius}
-                />
-                <CustomInput
-                  label="BR"
-                  id="borderBottomRightRadius"
-                  onChange={handleChange}
-                  value={styles.borderBottomRightRadius}
-                />
-              </div>
-            </>
-          ) : (
-            <CustomInput
-              label="B"
-              id="borderRadius"
-              onChange={handleChange}
-              value={styles.borderRadius}
-            />
-          )}
-        </div>
+        )}
 
         <div className="flex flex-col gap-2">
           <div className="flex justify-between items-center gap-4">
-            <p>Border</p>
-            <Tooltip>
-              <TooltipTrigger>
-                <Scan
-                  size={16}
-                  className="cursor-pointer"
-                  onClick={() => setIndependentBorders(!independentBorders)}
-                />
-              </TooltipTrigger>
-              <TooltipContent side="left" className="text-xs">
-                Independent borders
-              </TooltipContent>
-            </Tooltip>
-          </div>
-          {independentBorders ? (
-            <>
-              <div className="flex gap-4">
-                <CustomInput
-                  label="T"
-                  id="borderTopWidth"
-                  onChange={handleChange}
-                  value={styles.borderTopWidth}
-                />
-                <CustomInput
-                  label="R"
-                  id="borderRightWidth"
-                  onChange={handleChange}
-                  value={styles.borderRightWidth}
-                />
-              </div>
-              <div className="flex gap-4">
-                <CustomInput
-                  label="B"
-                  id="borderBottomWidth"
-                  onChange={handleChange}
-                  value={styles.borderBottomWidth}
-                />
-                <CustomInput
-                  label="L"
-                  id="borderLeftWidth"
-                  onChange={handleChange}
-                  value={styles.borderLeftWidth}
-                />
-              </div>
-            </>
-          ) : (
-            <CustomInput
-              label="B"
-              id="borderWidth"
-              onChange={handleChange}
-              value={styles.borderWidth}
-            />
-          )}
-          <CustomColorInput
-            onChangeColor={(value: string) => {
-              handleChange({ target: { id: "borderColor", value } });
-            }}
-            value={styles.borderColor || "#000000"}
-          />
-        </div>
-
-        <div className="flex flex-col gap-2">
-          <div className="flex justify-between items-center gap-4">
-            <p>Margin</p>
-            <Tooltip>
-              <TooltipTrigger>
-                <Scan
-                  size={16}
-                  className="cursor-pointer"
-                  onClick={() => setIndependentMargin(!independentMargin)}
-                />
-              </TooltipTrigger>
-              <TooltipContent side="left" className="text-xs">
-                Independent margin
-              </TooltipContent>
-            </Tooltip>
+            <p className="text-xs text-muted-foreground">Margin</p>
+            <Hint label="Independent Margin">
+              <Scan
+                size={16}
+                className="cursor-pointer"
+                onClick={() => setIndependentMargin(!independentMargin)}
+              />
+            </Hint>
           </div>
           {independentMargin ? (
             <>
@@ -222,18 +153,13 @@ export const DimensionsSection = ({ state, onChange: handleChange }: Props) => {
         <div className="flex flex-col gap-2">
           <div className="flex justify-between items-center gap-4">
             <p>Padding</p>
-            <Tooltip>
-              <TooltipTrigger>
-                <Scan
-                  size={16}
-                  className="cursor-pointer"
-                  onClick={() => setIndependentPadding(!independentPadding)}
-                />
-              </TooltipTrigger>
-              <TooltipContent side="left" className="text-xs">
-                Independent padding
-              </TooltipContent>
-            </Tooltip>
+            <Hint label="Independent Padding">
+              <Scan
+                size={16}
+                className="cursor-pointer"
+                onClick={() => setIndependentPadding(!independentPadding)}
+              />
+            </Hint>
           </div>
           {independentPadding ? (
             <>

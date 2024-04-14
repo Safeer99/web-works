@@ -56,7 +56,7 @@ export const Editor = ({ pageId, liveMode }: Props) => {
   return (
     <div
       className={clsx(
-        "use-automation-zoom-in h-full mt-16 mr-[320px] p-4 transition-all rounded-md",
+        "use-automation-zoom-in h-full mt-16 mr-[320px] p-4  transition-all rounded-md",
         {
           "!p-0 !m-0": state.editor.previewMode || state.editor.liveMode,
           "!w-[850px]": state.editor.device === "Tablet",
@@ -80,6 +80,9 @@ export const Editor = ({ pageId, liveMode }: Props) => {
         state.editor.elements.map((childElement) => (
           <Recursive key={childElement.id} element={childElement} />
         ))}
+      {!state.editor.previewMode && !state.editor.liveMode && (
+        <div className="h-10" />
+      )}
     </div>
   );
 };

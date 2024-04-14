@@ -6,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { WorkspaceForm } from "@/components/forms/workspace-form";
 import { getWorkspace } from "@/lib/workspace-service";
 import { WorkspaceSteps } from "./_components/workspace-steps";
+import { Actions } from "./_components/actions";
 
 interface Props {
   params: {
@@ -28,7 +29,15 @@ const WorkspaceIdPage = async ({ params }: Props) => {
         <ArrowLeft className="h-4 w-4 mr-2" />
         Back to workspaces list
       </Link>
-      <h1 className="text-3xl mb-8">{workspacePages.name}</h1>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl">{workspacePages.name}</h1>
+        <Actions
+          isPublished={workspacePages.published}
+          agencyId={params.agencyId}
+          workspaceId={params.workspaceId}
+          disabled={workspacePages.workspacePages.length === 0}
+        />
+      </div>
       <Tabs defaultValue="steps" className="w-full">
         <TabsList className="grid  grid-cols-2 w-[50%] bg-transparent ">
           <TabsTrigger value="steps">Steps</TabsTrigger>

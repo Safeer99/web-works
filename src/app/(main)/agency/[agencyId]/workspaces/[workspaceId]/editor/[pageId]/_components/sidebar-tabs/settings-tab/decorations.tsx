@@ -24,6 +24,7 @@ import {
   CustomInput,
   CustomSelectInput,
 } from "./custom-inputs";
+import { Hint } from "@/components/hint";
 
 interface Props {
   state: EditorState;
@@ -46,11 +47,12 @@ export const DecorationsSection = ({
     "right bottom",
   ];
   const { styles } = state.editor.selectedElement;
+  const [independentBorders, setIndependentBorders] = useState(false);
   const [customPosition, setCustomPosition] = useState(false);
 
   return (
     <AccordionContent>
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4 text-xs text-muted-foreground">
         <CustomColorInput
           onChangeColor={(value: string) => {
             handleChange({ target: { id: "backgroundColor", value } });
@@ -91,18 +93,13 @@ export const DecorationsSection = ({
         <div className="flex flex-col gap-2">
           <div className="flex justify-between items-center gap-4">
             <p>Image Position</p>
-            <Tooltip>
-              <TooltipTrigger>
-                <Scan
-                  size={16}
-                  className="cursor-pointer"
-                  onClick={() => setCustomPosition(!customPosition)}
-                />
-              </TooltipTrigger>
-              <TooltipContent side="left" className="text-xs">
-                Custom Position
-              </TooltipContent>
-            </Tooltip>
+            <Hint label="Custom Position">
+              <Scan
+                size={16}
+                className="cursor-pointer"
+                onClick={() => setCustomPosition(!customPosition)}
+              />
+            </Hint>
           </div>
           {customPosition ? (
             <div className="flex gap-4">
@@ -160,13 +157,13 @@ export const DecorationsSection = ({
 
         <div>
           <div className="flex items-center justify-between h-7">
-            <small className="text-muted-foreground">Opacity</small>
-            <small className="p-2">
+            <p>Opacity</p>
+            <p className="p-2">
               {typeof styles?.opacity === "number"
                 ? styles?.opacity
                 : parseFloat((styles?.opacity || "0").replace("%", "")) || 100}
               %
-            </small>
+            </p>
           </div>
           <Slider
             onValueChange={(e) => {
@@ -184,6 +181,65 @@ export const DecorationsSection = ({
             ]}
             max={100}
             step={1}
+          />
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <div className="flex justify-between items-center gap-4">
+            <p>Border</p>
+            <Hint label="Independent Borders">
+              <Scan
+                size={16}
+                className="cursor-pointer"
+                onClick={() => setIndependentBorders(!independentBorders)}
+              />
+            </Hint>
+          </div>
+          {independentBorders ? (
+            <>
+              <div className="flex gap-4">
+                <CustomInput
+                  label="T"
+                  id="borderTopWidth"
+                  onChange={handleChange}
+                  value={styles.borderTopWidth}
+                />
+                <CustomInput
+                  label="R"
+                  id="borderRightWidth"
+                  onChange={handleChange}
+                  value={styles.borderRightWidth}
+                />
+              </div>
+              <div className="flex gap-4">
+                <CustomInput
+                  label="B"
+                  id="borderBottomWidth"
+                  onChange={handleChange}
+                  value={styles.borderBottomWidth}
+                />
+                <CustomInput
+                  label="L"
+                  id="borderLeftWidth"
+                  onChange={handleChange}
+                  value={styles.borderLeftWidth}
+                />
+              </div>
+            </>
+          ) : (
+            <CustomInput
+              label="B"
+              id="borderWidth"
+              onChange={handleChange}
+              value={styles.borderWidth}
+            />
+          )}
+
+          <CustomColorInput
+            onChangeColor={(value: string) => {
+              handleChange({ target: { id: "borderColor", value } });
+            }}
+            value={styles.borderColor || "#000000"}
           />
         </div>
       </div>

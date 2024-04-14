@@ -18,18 +18,12 @@ import { WorkspacePage } from "@prisma/client";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 
 import { useEditor } from "@/components/providers/editor";
 import { DeviceTypes } from "@/components/providers/editor/editor-types";
 import { upsertWorkspacePage } from "@/lib/workspace-service";
+import { Hint } from "@/components/hint";
 
 interface Props {
   agencyId: string;
@@ -99,81 +93,69 @@ export const EditorNavigation = ({
   };
 
   return (
-    <TooltipProvider>
-      <nav
-        className={clsx(
-          "fixed top-0 left-0 right-0 bg-background z-[999] border-b-[1px] flex items-center justify-between py-2 px-4 gap-2 transition-all",
-          { "!h-0 !p-0 !overflow-hidden": state.editor.previewMode }
-        )}
-      >
-        <aside className="flex items-center gap-4 max-w-[260px] w-[300px]">
-          <Link href={`/agency/${agencyId}/workspaces/${workspaceId}`}>
-            <ArrowLeftCircle />
-          </Link>
-          <div className="flex flex-col gap-1 w-full ">
-            <Input
-              defaultValue={pageDetails.name}
-              className="border-none h-5 m-0 p-0 text-base rounded-none focus-visible:ring-0"
-              onBlur={handleOnBlurTitleChange}
-            />
-            <span className="text-xs text-muted-foreground">
-              Path: /{pageDetails.pathName}
-            </span>
-          </div>
-        </aside>
-        <aside>
-          <Tabs
-            defaultValue="Desktop"
-            className="w-fit "
-            value={state.editor.device}
-            onValueChange={(value) => {
-              dispatch({
-                type: "CHANGE_DEVICE",
-                payload: { device: value as DeviceTypes },
-              });
-            }}
-          >
-            <TabsList className="grid w-full grid-cols-3 bg-transparent h-fit">
-              <Tooltip>
-                <TooltipTrigger>
-                  <TabsTrigger
-                    asChild
-                    value="Desktop"
-                    className="data-[state=active]:bg-muted w-10 h-10 p-2"
-                  >
-                    <Laptop />
-                  </TabsTrigger>
-                </TooltipTrigger>
-                <TooltipContent>Desktop</TooltipContent>
-              </Tooltip>
-              <Tooltip>
-                <TooltipTrigger>
-                  <TabsTrigger
-                    asChild
-                    value="Tablet"
-                    className="w-10 h-10 p-2 data-[state=active]:bg-muted"
-                  >
-                    <Tablet />
-                  </TabsTrigger>
-                </TooltipTrigger>
-                <TooltipContent>Tablet</TooltipContent>
-              </Tooltip>
-              <Tooltip>
-                <TooltipTrigger>
-                  <TabsTrigger
-                    asChild
-                    value="Mobile"
-                    className="w-10 h-10 p-2 data-[state=active]:bg-muted"
-                  >
-                    <Smartphone />
-                  </TabsTrigger>
-                </TooltipTrigger>
-                <TooltipContent>Mobile</TooltipContent>
-              </Tooltip>
-            </TabsList>
-          </Tabs>
-        </aside>
-        <aside className="flex items-center gap-2">
+    <nav
+      className={clsx(
+        "fixed top-0 left-0 right-0 bg-background z-[200] border-b-[1px] flex items-center justify-between py-2 px-4 gap-2 transition-all",
+        { "!h-0 !p-0 !overflow-hidden": state.editor.previewMode }
+      )}
+    >
+      <aside className="flex items-center gap-4 max-w-[260px] w-[300px]">
+        <Link href={`/agency/${agencyId}/workspaces/${workspaceId}`}>
+          <ArrowLeftCircle />
+        </Link>
+        <div className="flex flex-col gap-1 w-full ">
+          <Input
+            defaultValue={pageDetails.name}
+            className="border-none h-5 m-0 p-0 text-base rounded-none focus-visible:ring-0"
+            onBlur={handleOnBlurTitleChange}
+          />
+          <span className="text-xs text-muted-foreground">
+            Path: /{pageDetails.pathName}
+          </span>
+        </div>
+      </aside>
+      <aside>
+        <Tabs
+          defaultValue="Desktop"
+          className="w-fit"
+          value={state.editor.device}
+          onValueChange={(value) => {
+            dispatch({
+              type: "CHANGE_DEVICE",
+              payload: { device: value as DeviceTypes },
+            });
+          }}
+        >
+          <TabsList className="grid w-full grid-cols-3 bg-transparent h-fit">
+            <TabsTrigger
+              value="Desktop"
+              className="w-10 h-10 p-2 data-[state=active]:bg-muted"
+            >
+              <Hint label="Desktop" sideOffset={15}>
+                <Laptop />
+              </Hint>
+            </TabsTrigger>
+            <TabsTrigger
+              value="Tablet"
+              className="w-10 h-10 p-2 data-[state=active]:bg-muted"
+            >
+              <Hint label="Tablet" sideOffset={15}>
+                <Tablet />
+              </Hint>
+            </TabsTrigger>
+            <TabsTrigger
+              value="Mobile"
+              className="w-10 h-10 p-2 data-[state=active]:bg-muted"
+            >
+              <Hint label="Mobile" sideOffset={15}>
+                <Smartphone />
+              </Hint>
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
+      </aside>
+      <aside className="flex items-center gap-2">
+        <Hint label="Preview">
           <Button
             variant={"ghost"}
             size={"icon"}
@@ -182,6 +164,8 @@ export const EditorNavigation = ({
           >
             <EyeIcon />
           </Button>
+        </Hint>
+        <Hint label="Undo">
           <Button
             disabled={!(state.history.currentIndex > 0)}
             onClick={handleUndo}
@@ -191,6 +175,8 @@ export const EditorNavigation = ({
           >
             <Undo2 />
           </Button>
+        </Hint>
+        <Hint label="Redo">
           <Button
             disabled={
               !(state.history.currentIndex < state.history.history.length - 1)
@@ -202,23 +188,12 @@ export const EditorNavigation = ({
           >
             <Redo2 />
           </Button>
-
-          {/* <div className="flex flex-col gap-1 item-center mr-4">
-            <div className="flex flex-row items-center gap-2 text-sm">
-              Draft
-              <Switch disabled defaultChecked={true} className="scale-90" />
-              Publish
-            </div>
-            <span className="text-muted-foreground text-xs">
-              Last updated: {pageDetails.updatedAt.toLocaleDateString()}
-            </span>
-          </div> */}
-
-          <Button onClick={handleOnSave} size="sm">
+        </Hint>
+        {/* //TODO: ADD participants */}
+        {/* <Button onClick={handleOnSave} size="sm">
             Save
-          </Button>
-        </aside>
-      </nav>
-    </TooltipProvider>
+          </Button> */}
+      </aside>
+    </nav>
   );
 };

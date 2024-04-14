@@ -2,14 +2,8 @@
 
 import clsx from "clsx";
 import { useEditor } from "@/components/providers/editor";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
+
 import { TabList } from "./sidebar-tabs";
 import { SettingsTab } from "./sidebar-tabs/settings-tab";
 import { MediaBucketTab } from "./sidebar-tabs/media-bucket-tab";
@@ -24,58 +18,55 @@ export const EditorSidebar = ({ agencyId }: Props) => {
   const { state } = useEditor();
 
   return (
-    <Sheet open={true} modal={false}>
-      <Tabs className="w-full" defaultValue="Settings">
-        <SheetContent
-          showX={false}
-          side="right"
-          className={clsx(
-            "mt-[65px] w-16 z-[150] shadow-none p-0 focus:border-none transition-all overflow-hidden",
-            { hidden: state.editor.previewMode }
-          )}
-        >
-          <TabList />
-        </SheetContent>
-        <SheetContent
-          showX={false}
-          side="right"
-          className={clsx(
-            "mt-[65px] w-64 z-[140] shadow-none p-0 mr-16 bg-background h-full transition-all overflow-hidden",
-            { hidden: state.editor.previewMode }
-          )}
-        >
+    <Tabs className="w-full" defaultValue="Settings">
+      <div
+        className={clsx(
+          "fixed inset-y-0 right-0 mt-[65px] flex bg-background transition-all overflow-hidden",
+          { "!-right-80": state.editor.previewMode }
+        )}
+      >
+        <div className="w-64 border-l-[1px]">
           <div className="gap-4 h-full pb-24 overflow-scroll scrollbar-hidden">
-            <TabsContent className="focus-visible:ring-0" value="Settings">
-              <SheetHeader className="text-left px-4 py-1">
-                <SheetTitle className="text-sm">Styles</SheetTitle>
-                <SheetDescription className="text-xs">
+            <TabsContent value="Settings">
+              <div className="text-left px-4 py-1">
+                <h5 className="text-sm py-2">Styles</h5>
+                <p className="text-xs text-muted-foreground">
                   Show your creativity! You can customize every component as you
                   like.
-                </SheetDescription>
-              </SheetHeader>
-              <SettingsTab />
+                </p>
+              </div>
+              {state.editor.selectedElement.id ? (
+                <SettingsTab />
+              ) : (
+                <div className="w-full p-4 mt-20 grid place-items-center text-center text-sm text-muted-foreground">
+                  Select a component on canvas to customize it.
+                </div>
+              )}
             </TabsContent>
 
-            <TabsContent className="focus-visible:ring-0" value="Media">
+            <TabsContent value="Media">
               <MediaBucketTab agencyId={agencyId} />
             </TabsContent>
 
-            <TabsContent className="focus-visible:ring-0" value="Layers">
-              <LayersTab elements={state.editor.elements} level={0} />
+            <TabsContent value="Layers">
+              <LayersTab elements={state.editor.elements} />
             </TabsContent>
 
-            <TabsContent className="focus-visible:ring-0" value="Components">
-              <SheetHeader className="text-left px-4 py-1">
-                <SheetTitle className="text-sm">Components</SheetTitle>
-                <SheetDescription className="text-xs">
+            <TabsContent value="Components">
+              <div className="text-left px-4 py-1">
+                <h5 className="text-sm py-2">Components</h5>
+                <p className="text-xs text-muted-foreground">
                   You can drag and drop components on the canvas.
-                </SheetDescription>
-              </SheetHeader>
+                </p>
+              </div>
               <ComponentsTab />
             </TabsContent>
           </div>
-        </SheetContent>
-      </Tabs>
-    </Sheet>
+        </div>
+        <div className="w-16 border-l-[1px]">
+          <TabList />
+        </div>
+      </div>
+    </Tabs>
   );
 };

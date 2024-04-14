@@ -57,9 +57,8 @@ export const MediaCard = ({ file }: Props) => {
               className="object-cover rounded-lg"
             />
           </div>
-          <p className="opacity-0 h-0 w-0">{file.name}</p>
           <div className="p-4 relative">
-            <p className="text-muted-foreground">
+            <p className="text-xs text-muted-foreground">
               {file.createdAt.toDateString()}
             </p>
             <p>{file.name}</p>
@@ -90,7 +89,7 @@ export const MediaCard = ({ file }: Props) => {
           </DropdownMenuContent>
         </article>
       </DropdownMenu>
-      <AlertDialogContent>
+      <AlertDialogContent className="z-[200]">
         <AlertDialogHeader>
           <AlertDialogTitle className="text-left">
             Are you absolutely sure?
@@ -100,8 +99,8 @@ export const MediaCard = ({ file }: Props) => {
             file will no longer have access to it!
           </AlertDialogDescription>
         </AlertDialogHeader>
-        <AlertDialogFooter className="flex items-center">
-          <AlertDialogCancel className="mb-2">Cancel</AlertDialogCancel>
+        <AlertDialogFooter className="flex items-center gap-2">
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction
             disabled={loading}
             className="bg-destructive hover:bg-destructive"
