@@ -1,5 +1,16 @@
 import { Role } from "@prisma/client";
 import * as z from "zod";
+import { NextApiResponse } from "next";
+import { Server as NetServer, Socket } from "net";
+import { Server as SocketIOServer } from "socket.io";
+
+export type NextApiResponseServerIo = NextApiResponse & {
+  socket: Socket & {
+    server: NetServer & {
+      io: SocketIOServer;
+    };
+  };
+};
 
 export const AgencyFormSchema = z.object({
   name: z.string().min(2, { message: "Agency name must be atleast 2 chars." }),

@@ -12,19 +12,14 @@ import { EditorState } from "@/components/providers/editor/editor-types";
 import { AccordionContent } from "@/components/ui/accordion";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { Slider } from "@/components/ui/slider";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { Hint } from "@/components/hint";
 import {
   CustomColorInput,
   CustomInput,
   CustomSelectInput,
 } from "./custom-inputs";
-import { Hint } from "@/components/hint";
 
 interface Props {
   state: EditorState;
@@ -144,14 +139,20 @@ export const DecorationsSection = ({
           size="sm"
           type="single"
         >
-          <ToggleGroupItem title="auto" value="auto">
-            <LucideImageDown size={20} />
+          <ToggleGroupItem value="auto">
+            <Hint label="auto">
+              <LucideImageDown size={20} />
+            </Hint>
           </ToggleGroupItem>
-          <ToggleGroupItem title="cover" value="cover">
-            <ChevronsLeftRightIcon size={20} />
+          <ToggleGroupItem value="cover">
+            <Hint label="cover">
+              <ChevronsLeftRightIcon size={20} />
+            </Hint>
           </ToggleGroupItem>
-          <ToggleGroupItem title="contain" value="contain">
-            <AlignVerticalJustifyCenter size={20} />
+          <ToggleGroupItem value="contain">
+            <Hint label="contain">
+              <AlignVerticalJustifyCenter size={20} />
+            </Hint>
           </ToggleGroupItem>
         </ToggleGroup>
 
@@ -184,7 +185,7 @@ export const DecorationsSection = ({
           />
         </div>
 
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 mt-2">
           <div className="flex justify-between items-center gap-4">
             <p>Border</p>
             <Hint label="Independent Borders">

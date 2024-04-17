@@ -121,6 +121,9 @@ export const getWorkspacePageDetails = async (pageId: string) => {
     where: {
       id: pageId,
     },
+    include: {
+      workspace: true,
+    },
   });
 
   return res;

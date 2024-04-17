@@ -4,6 +4,7 @@ import clsx from "clsx";
 import { EyeOff } from "lucide-react";
 import { useEffect } from "react";
 import { useEditor } from "@/components/providers/editor";
+import { useSocket } from "@/components/providers/socket-provider";
 import { Button } from "@/components/ui/button";
 import { getWorkspacePageDetails } from "@/lib/workspace-service";
 import { Recursive } from "./editor-components/recursive";
@@ -15,6 +16,7 @@ interface Props {
 
 export const Editor = ({ pageId, liveMode }: Props) => {
   const { state, dispatch } = useEditor();
+  const { socket, isConnected } = useSocket();
 
   useEffect(() => {
     if (liveMode) {

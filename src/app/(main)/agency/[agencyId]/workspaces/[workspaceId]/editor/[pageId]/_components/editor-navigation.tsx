@@ -24,6 +24,7 @@ import { useEditor } from "@/components/providers/editor";
 import { DeviceTypes } from "@/components/providers/editor/editor-types";
 import { upsertWorkspacePage } from "@/lib/workspace-service";
 import { Hint } from "@/components/hint";
+import { Participants } from "./participants";
 
 interface Props {
   agencyId: string;
@@ -190,6 +191,7 @@ export const EditorNavigation = ({
           </Button>
         </Hint>
         {/* //TODO: ADD participants */}
+        <Participants />
         {/* <Button onClick={handleOnSave} size="sm">
             Save
           </Button> */}

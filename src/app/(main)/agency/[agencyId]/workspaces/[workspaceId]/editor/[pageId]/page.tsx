@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
 import EditorProvider from "@/components/providers/editor";
+import SocketProvider from "@/components/providers/socket-provider";
 import { Editor } from "@/components/editor";
 import { EditorNavigation } from "./_components/editor-navigation";
 import { EditorSidebar } from "./_components/editor-sidebar";
@@ -35,17 +36,19 @@ const EditorPage = async ({ params }: Props) => {
         workspaceId={params.workspaceId}
         pageDetails={pageDetails}
       >
-        <Wrapper>
-          <EditorNavigation
-            agencyId={params.agencyId}
-            workspaceId={params.workspaceId}
-            pageDetails={pageDetails}
-          />
-          <div className="flex justify-center h-full overflow-y-scroll scrollbar-hidden">
-            <Editor pageId={params.pageId} />
-          </div>
-          <EditorSidebar agencyId={params.agencyId} />
-        </Wrapper>
+        <SocketProvider agencyId={params.agencyId} roomId={params.pageId}>
+          <Wrapper>
+            <EditorNavigation
+              agencyId={params.agencyId}
+              workspaceId={params.workspaceId}
+              pageDetails={pageDetails}
+            />
+            <div className="flex justify-center h-full overflow-y-scroll scrollbar-hidden">
+              <Editor pageId={params.pageId} />
+            </div>
+            <EditorSidebar agencyId={params.agencyId} />
+          </Wrapper>
+        </SocketProvider>
       </EditorProvider>
     </div>
   );

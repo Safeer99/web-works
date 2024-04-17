@@ -20,7 +20,10 @@ export const UserAvatar = ({
     <Hint label={name}>
       <Avatar className="h-8 w-8 border-2" style={{ borderColor }}>
         <AvatarImage src={src} />
-        <AvatarFallback className="text-xs font-semibold bg-neutral-300">
+        <AvatarFallback
+          className="text-xs font-semibold"
+          style={{ backgroundColor: borderColor }}
+        >
           {fallback}
         </AvatarFallback>
       </Avatar>

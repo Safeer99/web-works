@@ -5,12 +5,8 @@ import { Scan } from "lucide-react";
 
 import { EditorState } from "@/components/providers/editor/editor-types";
 import { AccordionContent } from "@/components/ui/accordion";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { CustomColorInput, CustomInput } from "./custom-inputs";
+
+import { CustomInput } from "./custom-inputs";
 import { Hint } from "@/components/hint";
 
 interface Props {

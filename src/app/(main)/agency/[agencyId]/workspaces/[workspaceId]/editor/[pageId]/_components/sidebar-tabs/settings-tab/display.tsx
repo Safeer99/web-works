@@ -17,6 +17,7 @@ import { AccordionContent } from "@/components/ui/accordion";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { Hint } from "@/components/hint";
 import { CustomSelectInput } from "./custom-inputs";
 
 interface Props {
@@ -32,7 +33,7 @@ export const DisplaySection = ({ onChange: handleChange, state }: Props) => {
 
   return (
     <AccordionContent>
-      <div className="flex flex-col gap-4 text-xs text-muted-foreground">
+      <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between">
           <Label htmlFor="flexbox" className="text-xs">
             Flex-box
@@ -69,7 +70,7 @@ export const DisplaySection = ({ onChange: handleChange, state }: Props) => {
               />
             </div>
 
-            <div className="space-y-1">
+            <div className="space-y-1 text-xs text-muted-foreground">
               <p>Justify Content</p>
               <ToggleGroup
                 onValueChange={(value) => {
@@ -85,28 +86,40 @@ export const DisplaySection = ({ onChange: handleChange, state }: Props) => {
                 size="sm"
                 type="single"
               >
-                <ToggleGroupItem title="flex-start" value="flex-start">
-                  <AlignHorizontalJustifyStart size={18} />
+                <ToggleGroupItem value="flex-start">
+                  <Hint label="start">
+                    <AlignHorizontalJustifyStart size={18} />
+                  </Hint>
                 </ToggleGroupItem>
-                <ToggleGroupItem title="center" value="center">
-                  <AlignHorizontalJustifyCenter size={18} />
+                <ToggleGroupItem value="center">
+                  <Hint label="center">
+                    <AlignHorizontalJustifyCenter size={18} />
+                  </Hint>
                 </ToggleGroupItem>
-                <ToggleGroupItem title="flex-end" value="flex-end">
-                  <AlignHorizontalJustifyEnd size={18} />
+                <ToggleGroupItem value="flex-end">
+                  <Hint label="end">
+                    <AlignHorizontalJustifyEnd size={18} />
+                  </Hint>
                 </ToggleGroupItem>
-                <ToggleGroupItem title="space-between" value="space-between">
-                  <AlignHorizontalSpaceBetween size={18} />
+                <ToggleGroupItem value="space-between">
+                  <Hint label="between">
+                    <AlignHorizontalSpaceBetween size={18} />
+                  </Hint>
                 </ToggleGroupItem>
-                <ToggleGroupItem title="space-around" value="space-around">
-                  <AlignHorizontalSpaceAround size={18} />
+                <ToggleGroupItem value="space-around">
+                  <Hint label="around">
+                    <AlignHorizontalSpaceAround size={18} />
+                  </Hint>
                 </ToggleGroupItem>
-                <ToggleGroupItem title="space-evenly" value="space-evenly">
-                  <AlignHorizontalDistributeCenter size={18} />
+                <ToggleGroupItem value="space-evenly">
+                  <Hint label="evenly">
+                    <AlignHorizontalDistributeCenter size={18} />
+                  </Hint>
                 </ToggleGroupItem>
               </ToggleGroup>
             </div>
 
-            <div className="space-y-1">
+            <div className="space-y-1 text-xs text-muted-foreground">
               <p>Align Items</p>
               <ToggleGroup
                 onValueChange={(value) => {
@@ -122,17 +135,25 @@ export const DisplaySection = ({ onChange: handleChange, state }: Props) => {
                 size="sm"
                 type="single"
               >
-                <ToggleGroupItem title="flex-start" value="flex-start">
-                  <AlignStartHorizontal size={18} />
+                <ToggleGroupItem value="flex-start">
+                  <Hint label="start">
+                    <AlignStartHorizontal size={18} />
+                  </Hint>
                 </ToggleGroupItem>
-                <ToggleGroupItem title="center" value="center">
-                  <AlignCenterHorizontal size={18} />
+                <ToggleGroupItem value="center">
+                  <Hint label="center">
+                    <AlignCenterHorizontal size={18} />
+                  </Hint>
                 </ToggleGroupItem>
-                <ToggleGroupItem title="flex-end" value="flex-end">
-                  <AlignEndHorizontal size={18} />
+                <ToggleGroupItem value="flex-end">
+                  <Hint label="end">
+                    <AlignEndHorizontal size={18} />
+                  </Hint>
                 </ToggleGroupItem>
-                <ToggleGroupItem title="stretch" value="stretch">
-                  <StretchVertical size={18} />
+                <ToggleGroupItem value="stretch">
+                  <Hint label="stretch">
+                    <StretchVertical size={18} />
+                  </Hint>
                 </ToggleGroupItem>
               </ToggleGroup>
             </div>

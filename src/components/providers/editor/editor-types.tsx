@@ -1,3 +1,5 @@
+import { Role } from "@prisma/client";
+
 export const defaultStyles: React.CSSProperties = {
   backgroundPosition: "center",
   objectFit: "cover",
