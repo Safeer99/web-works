@@ -14,6 +14,7 @@ import {
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { FocusEventHandler, useEffect } from "react";
+import { useMediaQuery } from "usehooks-ts";
 import { WorkspacePage } from "@prisma/client";
 
 import { Button } from "@/components/ui/button";
@@ -37,8 +38,21 @@ export const EditorNavigation = ({
   pageDetails,
   workspaceId,
 }: Props) => {
+  const isDesktop = useMediaQuery("(min-width: 1200px)");
+  const isTablet = useMediaQuery("(min-width: 900px)");
+
   const router = useRouter();
   const { state, dispatch } = useEditor();
+
+  useEffect(() => {
+    const value = isDesktop ? "Desktop" : isTablet ? "Tablet" : "Mobile";
+    dispatch({
+      type: "CHANGE_DEVICE",
+      payload: {
+        device: value as DeviceTypes,
+      },
+    });
+  }, [isDesktop, isTablet]);
 
   useEffect(() => {
     dispatch({
@@ -130,6 +144,7 @@ export const EditorNavigation = ({
           <TabsList className="grid w-full grid-cols-3 bg-transparent h-fit">
             <TabsTrigger
               value="Desktop"
+              disabled={!isDesktop}
               className="w-10 h-10 p-2 data-[state=active]:bg-muted"
             >
               <Hint label="Desktop" sideOffset={15}>
@@ -138,6 +153,7 @@ export const EditorNavigation = ({
             </TabsTrigger>
             <TabsTrigger
               value="Tablet"
+              disabled={!isTablet}
               className="w-10 h-10 p-2 data-[state=active]:bg-muted"
             >
               <Hint label="Tablet" sideOffset={15}>
@@ -190,7 +206,6 @@ export const EditorNavigation = ({
             <Redo2 />
           </Button>
         </Hint>
-        {/* //TODO: ADD participants */}
         <Participants />
         {/* <Button onClick={handleOnSave} size="sm">
             Save

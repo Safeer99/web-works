@@ -4,19 +4,19 @@ import clsx from "clsx";
 import { EyeOff } from "lucide-react";
 import { useEffect } from "react";
 import { useEditor } from "@/components/providers/editor";
-import { useSocket } from "@/components/providers/socket-provider";
 import { Button } from "@/components/ui/button";
-import { getWorkspacePageDetails } from "@/lib/workspace-service";
 import { Recursive } from "./editor-components/recursive";
+import { useEditorSocket } from "@/hooks/use-editor-socket";
+import { WorkspacePage } from "@prisma/client";
 
 interface Props {
-  pageId: string;
+  pageDetails: WorkspacePage;
   liveMode?: boolean;
 }
 
-export const Editor = ({ pageId, liveMode }: Props) => {
+export const Editor = ({ pageDetails, liveMode }: Props) => {
   const { state, dispatch } = useEditor();
-  const { socket, isConnected } = useSocket();
+  useEditorSocket();
 
   useEffect(() => {
     if (liveMode) {
@@ -28,20 +28,20 @@ export const Editor = ({ pageId, liveMode }: Props) => {
   }, [liveMode]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const res = await getWorkspacePageDetails(pageId);
-      if (!res) return;
-
-      dispatch({
-        type: "LOAD_DATA",
-        payload: {
-          elements: res.content ? JSON.parse(res.content) : "",
-          withLive: !!liveMode,
-        },
-      });
-    };
-    fetchData();
-  }, [pageId]);
+    dispatch({
+      type: "LOAD_DATA",
+      payload: {
+        elements: pageDetails.content ? JSON.parse(pageDetails.content) : "",
+        withLive: !!liveMode,
+      },
+    });
+    dispatch({
+      type: "SET_PAGE_ID",
+      payload: {
+        pageId: pageDetails.id,
+      },
+    });
+  }, [pageDetails]);
 
   const handleClick = () => {
     dispatch({
@@ -58,7 +58,7 @@ export const Editor = ({ pageId, liveMode }: Props) => {
   return (
     <div
       className={clsx(
-        "use-automation-zoom-in h-full mt-16 mr-[320px] p-4  transition-all rounded-md",
+        "use-automation-zoom-in h-full mt-16 mr-[320px] p-4 transition-all rounded-md",
         {
           "!p-0 !m-0": state.editor.previewMode || state.editor.liveMode,
           "!w-[850px]": state.editor.device === "Tablet",

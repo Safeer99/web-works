@@ -1,11 +1,58 @@
-import { Role } from "@prisma/client";
-
 export const defaultStyles: React.CSSProperties = {
   backgroundPosition: "center",
   objectFit: "cover",
   backgroundRepeat: "no-repeat",
   textAlign: "left",
   opacity: "100%",
+};
+
+export const defaultDetails: Record<string, EditorElement> = {
+  text: {
+    content: { innerText: "Text Element" },
+    id: "",
+    name: "Text",
+    styles: {
+      color: "black",
+      ...defaultStyles,
+    },
+    type: "text",
+  },
+  link: {
+    content: {
+      innerText: "Link Element",
+      href: "#",
+    },
+    id: "",
+    name: "Link",
+    styles: {
+      color: "black",
+      ...defaultStyles,
+    },
+    type: "link",
+  },
+  video: {
+    content: {
+      src: "https://www.youtube.com/embed/URyiCGZNjdI?si=OUamoblqbl6tLsi_",
+    },
+    id: "",
+    name: "Video",
+    styles: {},
+    type: "video",
+  },
+  container: {
+    content: [],
+    id: "",
+    name: "Container",
+    styles: { ...defaultStyles },
+    type: "container",
+  },
+  contactForm: {
+    content: [],
+    id: "",
+    name: "Contact Form",
+    styles: {},
+    type: "contactForm",
+  },
 };
 
 export type EditorBtns =

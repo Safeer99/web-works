@@ -1,14 +1,14 @@
 "use client";
 
 import clsx from "clsx";
-import { Trash } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 import { useEditor } from "@/components/providers/editor";
 import { EditorElement } from "@/components/providers/editor/editor-types";
-import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import Link from "next/link";
+import { ComponentBadge, ComponentDeleteBadge } from "./component-badge";
+import { useDeleteElement } from "@/hooks/use-editor-socket";
 
 interface Props {
   element: EditorElement;
@@ -19,17 +19,12 @@ export const LinkComponent = ({ element }: Props) => {
   const [isEditMode, setIsEditMode] = useState(false);
   const { state, dispatch } = useEditor();
 
+  const deleteElement = useDeleteElement();
+
   if (Array.isArray(element.content)) return;
 
-  const styles = element.styles;
+  const { styles, name } = element;
   const value = element.content.innerText;
-
-  const handleDeleteElement = () => {
-    dispatch({
-      type: "DELETE_ELEMENT",
-      payload: { elementDetails: element },
-    });
-  };
 
   const handleOnClickBody = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -54,27 +49,24 @@ export const LinkComponent = ({ element }: Props) => {
   return (
     <div
       style={styles}
-      className={clsx(
-        "p-[2px] m-[5px] w-full relative text-[16px] transition-all",
-        {
-          "!border-blue-500 !border-solid":
-            state.editor.selectedElement.id === element.id,
-          "!border-dashed border-[1px] border-slate-300":
-            !state.editor.liveMode,
-        }
-      )}
+      className={clsx("p-[2px] w-full relative text-[16px] transition-all", {
+        "!border-blue-500 !border-solid":
+          state.editor.selectedElement.id === element.id,
+        "!border-dashed border-[1px] border-slate-300": !state.editor.liveMode,
+      })}
       onDoubleClick={(e) => {
         e.stopPropagation();
         setIsEditMode(true);
       }}
       onClick={handleOnClickBody}
     >
-      {state.editor.selectedElement.id === element.id &&
-        !state.editor.liveMode && (
-          <Badge className="absolute -top-[23px] -left-[1px] rounded-none rounded-t-lg">
-            {state.editor.selectedElement.name}
-          </Badge>
-        )}
+      <ComponentBadge
+        label={name}
+        visible={
+          state.editor.selectedElement.id === element.id &&
+          !state.editor.liveMode
+        }
+      />
       {(state.editor.previewMode || state.editor.liveMode || !isEditMode) && (
         <Link href={element.content.href || "#"} className="whitespace-pre">
           {value}
@@ -104,16 +96,13 @@ export const LinkComponent = ({ element }: Props) => {
           }}
         />
       )}
-      {state.editor.selectedElement.id === element.id &&
-        !state.editor.liveMode && (
-          <div className="absolute bg-red-600 px-2.5 py-1 text-xs font-bold -top-[25px] -right-[1px] rounded-none rounded-t-lg !text-white">
-            <Trash
-              className="cursor-pointer"
-              size={16}
-              onClick={handleDeleteElement}
-            />
-          </div>
-        )}
+      <ComponentDeleteBadge
+        onClick={deleteElement}
+        visible={
+          state.editor.selectedElement.id === element.id &&
+          !state.editor.liveMode
+        }
+      />
     </div>
   );
 };

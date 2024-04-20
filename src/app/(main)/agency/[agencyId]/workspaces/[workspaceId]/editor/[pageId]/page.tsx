@@ -44,7 +44,7 @@ const EditorPage = async ({ params }: Props) => {
               pageDetails={pageDetails}
             />
             <div className="flex justify-center h-full overflow-y-scroll scrollbar-hidden">
-              <Editor pageId={params.pageId} />
+              <Editor pageDetails={pageDetails} />
             </div>
             <EditorSidebar agencyId={params.agencyId} />
           </Wrapper>

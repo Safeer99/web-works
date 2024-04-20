@@ -1,10 +1,10 @@
 "use client";
 
-import { useSocket } from "@/components/providers/socket-provider";
+import clsx from "clsx";
 import { Badge } from "@/components/ui/badge";
+import { useSocket } from "@/components/providers/socket-provider";
 import { UserAvatar } from "@/components/user-avatar";
 import { idToColor } from "@/lib/utils";
-import clsx from "clsx";
 
 const MAX_SHOWN_USERS = 1;
 

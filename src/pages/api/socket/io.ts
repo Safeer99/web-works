@@ -3,7 +3,6 @@ import { NextApiRequest } from "next";
 import { Server as ServerIO } from "socket.io";
 
 import { NextApiResponseServerIo } from "@/lib/types";
-import { UserType } from "@/components/providers/users-provider";
 
 export const config = {
   api: {
@@ -11,7 +10,7 @@ export const config = {
   },
 };
 
-const userSocketMap: Record<string, UserType> = {};
+const userSocketMap: Record<string, any> = {};
 
 const ioHandler = (req: NextApiRequest, res: NextApiResponseServerIo) => {
   if (!res.socket.server.io) {
@@ -45,8 +44,20 @@ const ioHandler = (req: NextApiRequest, res: NextApiResponseServerIo) => {
         });
       });
 
+      socket.on("sync-code", (socketId, data) => {
+        socket.to(socketId).emit("sync-code", data);
+      });
+
+      // socket.on("select-element", ({ roomId, data }) => {
+      //   socket.to(roomId).emit("receive-select-element", data);
+      // });
+
       socket.on("send-changes", (roomId, data) => {
         socket.to(roomId).emit("receive-changes", data);
+      });
+
+      socket.on("delete-element", (roomId, data) => {
+        socket.to(roomId).emit("delete-element", data);
       });
 
       socket.on("disconnecting", () => {

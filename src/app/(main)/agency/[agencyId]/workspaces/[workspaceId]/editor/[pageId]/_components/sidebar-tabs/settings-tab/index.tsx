@@ -7,17 +7,18 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { TooltipProvider } from "@/components/ui/tooltip";
 
 import { DimensionsSection } from "./dimensions";
 import { TypographySection } from "./typography";
 import { DecorationsSection } from "./decorations";
 import { DisplaySection } from "./display";
 import { CustomSection } from "./custom";
+import { useUpdateElement } from "@/hooks/use-editor-socket";
 
 export const SettingsTab = () => {
-  const { state, dispatch } = useEditor();
+  const { state } = useEditor();
   const [debounce, setValue] = useDebounceValue("", 2000);
+  const updateElement = useUpdateElement();
 
   const handleChangeCustomValues = (e: any) => {
     const settingProperty = e.target.id;
@@ -26,7 +27,7 @@ export const SettingsTab = () => {
       [settingProperty]: value,
     };
 
-    dispatch({
+    updateElement({
       type: "UPDATE_ELEMENT",
       payload: {
         elementDetails: {
@@ -46,7 +47,7 @@ export const SettingsTab = () => {
     const styleObject = {
       [styleSettings]: value,
     };
-    dispatch({
+    updateElement({
       type: "UPDATE_ELEMENT",
       payload: {
         elementDetails: {
