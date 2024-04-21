@@ -3,6 +3,7 @@ import { TextComponent } from "./text";
 import { Container } from "./container";
 import { LinkComponent } from "./link";
 import { VideoComponent } from "./video";
+import { ImageComponent } from "./image";
 
 interface Props {
   element: EditorElement;
@@ -16,6 +17,8 @@ export const Recursive = ({ element }: Props) => {
       return <Container element={element} />;
     case "video":
       return <VideoComponent element={element} />;
+    case "image":
+      return <ImageComponent element={element} />;
     case "contactForm":
       return; //<ContactFormComponent element={element} />;
     case "2Col":

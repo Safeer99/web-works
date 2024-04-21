@@ -1,5 +1,12 @@
 import { EditorBtns } from "@/components/providers/editor/editor-types";
-import { Contact2Icon, Link2Icon, TypeIcon, Youtube } from "lucide-react";
+import {
+  BoxSelect,
+  Contact2Icon,
+  Image as ImageIcon,
+  Link2Icon,
+  TypeIcon,
+  Youtube,
+} from "lucide-react";
 
 export const TextPlaceholder = () => {
   const handleDragStart = (e: React.DragEvent, type: EditorBtns) => {
@@ -11,9 +18,12 @@ export const TextPlaceholder = () => {
     <div
       draggable
       onDragStart={(e) => handleDragStart(e, "text")}
-      className="h-14 w-14 bg-muted rounded-lg flex items-center justify-center cursor-grab"
+      className="h-14 w-14 hover:bg-muted rounded-lg flex items-center justify-center border-2 hover:border-primary cursor-grab transition-all group/placeholder"
     >
-      <TypeIcon size={40} className="text-muted-foreground" />
+      <TypeIcon
+        size={30}
+        className="text-muted-foreground group-hover/placeholder:text-white"
+      />
     </div>
   );
 };
@@ -27,9 +37,12 @@ export const ContainerPlaceholder = () => {
     <div
       draggable
       onDragStart={(e) => handleDragStart(e, "container")}
-      className=" h-14 w-14 bg-muted/70 rounded-lg p-2 flex flex-row gap-[4px] cursor-grab"
+      className="h-14 w-14 hover:bg-muted/70 rounded-lg flex items-center justify-center border-2 hover:border-primary cursor-grab transition-all group/placeholder"
     >
-      <div className="border-dashed border-[1px] h-full rounded-sm bg-muted border-muted-foreground/50 w-full" />
+      <BoxSelect
+        size={30}
+        className="text-muted-foreground group-hover/placeholder:text-white"
+      />
     </div>
   );
 };
@@ -43,26 +56,12 @@ export const LinkPlaceholder = () => {
     <div
       draggable
       onDragStart={(e) => handleDragStart(e, "link")}
-      className=" h-14 w-14 bg-muted rounded-lg flex items-center justify-center cursor-grab"
+      className=" h-14 w-14 hover:bg-muted rounded-lg flex items-center justify-center border-2 hover:border-primary cursor-grab transition-all group/placeholder"
     >
-      <Link2Icon size={40} className="text-muted-foreground" />
-    </div>
-  );
-};
-
-export const TwoColumnsPlaceholder = () => {
-  const handleDragStart = (e: React.DragEvent, type: EditorBtns) => {
-    if (type === null) return;
-    e.dataTransfer.setData("componentType", type);
-  };
-  return (
-    <div
-      draggable
-      onDragStart={(e) => handleDragStart(e, "2Col")}
-      className=" h-14 w-14 bg-muted/70 rounded-lg p-2 flex flex-row gap-[4px] cursor-grab"
-    >
-      <div className="border-dashed border-[1px] h-full rounded-sm bg-muted border-muted-foreground/50 w-full"></div>
-      <div className="border-dashed border-[1px] h-full rounded-sm bg-muted border-muted-foreground/50 w-full"></div>
+      <Link2Icon
+        size={30}
+        className="text-muted-foreground group-hover/placeholder:text-white"
+      />
     </div>
   );
 };
@@ -76,9 +75,31 @@ export const VideoPlaceholder = () => {
     <div
       draggable
       onDragStart={(e) => handleDragStart(e, "video")}
-      className="h-14 w-14 bg-muted rounded-lg flex items-center justify-center cursor-grab"
+      className="h-14 w-14 hover:bg-muted rounded-lg flex items-center justify-center border-2 hover:border-primary cursor-grab transition-all group/placeholder"
     >
-      <Youtube size={40} className="text-muted-foreground" />
+      <Youtube
+        size={30}
+        className="text-muted-foreground group-hover/placeholder:text-white"
+      />
+    </div>
+  );
+};
+
+export const ImagePlaceholder = () => {
+  const handleDragStart = (e: React.DragEvent, type: EditorBtns) => {
+    if (type === null) return;
+    e.dataTransfer.setData("componentType", type);
+  };
+  return (
+    <div
+      draggable
+      onDragStart={(e) => handleDragStart(e, "image")}
+      className="h-14 w-14 hover:bg-muted rounded-lg flex items-center justify-center border-2 hover:border-primary cursor-grab transition-all group/placeholder"
+    >
+      <ImageIcon
+        size={30}
+        className="text-muted-foreground group-hover/placeholder:text-white"
+      />
     </div>
   );
 };
@@ -92,9 +113,12 @@ export const ContactFormComponentPlaceholder = () => {
     <div
       draggable
       onDragStart={(e) => handleDragStart(e, "contactForm")}
-      className=" h-14 w-14 bg-muted rounded-lg flex items-center justify-center cursor-grab"
+      className=" h-14 w-14 hover:bg-muted rounded-lg flex items-center justify-center border-2 hover:border-primary cursor-grab transition-all group/placeholder"
     >
-      <Contact2Icon size={40} className="text-muted-foreground" />
+      <Contact2Icon
+        size={30}
+        className="text-muted-foreground group-hover/placeholder:text-white"
+      />
     </div>
   );
 };

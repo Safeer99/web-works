@@ -38,8 +38,8 @@ export const EditorSidebar = ({ agencyId }: Props) => {
               {state.editor.selectedElement.id ? (
                 <SettingsTab />
               ) : (
-                <div className="w-full p-4 mt-20 grid place-items-center text-center text-sm text-muted-foreground">
-                  Select a component on canvas to customize it.
+                <div className="p-6 mt-20 text-center text-sm text-muted-foreground">
+                  Select a component to customize it.
                 </div>
               )}
             </TabsContent>
@@ -49,7 +49,14 @@ export const EditorSidebar = ({ agencyId }: Props) => {
             </TabsContent>
 
             <TabsContent value="Layers">
-              <LayersTab elements={state.editor.elements} />
+              {Array.isArray(state.editor.elements[0].content) &&
+              state.editor.elements[0].content.length > 0 ? (
+                <LayersTab elements={state.editor.elements[0].content} />
+              ) : (
+                <div className="text-muted-foreground text-sm text-center mt-40 p-4">
+                  No components to show.
+                </div>
+              )}
             </TabsContent>
 
             <TabsContent value="Components">

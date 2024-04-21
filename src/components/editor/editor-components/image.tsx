@@ -5,12 +5,13 @@ import { useDeleteElement } from "@/hooks/use-editor-socket";
 import { EditorElement } from "@/components/providers/editor/editor-types";
 import { useEditor } from "@/components/providers/editor";
 import { ComponentBadge, ComponentDeleteBadge } from "./component-badge";
+import Image from "next/image";
 
 type Props = {
   element: EditorElement;
 };
 
-export const VideoComponent = ({ element }: Props) => {
+export const ImageComponent = ({ element }: Props) => {
   const { id, content, name, styles } = element;
   const { dispatch, state } = useEditor();
 
@@ -46,12 +47,11 @@ export const VideoComponent = ({ element }: Props) => {
         className="p-4 aspect-video relative flex items-center justify-center"
       >
         {!Array.isArray(content) && (
-          <iframe
-            width={"100%"}
-            height={"100%"}
-            src={content.src}
-            title="YouTube video player"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          <Image
+            alt={name}
+            width={Number(styles.width) || 100}
+            height={Number(styles.height) || 100}
+            src={content.src || "/canvas-placeholder.png"}
           />
         )}
       </div>

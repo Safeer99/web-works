@@ -39,6 +39,15 @@ export const defaultDetails: Record<string, EditorElement> = {
     styles: {},
     type: "video",
   },
+  image: {
+    content: {
+      src: "/canvas-placeholder.png",
+    },
+    id: "",
+    name: "Image",
+    styles: {},
+    type: "image",
+  },
   container: {
     content: [],
     id: "",
