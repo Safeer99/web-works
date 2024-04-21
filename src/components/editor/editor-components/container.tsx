@@ -2,6 +2,8 @@
 
 import clsx from "clsx";
 import { v4 } from "uuid";
+
+import { useDeleteElement, useUpdateElement } from "@/hooks/use-editor-socket";
 import { useEditor } from "@/components/providers/editor";
 import {
   EditorBtns,
@@ -10,7 +12,6 @@ import {
 } from "@/components/providers/editor/editor-types";
 import { Recursive } from "./recursive";
 import { ComponentBadge, ComponentDeleteBadge } from "./component-badge";
-import { useDeleteElement, useUpdateElement } from "@/hooks/use-editor-socket";
 
 interface Props {
   element: EditorElement;

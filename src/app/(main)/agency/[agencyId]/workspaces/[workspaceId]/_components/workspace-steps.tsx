@@ -55,7 +55,7 @@ export const WorkspaceSteps = ({
       setClickedPage(pages[0] || undefined);
     }
     setPagesState(pages);
-  }, [pages]);
+  }, [pages, pagesState.length]);
 
   const onDragEnd = (dropResult: DropResult) => {
     const { destination, source } = dropResult;

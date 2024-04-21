@@ -7,7 +7,7 @@ interface Props {
   level: number;
   expanded: boolean;
   active: boolean;
-  children: boolean;
+  hasChildren: boolean;
   handleExpand: () => void;
   onClick: () => void;
 }
@@ -18,7 +18,7 @@ export const LayerItem = ({
   handleExpand,
   expanded,
   active,
-  children,
+  hasChildren,
   onClick,
 }: Props) => {
   const ChevronIcon = expanded ? ChevronDown : ChevronRight;
@@ -36,13 +36,13 @@ export const LayerItem = ({
         size="icon"
         variant="ghost"
         className="h-full w-auto hover:bg-transparent"
-        disabled={!children}
+        disabled={!hasChildren}
         onClick={handleExpand}
       >
         <ChevronIcon
           className={cn(
             "h-4 w-4 shrink-0 text-muted-foreground/50",
-            !children && "opacity-0"
+            !hasChildren && "opacity-0"
           )}
         />
       </Button>

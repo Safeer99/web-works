@@ -179,6 +179,7 @@ export const editorReducer = (
         },
       };
       return clickedState;
+
     case "CHANGE_DEVICE":
       const changedDeviceState = {
         ...state,
@@ -254,27 +255,13 @@ export const editorReducer = (
       };
 
     case "SET_PAGE_ID":
-      const { pageId } = action.payload;
-      const updatedEditorStateWithPageId = {
-        ...state.editor,
-        pageId,
-      };
-
-      const updatedHistoryWithPageId = [
-        ...state.history.history.slice(0, state.history.currentIndex + 1),
-        { ...updatedEditorStateWithPageId },
-      ];
-
-      const pageIdState = {
+      return {
         ...state,
-        editor: updatedEditorStateWithPageId,
-        history: {
-          ...state.history,
-          history: updatedHistoryWithPageId,
-          currentIndex: updatedHistoryWithPageId.length - 1,
+        editor: {
+          ...state.editor,
+          pageId: action.payload.pageId,
         },
       };
-      return pageIdState;
 
     default:
       return state;

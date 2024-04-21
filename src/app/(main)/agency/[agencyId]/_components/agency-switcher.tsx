@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { Agency, Associate, Role } from "@prisma/client";
-import { Building2, Check, ChevronsUpDown, PlusCircle } from "lucide-react";
+import { Building2, Check, ChevronsUpDown, Plus } from "lucide-react";
 
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Button } from "@/components/ui/button";
@@ -47,12 +47,12 @@ export const AgencySwitcher = ({ data }: Props) => {
     .map((item) => item.agency);
 
   const currentAgency = data.find(
-    (item) => item.agencyId === params.agencyId
+    (item) => item.agencyId === params?.agencyId
   )?.agency;
 
   if (!currentAgency) return;
 
-  const onAccounSelect = (id: string) => {
+  const onAccountSelect = (id: string) => {
     if (currentAgency.id === id) return;
     setOpen(false);
     router.push(`/agency/${id}`);
@@ -100,7 +100,7 @@ export const AgencySwitcher = ({ data }: Props) => {
                   {agencies.map((agency) => (
                     <CommandItem
                       key={agency.id}
-                      onSelect={() => onAccounSelect(agency.id)}
+                      onSelect={() => onAccountSelect(agency.id)}
                       className="text-sm gap-2 px-4 cursor-pointer"
                     >
                       <Building2 />
@@ -128,7 +128,7 @@ export const AgencySwitcher = ({ data }: Props) => {
                       {associatedAgencies.map((agency) => (
                         <CommandItem
                           key={agency.id}
-                          onSelect={() => onAccounSelect(agency.id)}
+                          onSelect={() => onAccountSelect(agency.id)}
                           className="text-sm gap-2 px-4 cursor-pointer"
                         >
                           <Building2 />
@@ -167,7 +167,7 @@ export const AgencySwitcher = ({ data }: Props) => {
                 }}
                 className="mt-4 mb-2 mx-1"
               >
-                <PlusCircle className="mr-2 h-5 w-5" />
+                <Plus className="mr-2 h-5 w-5" />
                 Create agency
               </Button>
             </Command>

@@ -52,7 +52,7 @@ export const EditorNavigation = ({
         device: value as DeviceTypes,
       },
     });
-  }, [isDesktop, isTablet]);
+  }, [isDesktop, isTablet, dispatch]);
 
   useEffect(() => {
     dispatch({
@@ -61,7 +61,7 @@ export const EditorNavigation = ({
         pageId: pageDetails.id,
       },
     });
-  }, [pageDetails]);
+  }, [pageDetails, dispatch]);
 
   const handleOnBlurTitleChange: FocusEventHandler<HTMLInputElement> = async (
     event

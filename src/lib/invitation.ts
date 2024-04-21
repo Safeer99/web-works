@@ -1,22 +1,10 @@
 "use server";
 
+import { redirect } from "next/navigation";
 import { Role } from "@prisma/client";
 import { db } from "@/lib/db";
 import { getSelf } from "@/lib/auth-service";
-import { Resend } from "resend";
-import { redirect } from "next/navigation";
-
-const resend = new Resend(process.env.RESEND_API_KEY);
-
-const sendInvitaionMail = async (email: string, agency: string) => {
-  const confirmLink = `${process.env.NEXT_PUBLIC_URL}invite?agency=${agency}`;
-  await resend.emails.send({
-    from: "onboarding@resend.dev",
-    to: email,
-    subject: "Invitation of joining an agency",
-    html: `<p>Click <a href="${confirmLink}">here</a> for more information.</p>`,
-  });
-};
+import { sendInvitaionMail } from "@/lib/mail";
 
 export const getInvitationByIdAndEmail = async ({
   agencyId,
@@ -62,7 +50,7 @@ export const sendInvitation = async (
     data: { email, agencyId, role, expires },
   });
 
-  sendInvitaionMail(email, res.agencyId);
+  await sendInvitaionMail(email, res.agencyId);
 
   return res;
 };

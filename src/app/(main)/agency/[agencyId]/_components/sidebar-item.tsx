@@ -16,11 +16,11 @@ export const SidebarItem = ({ href, icon: Icon, label }: SidebarItemProps) => {
   const params = useParams();
 
   const isActive =
-    (pathname.endsWith(`${params.agencyId}`) && href === "/") ||
-    (pathname.includes(href) && href !== "/");
+    (pathname?.endsWith(`${params?.agencyId}`) && href === "/") ||
+    (pathname?.includes(href) && href !== "/");
 
   const onClick = () => {
-    router.push(`/agency/${params.agencyId}/${href}`);
+    router.push(`/agency/${params?.agencyId}/${href}`);
   };
 
   return (

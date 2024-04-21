@@ -25,7 +25,7 @@ export const Editor = ({ pageDetails, liveMode }: Props) => {
         payload: { value: true },
       });
     }
-  }, [liveMode]);
+  }, [liveMode, dispatch]);
 
   useEffect(() => {
     dispatch({
@@ -41,7 +41,7 @@ export const Editor = ({ pageDetails, liveMode }: Props) => {
         pageId: pageDetails.id,
       },
     });
-  }, [pageDetails]);
+  }, [pageDetails, dispatch, liveMode]);
 
   const handleClick = () => {
     dispatch({

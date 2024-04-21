@@ -41,7 +41,7 @@ export const CellActions: React.FC<CellActionsProps> = ({ rowData }) => {
   const modal = useModal();
   const router = useRouter();
   const params = useParams();
-  const { role } = useCurrentUser(params.agencyId as string);
+  const { role } = useCurrentUser(params?.agencyId as string);
 
   const [isLoading, startTransition] = useTransition();
   if (!rowData) return;
@@ -88,9 +88,7 @@ export const CellActions: React.FC<CellActionsProps> = ({ rowData }) => {
                       <Modal
                         description="You can change user permissions from here."
                         title="Edit User Details"
-                      >
-                        // TODO: create a permissions form
-                      </Modal>
+                      ></Modal>
                     );
                   }}
                 >

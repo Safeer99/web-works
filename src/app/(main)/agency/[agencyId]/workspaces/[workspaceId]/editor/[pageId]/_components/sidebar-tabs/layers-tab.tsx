@@ -37,7 +37,7 @@ export const LayersTab = ({ elements, level = 0 }: Props) => {
             expanded={expanded[item.id]}
             level={level}
             active={state.editor.selectedElement.id === item.id}
-            children={Array.isArray(item.content) && !!item.content.length}
+            hasChildren={Array.isArray(item.content) && !!item.content.length}
             onClick={() => handleOnClick(item.id)}
             handleExpand={() => handleExpand(item.id)}
           />

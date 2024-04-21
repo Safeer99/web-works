@@ -74,7 +74,7 @@ const SocketProvider = ({
       });
     };
     fetchData();
-  }, [agencyId]);
+  }, [agencyId, isLiveMode]);
 
   useEffect(() => {
     if (isLiveMode || self == null) return;
@@ -100,7 +100,7 @@ const SocketProvider = ({
     return () => {
       socketInstance.disconnect();
     };
-  }, [self, roomId]);
+  }, [self, roomId, isLiveMode]);
 
   return (
     <SocketContext.Provider
