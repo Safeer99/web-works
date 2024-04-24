@@ -29,8 +29,8 @@ const routes = [
   },
   {
     icon: PanelsTopLeft,
-    label: "Pipelines",
-    href: "/pipelines",
+    label: "Kanban",
+    href: "/kanban",
   },
   {
     icon: Users,

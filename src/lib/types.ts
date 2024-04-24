@@ -1,4 +1,4 @@
-import { Role } from "@prisma/client";
+import { Lane, Role, Tag, Ticket, User } from "@prisma/client";
 import * as z from "zod";
 import { NextApiResponse } from "next";
 import { Server as NetServer, Socket } from "net";
@@ -10,6 +10,15 @@ export type NextApiResponseServerIo = NextApiResponse & {
       io: SocketIOServer;
     };
   };
+};
+
+export type TicketAndTags = Ticket & {
+  tags: Tag[];
+  assigned: User | null;
+};
+
+export type LaneDetailsType = Lane & {
+  tickets: TicketAndTags[];
 };
 
 export const AgencyFormSchema = z.object({
@@ -39,6 +48,19 @@ export const WorkspacePageSchema = z.object({
 export const mediaFormSchema = z.object({
   link: z.string().min(1, { message: "Media File is required" }),
   name: z.string().min(1, { message: "Name is required" }),
+});
+
+export const BoardFormSchema = z.object({
+  name: z.string().min(1),
+});
+
+export const LaneFormSchema = z.object({
+  name: z.string().min(1),
+});
+
+export const TicketFormSchema = z.object({
+  name: z.string().min(1),
+  description: z.string().optional(),
 });
 
 export type MembersTable = {

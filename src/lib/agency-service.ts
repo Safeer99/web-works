@@ -37,6 +37,17 @@ export const upsertAgency = async ({ agencyId, values }: UpsertAgencyProps) => {
 
 export const deleteAgency = async (id: string) => {};
 
+export const getAllTeamMembers = async (id: string) => {
+  const members = await db.associate.findMany({
+    where: {
+      agencyId: id,
+    },
+    include: { user: true },
+  });
+
+  return members;
+};
+
 export const deleteAssociatedAccount = async (id: string) => {
   const res = await db.associate.delete({
     where: { id },

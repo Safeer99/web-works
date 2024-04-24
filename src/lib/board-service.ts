@@ -1,0 +1,200 @@
+"use server";
+
+import * as z from "zod";
+import { db } from "./db";
+import { BoardFormSchema } from "./types";
+import { Lane, Prisma, Tag, Ticket } from "@prisma/client";
+import { v4 } from "uuid";
+
+export const getBoardDetails = async (boardId: string) => {
+  const res = await db.board.findUnique({
+    where: { id: boardId },
+  });
+
+  return res;
+};
+
+export const getLanesWithTicketAndTags = async (boardId: string) => {
+  const res = await db.lane.findMany({
+    where: {
+      boardId,
+    },
+    orderBy: { order: "asc" },
+    include: {
+      tickets: {
+        orderBy: {
+          order: "asc",
+        },
+        include: {
+          tags: true,
+          assigned: true,
+        },
+      },
+    },
+  });
+
+  return res;
+};
+
+interface UpsertBoardProps {
+  id: string;
+  agencyId: string;
+  values: z.infer<typeof BoardFormSchema>;
+}
+
+export const upsertBoard = async ({
+  agencyId,
+  id,
+  values,
+}: UpsertBoardProps) => {
+  const res = await db.board.upsert({
+    where: { id },
+    update: values,
+    create: {
+      ...values,
+      id,
+      agencyId,
+    },
+  });
+
+  if (!res.id) throw new Error("Something went wrong!");
+
+  return res;
+};
+
+export const deleteBoard = async (id: string) => {
+  await db.board.delete({
+    where: { id },
+  });
+};
+
+export const updateLanesOrder = async (lanes: Lane[]) => {
+  try {
+    const updateTrans = lanes.map((lane) =>
+      db.lane.update({
+        where: { id: lane.id },
+        data: {
+          order: lane.order,
+        },
+      })
+    );
+
+    await db.$transaction(updateTrans);
+  } catch (error) {
+    console.log("ERROR UPDATE LANES ORDER", error);
+  }
+};
+
+export const updateTicketsOrder = async (tickets: Ticket[]) => {
+  try {
+    const updateTrans = tickets.map((ticket) =>
+      db.ticket.update({
+        where: { id: ticket.id },
+        data: {
+          order: ticket.order,
+          laneId: ticket.laneId,
+        },
+      })
+    );
+
+    await db.$transaction(updateTrans);
+  } catch (error) {
+    console.log("ERROR UPDATE TICKETS ORDER", error);
+  }
+};
+
+export const upsertLane = async (lane: Prisma.LaneUncheckedCreateInput) => {
+  let order: number;
+
+  if (!lane.order) {
+    const lanes = await db.lane.findMany({
+      where: {
+        boardId: lane.boardId,
+      },
+    });
+
+    order = lanes.length;
+  } else {
+    order = lane.order;
+  }
+
+  const response = await db.lane.upsert({
+    where: { id: lane.id || v4() },
+    update: lane,
+    create: { ...lane, order },
+  });
+
+  return response;
+};
+
+export const deleteLane = async (laneId: string) => {
+  const res = await db.lane.delete({ where: { id: laneId } });
+  return res;
+};
+
+export const upsertTicket = async (
+  ticket: Prisma.TicketUncheckedCreateInput,
+  tags: Tag[]
+) => {
+  let order: number;
+  if (!ticket.order) {
+    const tickets = await db.ticket.findMany({
+      where: {
+        laneId: ticket.laneId,
+      },
+    });
+    order = tickets.length;
+  } else {
+    order = ticket.order;
+  }
+
+  const res = await db.ticket.upsert({
+    where: {
+      id: ticket.id || v4(),
+    },
+    update: { ...ticket, tags: { set: tags } },
+    create: { ...ticket, tags: { connect: tags }, order },
+    include: {
+      assigned: true,
+      tags: true,
+      lane: true,
+    },
+  });
+
+  return res;
+};
+
+export const deleteTicket = async (ticketId: string) => {
+  const response = await db.ticket.delete({
+    where: {
+      id: ticketId,
+    },
+  });
+
+  return response;
+};
+
+export const upsertTag = async (
+  agencyId: string,
+  tag: Prisma.TagUncheckedCreateInput
+) => {
+  const response = await db.tag.upsert({
+    where: { id: tag.id || v4(), agencyId },
+    update: tag,
+    create: { ...tag, agencyId },
+  });
+
+  return response;
+};
+
+export const getTagsForAgency = async (agencyId: string) => {
+  const response = await db.tag.findMany({
+    where: { agencyId },
+  });
+  return response;
+};
+
+export const deleteTag = async (tagId: string) => {
+  const response = await db.tag.delete({ where: { id: tagId } });
+  return response;
+};

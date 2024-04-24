@@ -19,6 +19,20 @@ body,:root {
   -ms-overflow-style: none;
 }
 
+.custom-scrollbar::-webkit-scrollbar{
+  width: 8px;
+  height: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track{
+  background: rgb(23, 32, 46);
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb{
+  background: rgb(102, 26, 173);
+  border-radius: 5px;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
