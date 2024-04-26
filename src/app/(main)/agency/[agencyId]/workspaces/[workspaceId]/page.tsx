@@ -24,7 +24,7 @@ const WorkspaceIdPage = async ({ params }: Props) => {
     <div>
       <Link
         href={`/agency/${params.agencyId}/workspaces`}
-        className="flex items-center text-sm hover:opacity-75 transition mb-6"
+        className="w-fit flex items-center text-sm hover:opacity-75 transition mb-6"
       >
         <ArrowLeft className="h-4 w-4 mr-2" />
         Back to workspaces list
