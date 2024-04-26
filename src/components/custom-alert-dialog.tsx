@@ -5,7 +5,6 @@ import {
   AlertDialogDescription,
   AlertDialogContent,
   AlertDialogTitle,
-  AlertDialogTrigger,
   AlertDialogHeader,
   AlertDialogFooter,
   AlertDialogCancel,
@@ -15,22 +14,34 @@ import {
 interface Props {
   children: React.ReactNode;
   onConfirm: () => void;
+  title?: string;
+  description?: string;
 }
 
-export const ConfirmDialog = ({ children, onConfirm }: Props) => {
+export const CustomAlertDialog = ({
+  children,
+  onConfirm,
+  title,
+  description,
+}: Props) => {
   return (
     <AlertDialog>
-      <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
+      {children}
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+          <AlertDialogTitle>{title ? title : "Are you sure?"}</AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone.
+            {description ? description : "This action cannot be undone."}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={onConfirm}>Continue</AlertDialogAction>
+          <AlertDialogAction
+            className="bg-destructive hover:bg-destructive/80"
+            onClick={onConfirm}
+          >
+            Continue
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

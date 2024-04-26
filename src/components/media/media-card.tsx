@@ -4,8 +4,10 @@ import Image from "next/image";
 import { useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Copy, MoreHorizontal, Trash } from "lucide-react";
+import { toast } from "sonner";
 import { Media } from "@prisma/client";
 
+import { deleteMedia } from "@/lib/media-service";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,39 +16,32 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { toast } from "sonner";
-import { deleteMedia } from "@/lib/media-service";
+import { AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { CustomAlertDialog } from "../custom-alert-dialog";
 
 type Props = { file: Media };
 
 export const MediaCard = ({ file }: Props) => {
   const router = useRouter();
-  const [loading, startTransition] = useTransition();
+  const [isLoading, startTransition] = useTransition();
 
   const handleDelete = () => {
     startTransition(() => {
       deleteMedia(file.id)
         .then(() => {
-          toast.success("Successfully deleted the file");
+          toast.success("Successfully deleted the file.");
           router.refresh();
         })
-        .catch(() => toast.error("Something went wrong!"));
+        .catch(() => toast.error("Could not delete the file!!!"));
     });
   };
 
   return (
-    <AlertDialog>
+    <CustomAlertDialog
+      onConfirm={handleDelete}
+      description="Are you sure you want to delete this file? All accounts using this
+    file will no longer have access to it!"
+    >
       <DropdownMenu>
         <article className="border w-full rounded-lg bg-slate-900">
           <div className="relative w-full h-40">
@@ -63,7 +58,7 @@ export const MediaCard = ({ file }: Props) => {
             </p>
             <p>{file.name}</p>
             <div className="absolute top-4 right-4 p-[1px] cursor-pointer ">
-              <DropdownMenuTrigger>
+              <DropdownMenuTrigger disabled={isLoading}>
                 <MoreHorizontal />
               </DropdownMenuTrigger>
             </div>
@@ -89,27 +84,6 @@ export const MediaCard = ({ file }: Props) => {
           </DropdownMenuContent>
         </article>
       </DropdownMenu>
-      <AlertDialogContent className="z-[200]">
-        <AlertDialogHeader>
-          <AlertDialogTitle className="text-left">
-            Are you absolutely sure?
-          </AlertDialogTitle>
-          <AlertDialogDescription className="text-left">
-            Are you sure you want to delete this file? All subaccount using this
-            file will no longer have access to it!
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter className="flex items-center gap-2">
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction
-            disabled={loading}
-            className="bg-destructive hover:bg-destructive"
-            onClick={handleDelete}
-          >
-            Delete
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+    </CustomAlertDialog>
   );
 };

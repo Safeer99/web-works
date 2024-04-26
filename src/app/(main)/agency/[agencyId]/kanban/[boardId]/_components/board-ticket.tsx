@@ -1,23 +1,14 @@
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { Draggable } from "@hello-pangea/dnd";
 import { Edit, MoreHorizontalIcon, Trash, User2 } from "lucide-react";
+import { format } from "date-fns";
+import { Draggable } from "@hello-pangea/dnd";
 
 import { useModal } from "@/hooks/use-modals";
 import { TicketAndTags } from "@/lib/types";
 import { deleteTicket } from "@/lib/board-service";
 
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+import { AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Card,
@@ -35,9 +26,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { TicketForm } from "@/components/forms/ticket-form";
+import { CustomAlertDialog } from "@/components/custom-alert-dialog";
 import { Modal } from "@/components/modal";
 import { TagComponent } from "@/components/tag";
-import { format } from "date-fns";
 
 interface TicketProps {
   ticket: TicketAndTags;
@@ -81,9 +72,13 @@ export const BoardTicket = ({ ticket, index, agencyId }: TicketProps) => {
             {...provided.dragHandleProps}
             ref={provided.innerRef}
           >
-            <AlertDialog>
+            <CustomAlertDialog
+              onConfirm={handleDeleteTicket}
+              description="This action cannot be undone. This will permanently delete
+                      the ticket and remove it from our servers."
+            >
               <DropdownMenu>
-                <Card className="my-4 dark:bg-slate-900 bg-slate-100 shadow-none transition-all">
+                <Card className="my-4 dark:bg-slate-900 bg-slate-100 shadow-md transition-all">
                   <CardHeader className="p-[12px]">
                     <CardTitle className="flex items-center justify-between">
                       <span className="text-lg w-full">{ticket.name}</span>
@@ -151,28 +146,8 @@ export const BoardTicket = ({ ticket, index, agencyId }: TicketProps) => {
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </Card>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>
-                      Are you absolutely sure?
-                    </AlertDialogTitle>
-                    <AlertDialogDescription>
-                      This action cannot be undone. This will permanently delete
-                      the ticket and remove it from our servers.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter className="flex items-center">
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction
-                      className="bg-destructive"
-                      onClick={handleDeleteTicket}
-                    >
-                      Delete
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
               </DropdownMenu>
-            </AlertDialog>
+            </CustomAlertDialog>
           </div>
         );
       }}

@@ -1,7 +1,13 @@
 import React from "react";
 
-const Page = () => {
+interface Props {
+  params: {
+    domain: string;
+  };
+}
+
+const DomainPage = ({}: Props) => {
   return <div>Domain page</div>;
 };
 
-export default Page;
+export default DomainPage;

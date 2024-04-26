@@ -1,29 +1,16 @@
 "use server";
 
-import * as z from "zod";
-import { WorkspaceFormSchema } from "./types";
-import { db } from "./db";
-import { getSelf } from "./auth-service";
+import { v4 } from "uuid";
+import { Prisma } from "@prisma/client";
+import { db } from "@/lib/db";
 
-interface UpsertWorkspaceProps {
-  agencyId: string;
-  workspace: z.infer<typeof WorkspaceFormSchema>;
-  workspaceId: string;
-}
-
-export const upsertWorkspace = async ({
-  agencyId,
-  workspace,
-  workspaceId,
-}: UpsertWorkspaceProps) => {
+export const upsertWorkspace = async (
+  workspace: Prisma.WorkspaceUncheckedCreateInput
+) => {
   const res = await db.workspace.upsert({
-    where: { id: workspaceId },
+    where: { id: workspace.id || v4() },
     update: workspace,
-    create: {
-      ...workspace,
-      id: workspaceId,
-      agencyId,
-    },
+    create: workspace,
   });
 
   if (!res.id) throw new Error("Something went wrong!");
@@ -77,28 +64,19 @@ export const deleteWorkspace = async (id: string) => {
   return res;
 };
 
-interface UpsertPageProps {
-  id: string;
-  name: string;
-  order: number;
-  pathName?: string;
-  content?: string | null;
-  previewImage?: string | null;
-}
+//! Workspace Pages actions
 
 export const upsertWorkspacePage = async (
   agencyId: string,
-  workspaceId: string,
-  workspacePage: UpsertPageProps
+  workspacePage: Prisma.WorkspacePageUncheckedCreateInput
 ) => {
-  if (!agencyId || !workspaceId) return;
+  if (!agencyId || !workspacePage.workspaceId) return;
 
   const res = await db.workspacePage.upsert({
-    where: { id: workspacePage.id },
-    update: { ...workspacePage },
+    where: { id: workspacePage.id || v4() },
+    update: workspacePage,
     create: {
       ...workspacePage,
-      workspaceId,
       content: workspacePage.content
         ? workspacePage.content
         : JSON.stringify([

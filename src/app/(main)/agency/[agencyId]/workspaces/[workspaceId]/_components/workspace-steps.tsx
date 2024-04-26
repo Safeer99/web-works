@@ -3,18 +3,12 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { DragDropContext, DropResult, Droppable } from "react-beautiful-dnd";
+import { DragDropContext, DropResult, Droppable } from "@hello-pangea/dnd";
 import { Check, ExternalLink, LucideEdit } from "lucide-react";
 import { Workspace, WorkspacePage } from "@prisma/client";
 
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 import { WorkspacePageForm } from "@/components/forms/workspace-page-form";
@@ -78,11 +72,12 @@ export const WorkspaceSteps = ({
 
     newPageOrder.forEach(async (page, index) => {
       try {
-        await upsertWorkspacePage(agencyId, workspaceId, {
+        await upsertWorkspacePage(agencyId, {
           pathName: page.pathName,
           id: page.id,
           order: index,
           name: page.name,
+          workspaceId,
         });
       } catch (error) {
         toast.error("Could not save page order");

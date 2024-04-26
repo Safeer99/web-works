@@ -1,41 +1,39 @@
 "use server";
 
-import * as z from "zod";
-import { Role } from "@prisma/client";
-
+import { v4 } from "uuid";
+import { Prisma, Role } from "@prisma/client";
 import { db } from "@/lib/db";
-import { AgencyFormSchema } from "@/lib/types";
 import { getSelf } from "@/lib/auth-service";
+import { AssociateWithUser } from "./types";
 
-interface UpsertAgencyProps {
-  agencyId: string;
-  values: z.infer<typeof AgencyFormSchema>;
-}
-
-export const upsertAgency = async ({ agencyId, values }: UpsertAgencyProps) => {
+export const upsertAgency = async (
+  agency: Prisma.AgencyUncheckedCreateInput
+) => {
   const self = await getSelf();
 
-  const agency = await db.agency.upsert({
+  const res = await db.agency.upsert({
     where: {
-      id: agencyId,
+      id: agency.id || v4(),
     },
-    update: values,
+    update: agency,
     create: {
-      id: agencyId,
+      ...agency,
       ownerId: self.id,
-      ...values,
       associates: {
         create: [{ userId: self.id, role: Role.AGENCY_OWNER }],
       },
     },
   });
 
-  if (!agency.id) throw new Error("Something went wrong!");
+  if (!res.id) throw new Error("Something went wrong!");
 
-  return agency;
+  return res;
 };
 
-export const deleteAgency = async (id: string) => {};
+export const deleteAgency = async (id: string) => {
+  const res = await db.agency.delete({ where: { id } });
+  return res;
+};
 
 export const getAllTeamMembers = async (id: string) => {
   const members = await db.associate.findMany({
@@ -46,6 +44,16 @@ export const getAllTeamMembers = async (id: string) => {
   });
 
   return members;
+};
+
+export const updateAssociatedAccount = async (account: AssociateWithUser) => {
+  const res = await db.associate.update({
+    where: { id: account.id },
+    data: {
+      role: account.role,
+    },
+  });
+  return res;
 };
 
 export const deleteAssociatedAccount = async (id: string) => {

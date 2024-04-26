@@ -68,7 +68,8 @@ export const EditorNavigation = ({
   ) => {
     if (event.target.value === pageDetails.name) return;
     if (event.target.value) {
-      await upsertWorkspacePage(agencyId, workspaceId, {
+      await upsertWorkspacePage(agencyId, {
+        workspaceId,
         id: pageDetails.id,
         name: event.target.value,
         order: pageDetails.order,
@@ -97,7 +98,7 @@ export const EditorNavigation = ({
   const handleOnSave = async () => {
     const content = JSON.stringify(state.editor.elements);
     try {
-      await upsertWorkspacePage(agencyId, workspaceId, {
+      await upsertWorkspacePage(agencyId, {
         ...pageDetails,
         content,
       });

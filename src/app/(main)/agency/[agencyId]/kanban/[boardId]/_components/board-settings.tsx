@@ -4,19 +4,10 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Board } from "@prisma/client";
 
-import { BoardForm } from "@/components/forms/board-form";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+import { AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import { BoardForm } from "@/components/forms/board-form";
+import { CustomAlertDialog } from "@/components/custom-alert-dialog";
 import { deleteBoard } from "@/lib/board-service";
 
 interface SettingsProps {
@@ -38,7 +29,11 @@ export const BoardSettings = ({ boardId, agencyId, boards }: SettingsProps) => {
   };
 
   return (
-    <AlertDialog>
+    <CustomAlertDialog
+      onConfirm={handleDelete}
+      description="This action cannot be undone. This will permanently delete your
+    data and remove it from our servers."
+    >
       <div>
         <BoardForm
           agencyId={agencyId}
@@ -49,23 +44,8 @@ export const BoardSettings = ({ boardId, agencyId, boards }: SettingsProps) => {
           <AlertDialogTrigger asChild>
             <Button variant={"destructive"}>Delete Pipeline</Button>
           </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-              <AlertDialogDescription>
-                This action cannot be undone. This will permanently delete your
-                account and remove your data from our servers.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter className="items-center">
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={handleDelete}>
-                Delete
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
         </div>
       </div>
-    </AlertDialog>
+    </CustomAlertDialog>
   );
 };

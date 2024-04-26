@@ -83,7 +83,7 @@ export const TicketForm = ({
         description: defaultData.description || "",
       });
     }
-  }, [defaultData]);
+  }, [defaultData, form]);
 
   const onSubmit = async (values: z.infer<typeof TicketFormSchema>) => {
     if (!laneId) return;

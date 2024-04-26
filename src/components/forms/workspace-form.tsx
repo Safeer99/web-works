@@ -1,8 +1,7 @@
 "use client";
 
+import * as z from "zod";
 import { useEffect, useTransition } from "react";
-import { z } from "zod";
-import { v4 } from "uuid";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -23,6 +22,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { FileUpload } from "@/components/file-upload";
 import { Loading } from "@/components/loading";
+
 import { useModal } from "@/hooks/use-modals";
 import { WorkspaceFormSchema } from "@/lib/types";
 import { upsertWorkspace } from "@/lib/workspace-service";
@@ -39,6 +39,7 @@ export const WorkspaceForm = ({
   const modal = useModal();
   const router = useRouter();
   const [isLoading, startTransition] = useTransition();
+
   const form = useForm<z.infer<typeof WorkspaceFormSchema>>({
     mode: "onChange",
     resolver: zodResolver(WorkspaceFormSchema),
@@ -59,21 +60,21 @@ export const WorkspaceForm = ({
         subDomainName: defaultData.subDomainName || "",
       });
     }
-  }, [defaultData]);
+  }, [defaultData, form]);
 
   const onSubmit = (values: z.infer<typeof WorkspaceFormSchema>) => {
     startTransition(() => {
       upsertWorkspace({
+        id: defaultData?.id,
         agencyId,
-        workspace: values,
-        workspaceId: defaultData?.id || v4(),
+        ...values,
       })
-        .then((data) => {
+        .then(() => {
           toast.success(`Workspace saved successfully.`);
           modal.onClose();
           router.refresh();
         })
-        .catch(() => toast.error("Something went wrong!"));
+        .catch(() => toast.error("Could not save workspace!!!"));
     });
   };
 

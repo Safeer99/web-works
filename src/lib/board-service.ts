@@ -1,10 +1,8 @@
 "use server";
 
-import * as z from "zod";
-import { db } from "./db";
-import { BoardFormSchema } from "./types";
-import { Lane, Prisma, Tag, Ticket } from "@prisma/client";
 import { v4 } from "uuid";
+import { Lane, Prisma, Tag, Ticket } from "@prisma/client";
+import { db } from "@/lib/db";
 
 export const getBoardDetails = async (boardId: string) => {
   const res = await db.board.findUnique({
@@ -36,25 +34,11 @@ export const getLanesWithTicketAndTags = async (boardId: string) => {
   return res;
 };
 
-interface UpsertBoardProps {
-  id: string;
-  agencyId: string;
-  values: z.infer<typeof BoardFormSchema>;
-}
-
-export const upsertBoard = async ({
-  agencyId,
-  id,
-  values,
-}: UpsertBoardProps) => {
+export const upsertBoard = async (board: Prisma.BoardUncheckedCreateInput) => {
   const res = await db.board.upsert({
-    where: { id },
-    update: values,
-    create: {
-      ...values,
-      id,
-      agencyId,
-    },
+    where: { id: board.id || v4() },
+    update: board,
+    create: board,
   });
 
   if (!res.id) throw new Error("Something went wrong!");
@@ -63,9 +47,10 @@ export const upsertBoard = async ({
 };
 
 export const deleteBoard = async (id: string) => {
-  await db.board.delete({
+  const res = await db.board.delete({
     where: { id },
   });
+  return res;
 };
 
 export const updateLanesOrder = async (lanes: Lane[]) => {

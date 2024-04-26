@@ -10,17 +10,7 @@ import { LaneDetailsType, TicketAndTags } from "@/lib/types";
 import { deleteLane } from "@/lib/board-service";
 import { useModal } from "@/hooks/use-modals";
 
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+import { AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -31,6 +21,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { LaneForm } from "@/components/forms/lane-form";
 import { TicketForm } from "@/components/forms/ticket-form";
+import { CustomAlertDialog } from "@/components/custom-alert-dialog";
 import { Modal } from "@/components/modal";
 import { BoardTicket } from "./board-ticket";
 
@@ -92,17 +83,17 @@ export const BoardLane = ({
     >
       {(provided) => {
         return (
-          <div
-            {...provided.draggableProps}
-            ref={provided.innerRef}
-            className="h-full"
-          >
-            <AlertDialog>
+          <div {...provided.draggableProps} ref={provided.innerRef}>
+            <CustomAlertDialog
+              onConfirm={handleDeleteLane}
+              description="This action cannot be undone. This will permanently delete
+                      the lane and remove it from our servers."
+            >
               <DropdownMenu>
-                <div className="dark:bg-background/20 bg-slate-300/20 min-h-[600px] w-[300px] px-4 relative rounded-lg overflow-visible flex-shrink-0">
+                <div className="dark:bg-background/20 bg-slate-300/20 min-h-[600px] h-full w-[300px] px-4 pb-4 relative rounded-lg overflow-visible flex-shrink-0">
                   <div
                     {...provided.dragHandleProps}
-                    className="h-14 backdrop-blur-lg dark:bg-background/40 bg-slate-300/40  absolute top-0 left-0 right-0 z-10"
+                    className="h-14 backdrop-blur-lg dark:bg-background/40 bg-slate-300/40 absolute top-0 left-0 right-0 z-10"
                   >
                     <div className="h-full flex items-center p-4 justify-between cursor-grab border-b-[1px]">
                       <div className="flex items-center w-full gap-2">
@@ -174,28 +165,8 @@ export const BoardLane = ({
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </div>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>
-                      Are you absolutely sure?
-                    </AlertDialogTitle>
-                    <AlertDialogDescription>
-                      This action cannot be undone. This will permanently delete
-                      your account and remove your data from our servers.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter className="flex items-center">
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction
-                      className="bg-destructive"
-                      onClick={handleDeleteLane}
-                    >
-                      Continue
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
               </DropdownMenu>
-            </AlertDialog>
+            </CustomAlertDialog>
           </div>
         );
       }}

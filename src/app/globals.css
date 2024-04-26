@@ -13,26 +13,6 @@ body,:root {
   box-sizing: border-box;
 }
 
-.scrollbar-hidden::-webkit-scrollbar{
-  display: none;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-
-.custom-scrollbar::-webkit-scrollbar{
-  width: 8px;
-  height: 8px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-track{
-  background: rgb(23, 32, 46);
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb{
-  background: rgb(102, 26, 173);
-  border-radius: 5px;
-}
-
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -87,6 +67,27 @@ body,:root {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+
+.scrollbar-hidden::-webkit-scrollbar{
+  display: none;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.custom-scrollbar::-webkit-scrollbar{
+  width: 8px;
+  height: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track{
+  background: rgb(52, 52, 52);
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb{
+  background: rgb(62, 36, 95);
+  border-radius: 5px;
 }
 
 .dotPattern {

@@ -2,17 +2,17 @@
 
 import clsx from "clsx";
 import Image from "next/image";
+import { format } from "date-fns";
+import { ArrowUpDown } from "lucide-react";
 import { ColumnDef } from "@tanstack/react-table";
 import { Role } from "@prisma/client";
-import { format } from "date-fns";
 
+import { AssociateWithUser } from "@/lib/types";
 import { Badge } from "@/components/ui/badge";
-import { MembersTable } from "@/lib/types";
-import { CellActions } from "./cell-actions";
 import { Button } from "@/components/ui/button";
-import { ArrowUpDown } from "lucide-react";
+import { CellActions } from "./cell-actions";
 
-export const columns: ColumnDef<MembersTable>[] = [
+export const columns: ColumnDef<AssociateWithUser>[] = [
   {
     accessorKey: "name",
     header: ({ column }) => {

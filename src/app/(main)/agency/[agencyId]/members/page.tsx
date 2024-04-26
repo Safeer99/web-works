@@ -23,6 +23,7 @@ const MembersPage = async ({ params: { agencyId } }: Props) => {
   const data = members.map((member) => {
     return {
       id: member.id,
+      agencyId: member.agencyId,
       name: member.user.name,
       email: member.user.email,
       imageUrl: member.user.imageUrl,

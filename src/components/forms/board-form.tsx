@@ -1,6 +1,6 @@
 "use client";
-import React, { useEffect, useTransition } from "react";
-import { v4 } from "uuid";
+
+import { useEffect, useTransition } from "react";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -31,8 +31,8 @@ interface BoardFormProps {
 }
 
 export const BoardForm = ({ defaultData, agencyId }: BoardFormProps) => {
-  const onClose = useModal((state) => state.onClose);
   const router = useRouter();
+  const onClose = useModal((state) => state.onClose);
   const [isLoading, startTransition] = useTransition();
 
   const form = useForm<z.infer<typeof BoardFormSchema>>({
@@ -49,16 +49,16 @@ export const BoardForm = ({ defaultData, agencyId }: BoardFormProps) => {
         name: defaultData.name || "",
       });
     }
-  }, [defaultData]);
+  }, [defaultData, form]);
 
   const onSubmit = (values: z.infer<typeof BoardFormSchema>) => {
     if (!agencyId) return;
 
     startTransition(() => {
       upsertBoard({
-        id: defaultData?.id || v4(),
+        id: defaultData?.id,
         agencyId,
-        values,
+        ...values,
       })
         .then(() => {
           toast.success("Saved board details.");

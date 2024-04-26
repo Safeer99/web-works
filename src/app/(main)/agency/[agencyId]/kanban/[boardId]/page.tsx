@@ -24,7 +24,7 @@ const KanbanIdPage = async ({ params }: Props) => {
   const boardDetails = await getBoardDetails(params.boardId);
 
   if (!boardDetails) {
-    return redirect(`/agency/${params.agencyId}/board`);
+    return redirect(`/agency/${params.agencyId}/kanban`);
   }
 
   const boards = await db.board.findMany({

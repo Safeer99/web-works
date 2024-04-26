@@ -2,7 +2,7 @@
 
 import { useTransition } from "react";
 import { toast } from "sonner";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
 import { Role } from "@prisma/client";
 
@@ -14,34 +14,25 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+import { AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { UserForm } from "@/components/forms/user-form";
+import { CustomAlertDialog } from "@/components/custom-alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/modal";
 
 import { useModal } from "@/hooks/use-modals";
-import { MembersTable } from "@/lib/types";
 import { useCurrentUser } from "@/hooks/use-current-user";
+import { AssociateWithUser } from "@/lib/types";
 import { deleteAssociatedAccount } from "@/lib/agency-service";
 
 interface CellActionsProps {
-  rowData: MembersTable;
+  rowData: AssociateWithUser;
 }
 
 export const CellActions: React.FC<CellActionsProps> = ({ rowData }) => {
   const modal = useModal();
   const router = useRouter();
-  const params = useParams();
-  const { role } = useCurrentUser(params?.agencyId as string);
+  const { role } = useCurrentUser(rowData.agencyId as string);
 
   const [isLoading, startTransition] = useTransition();
   if (!rowData) return;
@@ -53,14 +44,18 @@ export const CellActions: React.FC<CellActionsProps> = ({ rowData }) => {
           toast.success(`Kick ${rowData.name} successfully.`);
           router.refresh();
         })
-        .catch(() => toast.error("Something went wrong!"));
+        .catch(() => toast.error("Could not kick user!!!"));
     });
   };
 
   return (
-    <AlertDialog>
+    <CustomAlertDialog
+      onConfirm={handleRemove}
+      description="This action cannot be undone. This will permanently delete the user
+    and related data."
+    >
       <DropdownMenu>
-        <DropdownMenuTrigger asChild>
+        <DropdownMenuTrigger disabled={isLoading} asChild>
           <Button variant="ghost" className="h-8 w-8 p-0">
             <span className="sr-only">Open menu</span>
             <MoreHorizontal className="h-4 w-4" />
@@ -88,7 +83,9 @@ export const CellActions: React.FC<CellActionsProps> = ({ rowData }) => {
                       <Modal
                         description="You can change user permissions from here."
                         title="Edit User Details"
-                      ></Modal>
+                      >
+                        <UserForm defaultData={rowData} />
+                      </Modal>
                     );
                   }}
                 >
@@ -106,29 +103,6 @@ export const CellActions: React.FC<CellActionsProps> = ({ rowData }) => {
             )}
         </DropdownMenuContent>
       </DropdownMenu>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle className="text-left">
-            Are you absolutely sure?
-          </AlertDialogTitle>
-          <AlertDialogDescription className="text-left">
-            This action cannot be undone. This will permanently delete the user
-            and related data.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter className="flex items-center">
-          <AlertDialogCancel disabled={isLoading} className="mr-2">
-            Cancel
-          </AlertDialogCancel>
-          <AlertDialogAction
-            disabled={isLoading}
-            className="bg-destructive hover:bg-destructive"
-            onClick={handleRemove}
-          >
-            Delete
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+    </CustomAlertDialog>
   );
 };

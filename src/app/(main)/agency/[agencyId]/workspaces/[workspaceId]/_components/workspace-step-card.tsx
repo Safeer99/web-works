@@ -1,5 +1,5 @@
 import { WorkspacePage } from "@prisma/client";
-import { Draggable } from "react-beautiful-dnd";
+import { Draggable } from "@hello-pangea/dnd";
 import { AppWindow, ArrowDown } from "lucide-react";
 
 import { Card, CardContent } from "@/components/ui/card";

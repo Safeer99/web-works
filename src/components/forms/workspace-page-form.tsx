@@ -1,7 +1,7 @@
 "use client";
+
+import * as z from "zod";
 import { useEffect, useTransition } from "react";
-import { z } from "zod";
-import { v4 } from "uuid";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { CopyPlusIcon, Trash } from "lucide-react";
@@ -64,7 +64,7 @@ export const WorkspacePageForm = ({
     if (defaultData) {
       form.reset({ name: defaultData.name, pathName: defaultData.pathName });
     }
-  }, [defaultData]);
+  }, [defaultData, form]);
 
   const onSubmit = (values: z.infer<typeof WorkspacePageSchema>) => {
     if (order !== 0 && !values.pathName) {
@@ -75,18 +75,19 @@ export const WorkspacePageForm = ({
     }
 
     startTransition(() => {
-      upsertWorkspacePage(agencyId, workspaceId, {
-        name: values.name,
-        id: defaultData?.id || v4(),
+      upsertWorkspacePage(agencyId, {
+        id: defaultData?.id,
         order: defaultData?.order || order,
+        name: values.name,
         pathName: values.pathName || "",
+        workspaceId,
       })
         .then(() => {
           modal.onClose();
           toast.success("Save Page details successfully.");
           router.refresh();
         })
-        .catch(() => toast.error("Something went wrong!"));
+        .catch(() => toast.error("Could not save page!!!"));
     });
   };
 
@@ -96,8 +97,8 @@ export const WorkspacePageForm = ({
     const lastPage = res?.workspacePages.length;
 
     startTransition(() => {
-      upsertWorkspacePage(agencyId, workspaceId, {
-        id: v4(),
+      upsertWorkspacePage(agencyId, {
+        workspaceId,
         order: lastPage ? lastPage : 0,
         name: `${defaultData.name} Copy`,
         pathName: `${defaultData.pathName}copy`,
@@ -108,7 +109,7 @@ export const WorkspacePageForm = ({
           toast.success("Copied Page successfully.");
           router.refresh();
         })
-        .catch(() => toast.error("Something went wrong!"));
+        .catch(() => toast.error("Could not copy page!!!"));
     });
   };
 
@@ -120,7 +121,7 @@ export const WorkspacePageForm = ({
           toast.success("Page deleted successfully.");
           router.refresh();
         })
-        .catch(() => toast.error("Something went wrong!"));
+        .catch(() => toast.error("Could not delete page!!!"));
     });
   };
 
@@ -171,7 +172,7 @@ export const WorkspacePageForm = ({
                 </FormItem>
               )}
             />
-            <div className="flex items-center gap-3">
+            <div className="flex items-center justify-between">
               <Button
                 className="w-22 self-end"
                 disabled={isLoading}
@@ -181,16 +182,7 @@ export const WorkspacePageForm = ({
               </Button>
 
               {defaultData?.id && (
-                <>
-                  <Button
-                    variant={"outline"}
-                    className="w-22 self-end border-red-600 text-red-600 hover:bg-red-600"
-                    disabled={isLoading}
-                    type="button"
-                    onClick={onDelete}
-                  >
-                    <Trash />
-                  </Button>
+                <div>
                   <Button
                     variant={"outline"}
                     size={"icon"}
@@ -200,7 +192,16 @@ export const WorkspacePageForm = ({
                   >
                     <CopyPlusIcon />
                   </Button>
-                </>
+                  <Button
+                    variant={"outline"}
+                    className="w-22 self-end ml-4 border-red-600 text-red-600 hover:bg-red-600"
+                    disabled={isLoading}
+                    type="button"
+                    onClick={onDelete}
+                  >
+                    <Trash />
+                  </Button>
+                </div>
               )}
             </div>
           </form>

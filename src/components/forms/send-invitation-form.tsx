@@ -118,7 +118,7 @@ export const SendInvitation: React.FC<SendInvitationProps> = ({ agencyId }) => {
                         <SelectValue placeholder="Select user role..." />
                       </SelectTrigger>
                     </FormControl>
-                    <SelectContent>
+                    <SelectContent className="z-[800]">
                       <SelectItem value={Role.AGENCY_ADMIN}>
                         Agency Admin
                       </SelectItem>

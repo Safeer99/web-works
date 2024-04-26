@@ -1,10 +1,9 @@
 "use client";
 
-import clsx from "clsx";
-import { Badge } from "@/components/ui/badge";
 import { useSocket } from "@/components/providers/socket-provider";
 import { UserAvatar } from "@/components/user-avatar";
 import { idToColor } from "@/lib/utils";
+import { Wifi, WifiOff } from "lucide-react";
 
 const MAX_SHOWN_USERS = 1;
 
@@ -15,7 +14,7 @@ export const Participants = () => {
 
   return (
     <div className="p-3 h-12 flex items-center shadow-md">
-      <div className="flex gap-x-2">
+      <div className="flex gap-x-2 mr-4">
         {currentUser && (
           <UserAvatar
             src={currentUser.avatar}
@@ -42,13 +41,11 @@ export const Participants = () => {
           />
         )}
       </div>
-      <Badge
-        className={clsx("bg-yellow-600 ml-2", {
-          "bg-emerald-600": isConnected,
-        })}
-      >
-        Connection
-      </Badge>
+      {isConnected ? (
+        <Wifi className="text-emerald-500" />
+      ) : (
+        <WifiOff className="text-red-600" />
+      )}
     </div>
   );
 };

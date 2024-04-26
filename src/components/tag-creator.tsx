@@ -52,7 +52,7 @@ export const TagCreator = ({
 
   useEffect(() => {
     getSelectedTags(selectedTags);
-  }, [selectedTags]);
+  }, [selectedTags, getSelectedTags]);
 
   useEffect(() => {
     if (agencyId) {

@@ -63,8 +63,9 @@ export const TicketFormSchema = z.object({
   description: z.string().optional(),
 });
 
-export type MembersTable = {
+export type AssociateWithUser = {
   id: string;
+  agencyId: string;
   name: string;
   email: string;
   imageUrl: string;

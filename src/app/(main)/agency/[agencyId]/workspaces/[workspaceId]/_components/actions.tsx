@@ -1,6 +1,7 @@
 "use client";
 
-import { ConfirmDialog } from "@/components/confirm-dialog";
+import { CustomAlertDialog } from "@/components/custom-alert-dialog";
+import { AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { useConfettiStore } from "@/hooks/use-confetti-store";
 import {
@@ -10,7 +11,7 @@ import {
 } from "@/lib/workspace-service";
 import { Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
+import { useTransition } from "react";
 import { toast } from "sonner";
 
 interface Props {
@@ -63,20 +64,15 @@ export const Actions = ({
   };
 
   return (
-    <div className="flex items-center gap-x-2">
+    <div className="flex items-center gap-x-4">
       <Button onClick={onClick} disabled={disabled || isLoading} size="sm">
         {isPublished ? "Unpublish" : "Publish"}
       </Button>
-      <ConfirmDialog onConfirm={onDelete}>
-        <Button
-          variant="outline"
-          className="hover:bg-red-500"
-          size="sm"
-          disabled={isLoading}
-        >
-          <Trash className="h-4 w-4" />
-        </Button>
-      </ConfirmDialog>
+      <CustomAlertDialog onConfirm={onDelete}>
+        <AlertDialogTrigger className="hover:bg-red-600 hover:text-white text-red-600 p-[7px] px-3 rounded-md border-[1px] border-red-600">
+          <Trash className="h-5 w-5" />
+        </AlertDialogTrigger>
+      </CustomAlertDialog>
     </div>
   );
 };

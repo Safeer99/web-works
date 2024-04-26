@@ -49,7 +49,7 @@ export const LaneForm = ({ defaultData, boardId }: LaneFormProps) => {
         name: defaultData.name || "",
       });
     }
-  }, [defaultData]);
+  }, [defaultData, form]);
 
   const onSubmit = (values: z.infer<typeof LaneFormSchema>) => {
     if (!boardId) return;
