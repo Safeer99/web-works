@@ -10,18 +10,19 @@ import { useResizeObserver } from "@/hooks/use-resize-observer";
 import { useEditor } from "@/components/providers/editor";
 import { EditorElement } from "@/components/providers/editor/editor-types";
 import ContentEditable, { ContentEditableEvent } from "react-contenteditable";
+import { Button } from "@/components/ui/button";
 
 interface Props {
   element: EditorElement;
 }
 
-export const TextComponent = ({ element }: Props) => {
+export const SubmitButtonComponent = ({ element }: Props) => {
   const { styles, id, content } = element;
 
   const { state, dispatch } = useEditor();
   const updateElement = useUpdateElement();
 
-  const handleOnClick = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleOnClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     if (state.editor.selectedElement.id === id) return;
 
@@ -53,7 +54,7 @@ export const TextComponent = ({ element }: Props) => {
     [state.editor.selectedElement]
   );
 
-  const ref = useResizeObserver<HTMLDivElement>(handleOnResizeBody);
+  const ref = useResizeObserver<HTMLButtonElement>(handleOnResizeBody);
 
   const handleOnChange = (e: ContentEditableEvent) => {
     updateElement({
@@ -73,18 +74,22 @@ export const TextComponent = ({ element }: Props) => {
   if (Array.isArray(content)) return;
 
   return (
-    <ContentEditable
-      innerRef={ref}
-      tagName="p"
-      html={content.innerText || ""}
-      disabled={state.editor.previewMode || state.editor.liveMode}
+    <Button
+      type="submit"
+      ref={ref}
+      style={styles}
       onClick={handleOnClick}
-      onChange={handleOnChange}
       className={clsx("relative transition-all whitespace-pre", {
         "outline-dashed outline-slate-400 outline-[1px]":
           !state.editor.previewMode && !state.editor.liveMode,
       })}
-      style={styles}
-    />
+    >
+      <ContentEditable
+        tagName="span"
+        html={content.innerText || ""}
+        disabled={state.editor.previewMode || state.editor.liveMode}
+        onChange={handleOnChange}
+      />
+    </Button>
   );
 };

@@ -1,4 +1,8 @@
-import { DeviceTypes, EditorElement } from "./editor-types";
+import {
+  DeviceTypes,
+  EditorElement,
+  SelectedElementType,
+} from "./editor-types";
 
 export type EditorAction =
   | {
@@ -17,20 +21,21 @@ export type EditorAction =
   | {
       type: "DELETE_ELEMENT";
       payload: {
-        elementDetails: EditorElement;
+        elementDetails: SelectedElementType;
       };
     }
   | {
       type: "CHANGE_CLICKED_ELEMENT";
       payload: {
         elementDetails?:
-          | EditorElement
+          | SelectedElementType
           | {
               id: "";
               content: [];
               name: "";
               styles: {};
               type: null;
+              position: { x: 0; y: 0; h: 0; w: 0 };
             };
       };
     }

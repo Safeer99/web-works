@@ -110,3 +110,39 @@ body,:root {
     transform: scale(1);
   }
 }
+
+.editor-loader{
+  position: relative;
+  border-radius: 20px;
+  background: linear-gradient(90deg, rgb(173, 81, 226), rgb(142, 41, 201), rgb(111, 2, 173), rgb(173, 81, 226));
+  -webkit-box-reflect: below 1px linear-gradient(transparent, #0005);
+}
+
+.editor-loader::before{
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: inherit;
+  background-size: 200%;
+  border-radius: 20px;
+  animation: animate-loader 2s linear infinite reverse;
+}
+
+.editor-loader::after{
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: inherit;
+  background-size: 200%;
+  border-radius: 20px;
+  filter: blur(30px);
+  animation: animate-loader 2s linear infinite reverse;
+}
+
+@keyframes animate-loader {
+  from {
+    background-position: 0 0;
+  } to{
+    background-position: 200% 0;
+  }
+}

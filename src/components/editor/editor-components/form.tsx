@@ -4,8 +4,8 @@ import clsx from "clsx";
 import { useCallback } from "react";
 
 import { compareValues, targetToXYWH } from "@/lib/utils";
-import { useUpdateElement } from "@/hooks/use-editor-socket";
 import { useResizeObserver } from "@/hooks/use-resize-observer";
+import { useUpdateElement } from "@/hooks/use-editor-socket";
 
 import { useEditor } from "@/components/providers/editor";
 import { getElementDetails } from "@/components/providers/editor/editor-default-data";
@@ -19,8 +19,8 @@ interface Props {
   element: EditorElement;
 }
 
-export const Container = ({ element }: Props) => {
-  const { id, content, styles, type } = element;
+export const FormComponent = ({ element }: Props) => {
+  const { id, content, styles } = element;
 
   const { state, dispatch } = useEditor();
   const addElement = useUpdateElement();
@@ -82,29 +82,35 @@ export const Container = ({ element }: Props) => {
 
   const ref = useResizeObserver<HTMLDivElement>(handleOnResizeBody);
 
+  const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!state.editor.liveMode && !state.editor.previewMode) return;
+
+    try {
+      console.log({ target: event.target });
+    } catch (error) {}
+  };
+
   return (
     <div
       ref={ref}
       style={styles}
-      className={clsx("relative transition-all group box-border", {
+      className={clsx("relative transition-all", {
         "outline-dashed outline-slate-400 outline-[1px]":
           !state.editor.previewMode && !state.editor.liveMode,
-        "max-w-full w-full h-fit": type === "container",
-        "min-h-full h-fit border-transparent border-[1px] outline-none":
-          type === "__body",
       })}
       onDrop={(e) => handleOnDrop(e)}
       onDragOver={handleDragOver}
-      onDragStart={(e) => handleDragStart(e, "container")}
-      draggable={
-        type !== "__body" && !state.editor.liveMode && !state.editor.previewMode
-      }
+      onDragStart={(e) => handleDragStart(e, "form")}
+      draggable={!state.editor.liveMode && !state.editor.previewMode}
       onClick={handleOnClickBody}
     >
-      {Array.isArray(content) &&
-        content.map((childElement) => (
-          <Recursive key={childElement.id} element={childElement} />
-        ))}
+      <form onSubmit={handleFormSubmit}>
+        {Array.isArray(content) &&
+          content.map((element) => (
+            <Recursive key={element.id} element={element} />
+          ))}
+      </form>
     </div>
   );
 };

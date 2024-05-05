@@ -10,6 +10,7 @@ import {
   Side,
   XYWH,
 } from "@/lib/types";
+import { SelectedElementType } from "@/components/providers/editor/editor-types";
 
 const COLORS = ["#DC2626", "#D97706", "#059669", "#7C3AED", "#DB2777"];
 
@@ -30,6 +31,28 @@ export function getContrastingTextColor(color: Color) {
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
+}
+
+export function targetToXYWH(target: HTMLElement) {
+  const bounds = target.getBoundingClientRect();
+  return {
+    x: bounds.left,
+    y: bounds.top,
+    w: bounds.width,
+    h: bounds.height,
+  };
+}
+
+export function compareValues(
+  prevValue: SelectedElementType["position"],
+  newValue: SelectedElementType["position"]
+) {
+  return (
+    prevValue.x === newValue.x &&
+    prevValue.y === newValue.y &&
+    prevValue.w === newValue.w &&
+    prevValue.h === newValue.h
+  );
 }
 
 export function pointerEventToCanvasPoint(

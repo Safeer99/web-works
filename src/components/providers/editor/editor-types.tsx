@@ -1,103 +1,63 @@
-export const defaultStyles: React.CSSProperties = {
-  backgroundPosition: "center",
-  objectFit: "cover",
-  backgroundRepeat: "no-repeat",
-  textAlign: "left",
-  opacity: "100%",
-};
-
-export const defaultDetails: Record<string, EditorElement> = {
-  text: {
-    content: { innerText: "Text Element" },
-    id: "",
-    name: "Text",
-    styles: {
-      color: "black",
-      ...defaultStyles,
-    },
-    type: "text",
-  },
-  link: {
-    content: {
-      innerText: "Link Element",
-      href: "#",
-    },
-    id: "",
-    name: "Link",
-    styles: {
-      color: "black",
-      ...defaultStyles,
-    },
-    type: "link",
-  },
-  video: {
-    content: {
-      src: "https://www.youtube.com/embed/URyiCGZNjdI?si=OUamoblqbl6tLsi_",
-    },
-    id: "",
-    name: "Video",
-    styles: {},
-    type: "video",
-  },
-  image: {
-    content: {
-      src: "/canvas-placeholder.png",
-    },
-    id: "",
-    name: "Image",
-    styles: {},
-    type: "image",
-  },
-  container: {
-    content: [],
-    id: "",
-    name: "Container",
-    styles: { ...defaultStyles },
-    type: "container",
-  },
-  contactForm: {
-    content: [],
-    id: "",
-    name: "Contact Form",
-    styles: {},
-    type: "contactForm",
-  },
-};
+import { defaultDetails } from "./editor-default-data";
 
 export type EditorBtns =
-  | "text"
-  | "container"
-  | "section"
-  | "contactForm"
-  | "paymentForm"
-  | "link"
-  | "2Col"
-  | "video"
   | "__body"
+  | "container"
+  | "text"
+  | "navigate"
+  | "link"
+  | "video"
   | "image"
-  | null
-  | "3Col";
+  | "form"
+  | "label"
+  | "input"
+  | "textarea"
+  | "checkbox"
+  | "select"
+  | "submitButton"
+  | null;
+
+export type FormBtns =
+  | "label"
+  | "input"
+  | "textarea"
+  | "select"
+  | "checkbox"
+  | "submitButton"
+  | null;
 
 export type DeviceTypes = "Desktop" | "Mobile" | "Tablet";
 
+export type ElementContent = {
+  href?: string; //!                  link
+  route?: string; //!                 navigate
+  src?: string; //!                   image, video
+  innerText?: string; //!             text, link, navigate, label, button
+  //? Form elements attributes
+  id?: string; //!                    input, textarea, select, checkbox, label
+  required?: boolean; //!             input, textarea, select, checkbox
+  placeholder?: string; //!           input, textarea, select
+  type?: string; //!                  input
+  label?: string; //!                 select checkbox
+  items?: Record<string, any>[]; //!  select
+};
+
 export type EditorElement = {
   id: string;
-  styles: React.CSSProperties;
   name: string;
   type: EditorBtns;
-  content:
-    | EditorElement[]
-    | {
-        href?: string;
-        innerText?: string;
-        src?: string;
-      };
+  styles: React.CSSProperties;
+  content: EditorElement[] | ElementContent;
+};
+
+export type SelectedElementType = EditorElement & {
+  position: { x: number; y: number; w: number; h: number };
 };
 
 export type Editor = {
   liveMode: boolean;
   elements: EditorElement[];
-  selectedElement: EditorElement;
+  selectedElement: SelectedElementType;
   device: DeviceTypes;
   previewMode: boolean;
   pageId: string;
@@ -114,21 +74,14 @@ export type EditorState = {
 };
 
 export const initialEditorState: EditorState["editor"] = {
-  elements: [
-    {
-      id: "__body",
-      content: [],
-      name: "Body",
-      styles: { ...defaultStyles },
-      type: "__body",
-    },
-  ],
+  elements: [defaultDetails["__body"]],
   selectedElement: {
     id: "",
     content: [],
     name: "",
     styles: {},
     type: null,
+    position: { x: 0, y: 0, w: 0, h: 0 },
   },
   device: "Desktop",
   previewMode: false,

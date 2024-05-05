@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  EditorElement,
-  EditorState,
-  initialEditorState,
-  initialState,
-} from "./editor-types";
+import { EditorElement, EditorState } from "./editor-types";
 import { EditorAction } from "./editor-actions";
 
 const addAnElement = (
@@ -61,18 +56,21 @@ const deleteAnElement = (
     throw Error(
       "You sent the wrong action type to the Delete Element editor State"
     );
-  return editorArray.filter((item) => {
-    if (item.id === action.payload.elementDetails.id) {
-      return false;
-    } else if (item.content && Array.isArray(item.content)) {
-      item.content = deleteAnElement(item.content, action);
-    }
-    return true;
-  });
+  return editorArray
+    .filter((item) => item.id !== action.payload.elementDetails.id)
+    .map((item) => {
+      if (item.content && Array.isArray(item.content)) {
+        return {
+          ...item,
+          content: deleteAnElement(item.content, action),
+        };
+      }
+      return item;
+    });
 };
 
 export const editorReducer = (
-  state: EditorState = initialState,
+  state: EditorState,
   action: EditorAction
 ): EditorState => {
   switch (action.type) {
@@ -99,26 +97,22 @@ export const editorReducer = (
     case "UPDATE_ELEMENT":
       const updatedElements = updateAnElement(state.editor.elements, action);
 
-      const UpdatedElementIsSelected =
+      const updatedElementIsSelected =
         state.editor.selectedElement.id === action.payload.elementDetails.id;
 
       const updatedEditorStateWithUpdate = {
         ...state.editor,
         elements: updatedElements,
-        selectedElement: UpdatedElementIsSelected
-          ? action.payload.elementDetails
-          : {
-              id: "",
-              content: [],
-              name: "",
-              styles: {},
-              type: null,
-            },
+        selectedElement: updatedElementIsSelected
+          ? {
+              position: { ...state.editor.selectedElement.position },
+              ...action.payload.elementDetails,
+            }
+          : { ...state.editor.selectedElement },
       };
-
       const updatedHistoryWithUpdate = [
         ...state.history.history.slice(0, state.history.currentIndex + 1),
-        { ...updatedEditorStateWithUpdate }, // Save a copy of the updated state
+        { ...updatedEditorStateWithUpdate },
       ];
       const updatedEditor = {
         ...state,
@@ -136,13 +130,27 @@ export const editorReducer = (
         state.editor.elements,
         action
       );
+
+      const updatedSelectedElementState =
+        state.editor.selectedElement.id === action.payload.elementDetails.id
+          ? {
+              id: "",
+              content: [],
+              name: "",
+              styles: {},
+              type: null,
+              position: { x: 0, y: 0, h: 0, w: 0 },
+            }
+          : state.editor.selectedElement;
+
       const updatedEditorStateAfterDelete = {
         ...state.editor,
         elements: updatedElementsAfterDelete,
+        selectedElement: updatedSelectedElementState,
       };
       const updatedHistoryAfterDelete = [
         ...state.history.history.slice(0, state.history.currentIndex + 1),
-        { ...updatedEditorStateAfterDelete }, // Save a copy of the updated state
+        { ...updatedEditorStateAfterDelete },
       ];
 
       const deletedState = {
@@ -154,31 +162,34 @@ export const editorReducer = (
           currentIndex: updatedHistoryAfterDelete.length - 1,
         },
       };
+
       return deletedState;
 
     case "CHANGE_CLICKED_ELEMENT":
-      const clickedState = {
-        ...state,
-        editor: {
-          ...state.editor,
-          selectedElement: action.payload.elementDetails || {
-            id: "",
-            content: [],
-            name: "",
-            styles: {},
-            type: null,
-          },
-        },
-        history: {
-          ...state.history,
-          history: [
-            ...state.history.history.slice(0, state.history.currentIndex + 1),
-            { ...state.editor }, // Save a copy of the current editor state
-          ],
-          currentIndex: state.history.currentIndex + 1,
+      const updatedEditorClickedState = {
+        ...state.editor,
+        selectedElement: action.payload.elementDetails || {
+          id: "",
+          content: [],
+          name: "",
+          styles: {},
+          type: null,
+          position: { x: 0, y: 0, h: 0, w: 0 },
         },
       };
-      return clickedState;
+      const updatedHistoryState = [
+        ...state.history.history.slice(0, state.history.currentIndex + 1),
+        { ...updatedEditorClickedState },
+      ];
+      const updatedState = {
+        ...state,
+        editor: updatedEditorClickedState,
+        history: {
+          history: updatedHistoryState,
+          currentIndex: updatedHistoryState.length - 1,
+        },
+      };
+      return updatedState;
 
     case "CHANGE_DEVICE":
       const changedDeviceState = {
@@ -245,12 +256,17 @@ export const editorReducer = (
       return state;
 
     case "LOAD_DATA":
+      const editorState = {
+        ...state.editor,
+        elements: action.payload.elements || [...state.editor.elements],
+        liveMode: !!action.payload.withLive,
+      };
       return {
-        ...initialState,
-        editor: {
-          ...initialState.editor,
-          elements: action.payload.elements || initialEditorState.elements,
-          liveMode: !!action.payload.withLive,
+        ...state,
+        editor: editorState,
+        history: {
+          history: [editorState],
+          currentIndex: 0,
         },
       };
 

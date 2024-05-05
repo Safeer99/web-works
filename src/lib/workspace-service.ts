@@ -64,6 +64,20 @@ export const deleteWorkspace = async (id: string) => {
   return res;
 };
 
+export const getWorkspaceByDomain = async (subDomainName: string) => {
+  const res = await db.workspace.findUnique({
+    where: {
+      subDomainName,
+      published: true,
+    },
+    include: {
+      workspacePages: true,
+    },
+  });
+
+  return res;
+};
+
 //! Workspace Pages actions
 
 export const upsertWorkspacePage = async (

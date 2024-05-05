@@ -1,65 +1,74 @@
 "use client";
-import clsx from "clsx";
 
-import { useDeleteElement } from "@/hooks/use-editor-socket";
+import clsx from "clsx";
+import Image from "next/image";
+import { useCallback } from "react";
+
+import { compareValues, targetToXYWH } from "@/lib/utils";
+import { useResizeObserver } from "@/hooks/use-resize-observer";
+
 import { EditorElement } from "@/components/providers/editor/editor-types";
 import { useEditor } from "@/components/providers/editor";
-import { ComponentBadge, ComponentDeleteBadge } from "./component-badge";
-import Image from "next/image";
 
-type Props = {
+interface Props {
   element: EditorElement;
-};
+}
 
 export const ImageComponent = ({ element }: Props) => {
-  const { id, content, name, styles } = element;
-  const { dispatch, state } = useEditor();
+  const { id, content, styles, name } = element;
+  const { state, dispatch } = useEditor();
 
-  const deleteElement = useDeleteElement();
-
-  const handleOnClick = (e: React.MouseEvent) => {
+  const handleOnClick = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
+
+    if (state.editor.selectedElement.id === id) return;
+
+    const position = targetToXYWH(e.target as HTMLElement);
     dispatch({
       type: "CHANGE_CLICKED_ELEMENT",
       payload: {
-        elementDetails: element,
+        elementDetails: { ...element, position },
       },
     });
   };
 
+  const handleOnResizeBody = useCallback(
+    (target: HTMLElement) => {
+      if (state.editor.selectedElement.id !== id) return;
+      const position = targetToXYWH(target);
+
+      if (compareValues(state.editor.selectedElement.position, position))
+        return;
+
+      dispatch({
+        type: "CHANGE_CLICKED_ELEMENT",
+        payload: {
+          elementDetails: { ...element, position },
+        },
+      });
+    },
+    [state.editor.selectedElement]
+  );
+
+  const ref = useResizeObserver<HTMLDivElement>(handleOnResizeBody);
+
+  if (Array.isArray(content)) return;
+
   return (
     <div
+      ref={ref}
       className={clsx("relative transition-all", {
-        "!border-blue-500": state.editor.selectedElement.id === id,
-        "!border-solid": state.editor.selectedElement.id === id,
-        "border-dashed border-[1px] border-slate-300": !state.editor.liveMode,
+        "outline-dashed outline-slate-400 outline-[1px]":
+          !state.editor.previewMode && !state.editor.liveMode,
       })}
       onClick={handleOnClick}
     >
-      <ComponentBadge
-        label={name}
-        visible={
-          state.editor.selectedElement.id === id && !state.editor.liveMode
-        }
-      />
-      <div
+      <Image
         style={styles}
-        className="p-4 aspect-video relative flex items-center justify-center"
-      >
-        {!Array.isArray(content) && (
-          <Image
-            alt={name}
-            width={Number(styles.width) || 100}
-            height={Number(styles.height) || 100}
-            src={content.src || "/canvas-placeholder.png"}
-          />
-        )}
-      </div>
-      <ComponentDeleteBadge
-        visible={
-          state.editor.selectedElement.id === id && !state.editor.liveMode
-        }
-        onClick={deleteElement}
+        alt={name}
+        width={400}
+        height={230}
+        src={content.src || "/image-placeholder.png"}
       />
     </div>
   );

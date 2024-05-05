@@ -4,8 +4,9 @@ import { Role } from "@prisma/client";
 
 import { useEditor } from "@/components/providers/editor";
 import { EditorAction } from "@/components/providers/editor/editor-actions";
-import { EditorElement } from "@/components/providers/editor/editor-types";
+import { SelectedElementType } from "@/components/providers/editor/editor-types";
 import { useSocket } from "@/components/providers/socket-provider";
+import { upsertWorkspacePage } from "@/lib/workspace-service";
 
 type UserType = {
   id: string;
@@ -15,11 +16,34 @@ type UserType = {
 };
 
 export const useEditorSocket = () => {
-  const { state, dispatch } = useEditor();
-  const { socket, isConnected, self, setOthers } = useSocket();
+  const { state, dispatch, pageDetails } = useEditor();
+  const { socket, isConnected, self, setOthers, agencyId } = useSocket();
 
+  //! Save changes to DB on disconnect socket
   useEffect(() => {
-    if (socket == null) return;
+    if (socket == null || !isConnected || !pageDetails) return;
+
+    socket.on("disconnect", async () => {
+      // const content = JSON.stringify(state.editor.elements);
+      // try {
+      //   await upsertWorkspacePage(agencyId, {
+      //     ...pageDetails,
+      //     content,
+      //   });
+      //   toast.success("Saved");
+      // } catch (error) {
+      //   toast.error("Could not save!");
+      // }
+    });
+
+    return () => {
+      socket.off("disconnect");
+    };
+  }, [socket, isConnected, pageDetails, agencyId, state.editor.elements]);
+
+  //! receive changes socket
+  useEffect(() => {
+    if (socket == null || !isConnected) return;
     socket.on("receive-changes", (data: string) => {
       const action: Extract<
         EditorAction,
@@ -42,7 +66,7 @@ export const useEditorSocket = () => {
     });
 
     socket.on("delete-element", (data: string) => {
-      const element: EditorElement = JSON.parse(data);
+      const element: SelectedElementType = JSON.parse(data);
       dispatch({
         type: "DELETE_ELEMENT",
         payload: { elementDetails: element },
@@ -53,10 +77,11 @@ export const useEditorSocket = () => {
       socket.off("receive-changes");
       socket.off("delete-element");
     };
-  }, [socket, dispatch]);
+  }, [socket, isConnected, dispatch]);
 
+  //! sync-code and disconnected user socket
   useEffect(() => {
-    if (socket == null) return;
+    if (socket == null || !isConnected) return;
 
     socket.on("sync-code", (data: string) => {
       setTimeout(() => {
@@ -70,11 +95,6 @@ export const useEditorSocket = () => {
       }, 3000);
     });
 
-    socket.on("disconnect", () => {
-      console.log("DISCONNECT FROM CUSTOM HOOK");
-      // console.log("Saving.....", { state });
-    });
-
     socket.on("disconnected", (user: UserType) => {
       toast.success(`${user.name} leaves the room.`);
       setOthers((prev) => prev.filter((client) => client.id !== user.id));
@@ -82,11 +102,11 @@ export const useEditorSocket = () => {
 
     return () => {
       socket.off("sync-code");
-      socket.off("disconnect");
       socket.off("disconnected");
     };
-  }, [socket, dispatch, setOthers]);
+  }, [socket, isConnected, dispatch, setOthers]);
 
+  //! User joined socket
   useEffect(() => {
     if (socket == null || self == null || !isConnected) return;
 

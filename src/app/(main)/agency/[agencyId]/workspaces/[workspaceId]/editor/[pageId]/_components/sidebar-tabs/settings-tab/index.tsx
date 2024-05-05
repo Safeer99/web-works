@@ -20,6 +20,8 @@ export const SettingsTab = () => {
   const [debounce, setValue] = useDebounceValue("", 2000);
   const updateElement = useUpdateElement();
 
+  const { position, ...selectedElement } = state.editor.selectedElement;
+
   const handleChangeCustomValues = (e: any) => {
     const settingProperty = e.target.id;
     let value = e.target.value;
@@ -31,9 +33,9 @@ export const SettingsTab = () => {
       type: "UPDATE_ELEMENT",
       payload: {
         elementDetails: {
-          ...state.editor.selectedElement,
+          ...selectedElement,
           content: {
-            ...state.editor.selectedElement.content,
+            ...selectedElement.content,
             ...styleObject,
           },
         },
@@ -51,9 +53,9 @@ export const SettingsTab = () => {
       type: "UPDATE_ELEMENT",
       payload: {
         elementDetails: {
-          ...state.editor.selectedElement,
+          ...selectedElement,
           styles: {
-            ...state.editor.selectedElement.styles,
+            ...selectedElement.styles,
             ...styleObject,
           },
         },

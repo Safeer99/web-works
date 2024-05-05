@@ -1,24 +1,23 @@
 "use client";
 
-import clsx from "clsx";
-import { useCallback } from "react";
-
-import { compareValues, targetToXYWH } from "@/lib/utils";
-import { useResizeObserver } from "@/hooks/use-resize-observer";
-
-import { EditorElement } from "@/components/providers/editor/editor-types";
+import { Input } from "@/components/ui/input";
 import { useEditor } from "@/components/providers/editor";
+import { EditorElement } from "@/components/providers/editor/editor-types";
+import { compareValues, targetToXYWH } from "@/lib/utils";
+import { useCallback } from "react";
+import { useResizeObserver } from "@/hooks/use-resize-observer";
+import clsx from "clsx";
 
 interface Props {
   element: EditorElement;
 }
 
-export const VideoComponent = ({ element }: Props) => {
-  const { id, content, styles } = element;
+export const InputComponent = ({ element }: Props) => {
+  const { styles, id, content } = element;
 
   const { state, dispatch } = useEditor();
 
-  const handleOnClick = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleOnClick = (e: React.MouseEvent) => {
     e.stopPropagation();
 
     if (state.editor.selectedElement.id === id) return;
@@ -50,28 +49,25 @@ export const VideoComponent = ({ element }: Props) => {
     [state.editor.selectedElement]
   );
 
-  const ref = useResizeObserver<HTMLDivElement>(handleOnResizeBody);
+  const ref = useResizeObserver<HTMLInputElement>(handleOnResizeBody);
+
+  if (Array.isArray(content)) return;
 
   return (
-    <div
+    <Input
       ref={ref}
       style={styles}
-      className={clsx("relative transition-all", {
-        "outline-dashed outline-slate-400 outline-[1px]":
-          !state.editor.previewMode && !state.editor.liveMode,
-      })}
+      id={content.id}
+      type={content.type}
       onClick={handleOnClick}
-    >
-      {!Array.isArray(content) && (
-        <iframe
-          aria-disabled={!state.editor.previewMode && !state.editor.liveMode}
-          width={"100%"}
-          height={"100%"}
-          src={content.src}
-          title="YouTube video player"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        />
+      placeholder={content.placeholder}
+      className={clsx(
+        "relative focus:border-2 focus:border-primary bg-transparent outline-none focus-visible:ring-offset-0 focus-visible:ring-0 text-black",
+        {
+          "outline-dashed outline-slate-400 outline-[1px]":
+            !state.editor.previewMode && !state.editor.liveMode,
+        }
       )}
-    </div>
+    />
   );
 };

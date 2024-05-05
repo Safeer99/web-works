@@ -1,8 +1,12 @@
 "use client";
 
 import clsx from "clsx";
-import { useEditor } from "@/components/providers/editor";
+import { EyeIcon, Redo2, Undo2 } from "lucide-react";
+
 import { Tabs, TabsContent } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
+import { useEditor } from "@/components/providers/editor";
+import { Hint } from "@/components/hint";
 
 import { TabList } from "./sidebar-tabs";
 import { SettingsTab } from "./sidebar-tabs/settings-tab";
@@ -15,17 +19,30 @@ interface Props {
 }
 
 export const EditorSidebar = ({ agencyId }: Props) => {
-  const { state } = useEditor();
+  const { state, dispatch } = useEditor();
+
+  const handlePreviewClick = () => {
+    dispatch({ type: "TOGGLE_PREVIEW_MODE" });
+    dispatch({ type: "TOGGLE_LIVE_MODE" });
+  };
+
+  const handleUndo = () => {
+    dispatch({ type: "UNDO" });
+  };
+
+  const handleRedo = () => {
+    dispatch({ type: "REDO" });
+  };
 
   return (
-    <Tabs className="w-full" defaultValue="Settings">
+    <Tabs className="w-full" defaultValue="Components">
       <div
         className={clsx(
-          "fixed inset-y-0 right-0 mt-[65px] flex bg-background transition-all overflow-hidden",
+          "fixed inset-y-0 right-0 z-[190] mt-[65px] flex bg-background transition-all overflow-hidden",
           { "!-right-80": state.editor.previewMode }
         )}
       >
-        <div className="w-64 border-l-[1px]">
+        <aside className="w-64 border-l-[1px]">
           <div className="gap-4 h-full pb-24 overflow-scroll scrollbar-hidden">
             <TabsContent value="Settings">
               <div className="text-left px-4 py-1">
@@ -69,10 +86,49 @@ export const EditorSidebar = ({ agencyId }: Props) => {
               <ComponentsTab />
             </TabsContent>
           </div>
-        </div>
-        <div className="w-16 border-l-[1px]">
+        </aside>
+        <aside className="w-16 border-l-[1px] flex flex-col justify-between items-center pb-4">
           <TabList />
-        </div>
+          <div className="flex flex-col items-center gap-2">
+            <Hint label="Preview" side="left" sideOffset={8}>
+              <Button
+                variant={"ghost"}
+                size={"icon"}
+                className="hover:bg-slate-800"
+                onClick={handlePreviewClick}
+              >
+                <EyeIcon />
+              </Button>
+            </Hint>
+            <Hint label="Undo" side="left" sideOffset={8}>
+              <Button
+                disabled={!(state.history.currentIndex > 0)}
+                onClick={handleUndo}
+                variant={"ghost"}
+                size={"icon"}
+                className="hover:bg-slate-800"
+              >
+                <Undo2 />
+              </Button>
+            </Hint>
+            <Hint label="Redo" side="left" sideOffset={8}>
+              <Button
+                disabled={
+                  !(
+                    state.history.currentIndex <
+                    state.history.history.length - 1
+                  )
+                }
+                onClick={handleRedo}
+                variant={"ghost"}
+                size={"icon"}
+                className="hover:bg-slate-800"
+              >
+                <Redo2 />
+              </Button>
+            </Hint>
+          </div>
+        </aside>
       </div>
     </Tabs>
   );

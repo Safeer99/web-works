@@ -1,11 +1,13 @@
-import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
+import { redirect } from "next/navigation";
+
 import EditorProvider from "@/components/providers/editor";
 import SocketProvider from "@/components/providers/socket-provider";
-import { Editor } from "@/components/editor";
+
 import { EditorNavigation } from "./_components/editor-navigation";
 import { EditorSidebar } from "./_components/editor-sidebar";
 import { Wrapper } from "./_components/wrapper";
+import { EditorComponent } from "./_components/editor-component";
 
 interface Props {
   params: {
@@ -30,7 +32,7 @@ const EditorPage = async ({ params }: Props) => {
   }
 
   return (
-    <div className="fixed w-full top-0 bottom-0 left-0 right-0 z-[100] bg-background">
+    <div className="fixed w-full top-0 bottom-0 left-0 right-0 z-[100] bg-muted">
       <EditorProvider
         agencyId={params.agencyId}
         workspaceId={params.workspaceId}
@@ -43,9 +45,7 @@ const EditorPage = async ({ params }: Props) => {
               workspaceId={params.workspaceId}
               pageDetails={pageDetails}
             />
-            <div className="flex justify-center h-full overflow-y-scroll scrollbar-hidden">
-              <Editor pageDetails={pageDetails} />
-            </div>
+            <EditorComponent pageDetails={pageDetails} />
             <EditorSidebar agencyId={params.agencyId} />
           </Wrapper>
         </SocketProvider>
