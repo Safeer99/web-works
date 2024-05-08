@@ -32,13 +32,13 @@ export type ElementContent = {
   href?: string; //!                  link
   route?: string; //!                 navigate
   src?: string; //!                   image, video
-  innerText?: string; //!             text, link, navigate, label, button
+  innerText?: string; //!             text, link, navigate, button
   //? Form elements attributes
   id?: string; //!                    input, textarea, select, checkbox, label
   required?: boolean; //!             input, textarea, select, checkbox
   placeholder?: string; //!           input, textarea, select
   type?: string; //!                  input
-  label?: string; //!                 select checkbox
+  label?: string; //!                 select, checkbox, label
   items?: Record<string, any>[]; //!  select
 };
 

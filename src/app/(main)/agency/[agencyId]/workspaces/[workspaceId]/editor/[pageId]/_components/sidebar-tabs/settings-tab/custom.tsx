@@ -1,6 +1,6 @@
 import { EditorState } from "@/components/providers/editor/editor-types";
 import { AccordionContent } from "@/components/ui/accordion";
-import { Input } from "@/components/ui/input";
+import { CustomInput } from "../custom-inputs";
 
 interface Props {
   state: EditorState;
@@ -10,46 +10,56 @@ interface Props {
 export const CustomSection = ({ onChange: handleChange, state }: Props) => {
   const { content, type } = state.editor.selectedElement;
 
+  const showInnerText =
+    type === "text" ||
+    type === "navigate" ||
+    type === "link" ||
+    type === "submitButton";
+
   if (Array.isArray(content)) return;
 
   return (
     <AccordionContent>
       <div className="flex flex-col gap-4">
-        {(type === "link" || type === "text") && (
-          <div>
-            <p className="text-xs text-muted-foreground">Text</p>
-            <Input
-              id="innerText"
-              value={content.innerText || ""}
-              onChange={handleChange}
-              placeholder="text"
-              className="text-xs outline-none border-[1px] rounded-none focus-visible:ring-0 p-4 h-6"
-            />
-          </div>
+        {showInnerText && (
+          <CustomInput
+            id="innerText"
+            label="Text"
+            value={content.innerText}
+            onChange={handleChange}
+            placeholder="Text Element"
+            wFull
+          />
         )}
-        {type === "link" && (
-          <div>
-            <p className="text-xs text-muted-foreground">Link</p>
-            <Input
-              id="href"
-              value={content.href || ""}
-              onChange={handleChange}
-              placeholder="www.google.com"
-              className="text-xs outline-none border-[1px] rounded-none focus-visible:ring-0 p-4 h-6"
-            />
-          </div>
+        {type === "navigate" && (
+          <CustomInput
+            id="route"
+            label="Route"
+            value={content.route}
+            onChange={handleChange}
+            placeholder="/contact"
+            wFull
+          />
+        )}
+        {type === "image" && (
+          <CustomInput
+            id="src"
+            label="Image"
+            value={content.src}
+            onChange={handleChange}
+            placeholder="https://..."
+            wFull
+          />
         )}
         {type === "video" && (
-          <div>
-            <p className="text-xs text-muted-foreground">Video URL</p>
-            <Input
-              id="src"
-              value={content.src || ""}
-              onChange={handleChange}
-              placeholder="video url"
-              className="text-xs outline-none border-[1px] rounded-none focus-visible:ring-0 p-4 h-6"
-            />
-          </div>
+          <CustomInput
+            id="src"
+            label="Video"
+            value={content.src}
+            onChange={handleChange}
+            placeholder="https://..."
+            wFull
+          />
         )}
       </div>
     </AccordionContent>

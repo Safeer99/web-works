@@ -1,26 +1,22 @@
-import { useEffect } from "react";
 import { useDebounceValue } from "usehooks-ts";
 
-import { useEditor } from "@/components/providers/editor";
+import { useUpdateElement } from "@/hooks/use-editor-socket";
 import {
   Accordion,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-
-import { DimensionsSection } from "./dimensions";
-import { TypographySection } from "./typography";
-import { DecorationsSection } from "./decorations";
-import { DisplaySection } from "./display";
+import { useEditor } from "@/components/providers/editor";
 import { CustomSection } from "./custom";
-import { useUpdateElement } from "@/hooks/use-editor-socket";
+import { FormElementsSection } from "./form-elements";
+import { SelectElementSection } from "./select-element";
 
 export const SettingsTab = () => {
   const { state } = useEditor();
+  const { position, ...selectedElement } = state.editor.selectedElement;
+
   const [debounce, setValue] = useDebounceValue("", 2000);
   const updateElement = useUpdateElement();
-
-  const { position, ...selectedElement } = state.editor.selectedElement;
 
   const handleChangeCustomValues = (e: any) => {
     const settingProperty = e.target.id;
@@ -43,87 +39,57 @@ export const SettingsTab = () => {
     });
   };
 
-  const handleOnChanges = (e: any) => {
-    const styleSettings = e.target.id;
-    let value = e.target.value;
-    const styleObject = {
-      [styleSettings]: value,
-    };
-    updateElement({
-      type: "UPDATE_ELEMENT",
-      payload: {
-        elementDetails: {
-          ...selectedElement,
-          styles: {
-            ...selectedElement.styles,
-            ...styleObject,
-          },
-        },
-      },
-    });
-    setValue(value);
-  };
+  const isCustomElement =
+    selectedElement.type === "text" ||
+    selectedElement.type === "navigate" ||
+    selectedElement.type === "link" ||
+    selectedElement.type === "video" ||
+    selectedElement.type === "image" ||
+    selectedElement.type === "submitButton";
 
-  // TODO:- solve dbounce hook issue.
-
-  useEffect(() => {
-    if (debounce) {
-      console.log("Saving....");
-    }
-  }, [debounce]);
-
-  // TODO:- add restrictions based on selected element on all styles
+  const isFormElement =
+    selectedElement.type === "label" ||
+    selectedElement.type === "input" ||
+    selectedElement.type === "textarea" ||
+    selectedElement.type === "select" ||
+    selectedElement.type === "checkbox";
 
   return (
     <Accordion
       type="multiple"
       className="w-[255px]"
-      defaultValue={[
-        "Custom",
-        "Typography",
-        "Dimensions",
-        "Decorations",
-        "Display",
-      ]}
+      defaultValue={["Custom", "Form", "Select"]}
     >
-      <AccordionItem value="Custom" className="px-4 py-0">
-        <AccordionTrigger className="!no-underline text-sm">
-          Custom
-        </AccordionTrigger>
-        <CustomSection state={state} onChange={handleChangeCustomValues} />
-      </AccordionItem>
-
-      {(state.editor.selectedElement.type === "__body" ||
-        state.editor.selectedElement.type === "container") && (
-        <AccordionItem value="Display" className="px-4 py-0">
+      {isCustomElement && (
+        <AccordionItem value="Custom" className="px-4 py-0">
           <AccordionTrigger className="!no-underline text-sm">
-            Display
+            Custom Settings
           </AccordionTrigger>
-          <DisplaySection state={state} onChange={handleOnChanges} />
+          <CustomSection state={state} onChange={handleChangeCustomValues} />
         </AccordionItem>
       )}
 
-      <AccordionItem value="Dimensions" className=" px-4 py-0 ">
-        <AccordionTrigger className="!no-underline text-sm">
-          Dimensions
-        </AccordionTrigger>
-        <DimensionsSection state={state} onChange={handleOnChanges} />
-      </AccordionItem>
-
-      <AccordionItem value="Decorations" className="px-4 py-0 ">
-        <AccordionTrigger className="!no-underline text-sm">
-          Decorations
-        </AccordionTrigger>
-        <DecorationsSection state={state} onChange={handleOnChanges} />
-      </AccordionItem>
-
-      {(state.editor.selectedElement.type === "text" ||
-        state.editor.selectedElement.type === "link") && (
-        <AccordionItem value="Typography" className="px-4 py-0">
+      {isFormElement && (
+        <AccordionItem value="Form" className="px-4 py-0">
           <AccordionTrigger className="!no-underline text-sm">
-            Typography
+            Form Fields Settings
           </AccordionTrigger>
-          <TypographySection state={state} onChange={handleOnChanges} />
+          <FormElementsSection
+            state={state}
+            onChange={handleChangeCustomValues}
+          />
+        </AccordionItem>
+      )}
+
+      {selectedElement.type === "select" && (
+        <AccordionItem value="Select" className="px-4 py-0">
+          <AccordionTrigger className="!no-underline text-sm">
+            Select Field Settings
+          </AccordionTrigger>
+          <SelectElementSection
+            state={state}
+            onChange={handleChangeCustomValues}
+          />
         </AccordionItem>
       )}
     </Accordion>

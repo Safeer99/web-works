@@ -20,12 +20,18 @@ export const LayersTab = ({ elements, level = 0 }: Props) => {
   };
 
   const handleOnClick = (id: string) => {
-    dispatch({
-      type: "CHANGE_CLICKED_ELEMENT",
-      payload: {
-        elementDetails: elements?.find((item) => item.id === id),
-      },
-    });
+    const selectedElement = elements?.find((item) => item.id === id);
+    if (selectedElement) {
+      dispatch({
+        type: "CHANGE_CLICKED_ELEMENT",
+        payload: {
+          elementDetails: {
+            ...selectedElement,
+            position: { x: 0, y: 0, h: 0, w: 0 },
+          },
+        },
+      });
+    }
   };
 
   return (

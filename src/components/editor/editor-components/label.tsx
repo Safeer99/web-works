@@ -64,7 +64,7 @@ export const LabelComponent = ({ element }: Props) => {
           ...element,
           content: {
             ...element.content,
-            innerText: e.target.value,
+            label: e.target.value,
           },
         },
       },
@@ -86,7 +86,7 @@ export const LabelComponent = ({ element }: Props) => {
     >
       <ContentEditable
         tagName="span"
-        html={content.innerText || ""}
+        html={content.label || ""}
         disabled={state.editor.previewMode || state.editor.liveMode}
         onChange={handleOnChange}
       />

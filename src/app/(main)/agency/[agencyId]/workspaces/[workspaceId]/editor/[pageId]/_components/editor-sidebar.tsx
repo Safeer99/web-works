@@ -3,12 +3,13 @@
 import clsx from "clsx";
 import { EyeIcon, Redo2, Undo2 } from "lucide-react";
 
-import { Tabs, TabsContent } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { useEditor } from "@/components/providers/editor";
 import { Hint } from "@/components/hint";
 
 import { TabList } from "./sidebar-tabs";
+import { StylesTab } from "./sidebar-tabs/styles-tab";
 import { SettingsTab } from "./sidebar-tabs/settings-tab";
 import { MediaBucketTab } from "./sidebar-tabs/media-bucket-tab";
 import { ComponentsTab } from "./sidebar-tabs/components-tab";
@@ -44,21 +45,37 @@ export const EditorSidebar = ({ agencyId }: Props) => {
       >
         <aside className="w-64 border-l-[1px]">
           <div className="gap-4 h-full pb-24 overflow-scroll scrollbar-hidden">
-            <TabsContent value="Settings">
-              <div className="text-left px-4 py-1">
-                <h5 className="text-sm py-2">Styles</h5>
-                <p className="text-xs text-muted-foreground">
-                  Show your creativity! You can customize every component as you
-                  like.
-                </p>
-              </div>
-              {state.editor.selectedElement.id ? (
-                <SettingsTab />
-              ) : (
-                <div className="p-6 mt-20 text-center text-sm text-muted-foreground">
-                  Select a component to customize it.
-                </div>
-              )}
+            <TabsContent className="m-0" value="Settings">
+              <Tabs defaultValue="style">
+                <TabsList className="sticky inset-x-0 top-0 z-[250] w-full justify-start bg-background space-x-6 p-4 h-12 border-b-[1px] border-muted">
+                  <TabsTrigger
+                    className="data-[state=active]:border-primary border-transparent border-b-2 rounded-none px-0  transition-all"
+                    value="style"
+                  >
+                    Style
+                  </TabsTrigger>
+                  <TabsTrigger
+                    className="data-[state=active]:border-primary border-transparent border-b-2 rounded-none px-0  transition-all"
+                    value="settings"
+                  >
+                    Settings
+                  </TabsTrigger>
+                </TabsList>
+                {state.editor.selectedElement.id ? (
+                  <>
+                    <TabsContent value="style">
+                      <StylesTab />
+                    </TabsContent>
+                    <TabsContent value="settings">
+                      <SettingsTab />
+                    </TabsContent>
+                  </>
+                ) : (
+                  <div className="p-6 mt-40 text-center text-sm text-muted-foreground">
+                    Select a component to customize it.
+                  </div>
+                )}
+              </Tabs>
             </TabsContent>
 
             <TabsContent value="Media">

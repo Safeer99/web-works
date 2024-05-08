@@ -90,9 +90,7 @@ export const defaultDetails: Record<
     styles: {
       objectFit: "contain",
     },
-    content: {
-      src: "/image-placeholder.png",
-    },
+    content: {},
   },
   form: {
     id: "",
@@ -112,7 +110,7 @@ export const defaultDetails: Record<
         },
         content: {
           id: "email",
-          innerText: "Email",
+          label: "Email",
           required: false,
         },
       },
@@ -146,7 +144,7 @@ export const defaultDetails: Record<
     styles: { fontSize: "16px", color: "black" },
     content: {
       id: "",
-      innerText: "Label Element",
+      label: "Label Element",
     },
   },
   input: {

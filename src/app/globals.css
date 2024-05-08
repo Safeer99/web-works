@@ -3,7 +3,8 @@
 @tailwind utilities;
 
 html,
-body,:root {
+body,
+:root {
   height: 100%;
 }
 
@@ -69,23 +70,22 @@ body,:root {
   }
 }
 
-
-.scrollbar-hidden::-webkit-scrollbar{
+.scrollbar-hidden::-webkit-scrollbar {
   display: none;
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
 
-.custom-scrollbar::-webkit-scrollbar{
+.custom-scrollbar::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
-.custom-scrollbar::-webkit-scrollbar-track{
+.custom-scrollbar::-webkit-scrollbar-track {
   background: rgb(52, 52, 52);
 }
 
-.custom-scrollbar::-webkit-scrollbar-thumb{
+.custom-scrollbar::-webkit-scrollbar-thumb {
   background: rgb(62, 36, 95);
   border-radius: 5px;
 }
@@ -111,15 +111,58 @@ body,:root {
   }
 }
 
-.editor-loader{
+.loader-bg-text {
+  text-shadow: 0 0 20px #6d28d9;
+  letter-spacing: 2px;
+}
+
+.loader-bg-text::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  color: #6d28d9;
+  filter: blur(20px);
+  z-index: -1;
+}
+
+.loader-bg-text::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #6d28d9;
+  z-index: -2;
+  opacity: 0.5;
+  filter: blur(50px);
+}
+
+.loader-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: #6d28d9;
+  filter: blur(50px);
+}
+
+.editor-loader {
   position: relative;
   border-radius: 20px;
-  background: linear-gradient(90deg, rgb(173, 81, 226), rgb(142, 41, 201), rgb(111, 2, 173), rgb(173, 81, 226));
+  background: linear-gradient(
+    90deg,
+    #4f1ba1,
+    #5e21bc,
+    #6d28d9,
+    #7947df,
+    #855fe4,
+    #9275e9,
+    #6d28d9,
+    #5e21bc,
+    #4f1ba1
+  );
   -webkit-box-reflect: below 1px linear-gradient(transparent, #0005);
 }
 
-.editor-loader::before{
-  content: '';
+.editor-loader::before {
+  content: "";
   position: absolute;
   inset: 0;
   background: inherit;
@@ -128,8 +171,8 @@ body,:root {
   animation: animate-loader 2s linear infinite reverse;
 }
 
-.editor-loader::after{
-  content: '';
+.editor-loader::after {
+  content: "";
   position: absolute;
   inset: 0;
   background: inherit;
@@ -142,7 +185,8 @@ body,:root {
 @keyframes animate-loader {
   from {
     background-position: 0 0;
-  } to{
+  }
+  to {
     background-position: 200% 0;
   }
 }
