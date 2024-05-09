@@ -73,9 +73,19 @@ export const useEditorSocket = () => {
       });
     });
 
+    socket.on("undo", () => {
+      dispatch({ type: "UNDO" });
+    });
+
+    socket.on("redo", () => {
+      dispatch({ type: "REDO" });
+    });
+
     return () => {
       socket.off("receive-changes");
       socket.off("delete-element");
+      socket.off("undo");
+      socket.off("redo");
     };
   }, [socket, isConnected, dispatch]);
 
@@ -83,13 +93,14 @@ export const useEditorSocket = () => {
   useEffect(() => {
     if (socket == null || !isConnected) return;
 
-    socket.on("sync-code", (data: string) => {
+    socket.on("sync-code", (data: string, history: string) => {
       setTimeout(() => {
         dispatch({
           type: "LOAD_DATA",
           payload: {
             elements: JSON.parse(data),
             withLive: false,
+            history: JSON.parse(history),
           },
         });
       }, 3000);
@@ -124,7 +135,8 @@ export const useEditorSocket = () => {
         if (socketId !== socket.id) {
           toast.success(`${username} joines the room.`);
           const data = JSON.stringify(state.editor.elements);
-          socket.emit("sync-code", socketId, data);
+          const history = JSON.stringify(state.history);
+          socket.emit("sync-code", socketId, data, history);
         }
         const filteredUsers = clients.filter(
           (client) => client.id !== self?.id
@@ -136,7 +148,14 @@ export const useEditorSocket = () => {
     return () => {
       socket.off("user-joined");
     };
-  }, [socket, self, isConnected, setOthers, state.editor.elements]);
+  }, [
+    socket,
+    self,
+    isConnected,
+    setOthers,
+    state.editor.elements,
+    state.history,
+  ]);
 };
 
 export const useUpdateElement = () => {
@@ -169,4 +188,26 @@ export const useDeleteElement = () => {
     const data = JSON.stringify(state.editor.selectedElement);
     socket.emit("delete-element", roomId, data);
   }, [socket, roomId, dispatch, state.editor.selectedElement]);
+};
+
+export const useUndo = () => {
+  const { dispatch } = useEditor();
+  const { socket, roomId } = useSocket();
+
+  return useCallback(() => {
+    if (socket == null) return;
+    dispatch({ type: "UNDO" });
+    socket.emit("undo", roomId);
+  }, [socket, roomId, dispatch]);
+};
+
+export const useRedo = () => {
+  const { dispatch } = useEditor();
+  const { socket, roomId } = useSocket();
+
+  return useCallback(() => {
+    if (socket == null) return;
+    dispatch({ type: "REDO" });
+    socket.emit("redo", roomId);
+  }, [socket, roomId, dispatch]);
 };

@@ -3,9 +3,10 @@
 import clsx from "clsx";
 import { EyeIcon, Redo2, Undo2 } from "lucide-react";
 
+import { useRedo, useUndo } from "@/hooks/use-editor-socket";
+import { useEditor } from "@/components/providers/editor";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { useEditor } from "@/components/providers/editor";
 import { Hint } from "@/components/hint";
 
 import { TabList } from "./sidebar-tabs";
@@ -21,18 +22,12 @@ interface Props {
 
 export const EditorSidebar = ({ agencyId }: Props) => {
   const { state, dispatch } = useEditor();
+  const redo = useRedo();
+  const undo = useUndo();
 
   const handlePreviewClick = () => {
     dispatch({ type: "TOGGLE_PREVIEW_MODE" });
     dispatch({ type: "TOGGLE_LIVE_MODE" });
-  };
-
-  const handleUndo = () => {
-    dispatch({ type: "UNDO" });
-  };
-
-  const handleRedo = () => {
-    dispatch({ type: "REDO" });
   };
 
   return (
@@ -120,7 +115,7 @@ export const EditorSidebar = ({ agencyId }: Props) => {
             <Hint label="Undo" side="left" sideOffset={8}>
               <Button
                 disabled={!(state.history.currentIndex > 0)}
-                onClick={handleUndo}
+                onClick={undo}
                 variant={"ghost"}
                 size={"icon"}
                 className="hover:bg-slate-800"
@@ -136,7 +131,7 @@ export const EditorSidebar = ({ agencyId }: Props) => {
                     state.history.history.length - 1
                   )
                 }
-                onClick={handleRedo}
+                onClick={redo}
                 variant={"ghost"}
                 size={"icon"}
                 className="hover:bg-slate-800"

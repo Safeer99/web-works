@@ -1,6 +1,7 @@
 import {
   DeviceTypes,
   EditorElement,
+  HistoryState,
   SelectedElementType,
 } from "./editor-types";
 
@@ -60,6 +61,7 @@ export type EditorAction =
       type: "LOAD_DATA";
       payload: {
         elements: EditorElement[];
+        history?: HistoryState;
         withLive: boolean;
       };
     }

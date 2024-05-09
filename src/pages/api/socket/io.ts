@@ -44,13 +44,17 @@ const ioHandler = (req: NextApiRequest, res: NextApiResponseServerIo) => {
         });
       });
 
-      socket.on("sync-code", (socketId, data) => {
-        socket.to(socketId).emit("sync-code", data);
+      socket.on("sync-code", (socketId, data, history) => {
+        socket.to(socketId).emit("sync-code", data, history);
       });
 
-      // socket.on("select-element", ({ roomId, data }) => {
-      //   socket.to(roomId).emit("receive-select-element", data);
-      // });
+      socket.on("undo", (roomId) => {
+        socket.to(roomId).emit("undo");
+      });
+
+      socket.on("redo", (roomId) => {
+        socket.to(roomId).emit("redo");
+      });
 
       socket.on("send-changes", (roomId, data) => {
         socket.to(roomId).emit("receive-changes", data);

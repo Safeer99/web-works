@@ -177,17 +177,9 @@ export const editorReducer = (
           position: { x: 0, y: 0, h: 0, w: 0 },
         },
       };
-      const updatedHistoryState = [
-        ...state.history.history.slice(0, state.history.currentIndex + 1),
-        { ...updatedEditorClickedState },
-      ];
       const updatedState = {
         ...state,
         editor: updatedEditorClickedState,
-        history: {
-          history: updatedHistoryState,
-          currentIndex: updatedHistoryState.length - 1,
-        },
       };
       return updatedState;
 
@@ -264,7 +256,7 @@ export const editorReducer = (
       return {
         ...state,
         editor: editorState,
-        history: {
+        history: action.payload.history || {
           history: [editorState],
           currentIndex: 0,
         },
