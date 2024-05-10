@@ -13,6 +13,7 @@ export const createCanvas = async (agencyId: string) => {
   const res = await db.canvas.create({
     data: {
       agencyId,
+      snapshot: `/placeholders/${Math.floor(Math.random() * 4) + 1}.png`,
     },
   });
 
