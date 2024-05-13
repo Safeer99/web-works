@@ -36,9 +36,15 @@ import { useModal } from "@/hooks/use-modals";
 
 interface AgencyFormProps {
   defaultData?: Agency;
+  isOwner?: boolean;
+  isAdmin?: boolean;
 }
 
-export const AgencyForm = ({ defaultData }: AgencyFormProps) => {
+export const AgencyForm = ({
+  defaultData,
+  isAdmin = false,
+  isOwner = false,
+}: AgencyFormProps) => {
   const modal = useModal();
   const router = useRouter();
   const [isLoading, startTransition] = useTransition();
@@ -49,7 +55,7 @@ export const AgencyForm = ({ defaultData }: AgencyFormProps) => {
     defaultValues: {
       name: defaultData?.name,
       address: defaultData?.address,
-      agencyLogo: defaultData?.agencyLogo,
+      agencyLogo: defaultData?.agencyLogo || undefined,
       city: defaultData?.city,
       companyEmail: defaultData?.companyEmail,
       companyPhone: defaultData?.companyPhone,
@@ -60,24 +66,42 @@ export const AgencyForm = ({ defaultData }: AgencyFormProps) => {
   });
 
   useEffect(() => {
-    if (defaultData) form.reset(defaultData);
+    if (defaultData)
+      form.reset({
+        name: defaultData?.name,
+        address: defaultData?.address,
+        agencyLogo: defaultData?.agencyLogo || undefined,
+        city: defaultData?.city,
+        companyEmail: defaultData?.companyEmail,
+        companyPhone: defaultData?.companyPhone,
+        country: defaultData?.country,
+        state: defaultData?.state,
+        zipCode: defaultData?.zipCode,
+      });
   }, [defaultData, form]);
 
   const handleSubmit = async (values: z.infer<typeof AgencyFormSchema>) => {
+    if (!isAdmin && !isOwner) {
+      return toast.error("You don't have permission to edit these settings.");
+    }
+
     startTransition(() => {
-      upsertAgency({ id: defaultData?.id, ownerId: "", ...values })
+      upsertAgency({
+        id: defaultData?.id,
+        ownerId: defaultData?.ownerId || "",
+        ...values,
+      })
         .then((res) => {
           modal.onClose();
-          toast.success(`Agecny saved successfully.`);
-          if (defaultData?.id) router.refresh();
-          else router.replace(`/agency/${res.id}`);
+          toast.success(`Agency saved successfully.`);
+          router.refresh();
         })
         .catch(() => toast.error("Could not save agency!!!"));
     });
   };
 
   const handleDeleteAgency = () => {
-    if (!defaultData || !defaultData.id) return;
+    if (!defaultData || !defaultData.id || !isOwner) return;
     startTransition(() => {
       deleteAgency(defaultData.id)
         .then(() => {
@@ -251,7 +275,7 @@ export const AgencyForm = ({ defaultData }: AgencyFormProps) => {
               </Button>
             </form>
           </Form>
-          {defaultData?.id && (
+          {isOwner && defaultData?.id && (
             <div className="flex flex-col justify-between rounded-lg border border-destructive gap-4 p-4 mt-8">
               <div>
                 <div>Danger Zone</div>

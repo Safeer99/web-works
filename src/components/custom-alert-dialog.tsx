@@ -27,7 +27,10 @@ export const CustomAlertDialog = ({
   return (
     <AlertDialog>
       {children}
-      <AlertDialogContent>
+      <AlertDialogContent
+        className="z-[600]"
+        onClick={(e) => e.stopPropagation()}
+      >
         <AlertDialogHeader>
           <AlertDialogTitle>{title ? title : "Are you sure?"}</AlertDialogTitle>
           <AlertDialogDescription>

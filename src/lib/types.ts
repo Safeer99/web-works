@@ -30,7 +30,7 @@ export const AgencyFormSchema = z.object({
   zipCode: z.string().min(1),
   state: z.string().min(1),
   country: z.string().min(1),
-  agencyLogo: z.string().min(1),
+  agencyLogo: z.string().optional(),
 });
 
 export const WorkspaceFormSchema = z.object({
@@ -48,6 +48,10 @@ export const WorkspacePageSchema = z.object({
 export const mediaFormSchema = z.object({
   link: z.string().min(1, { message: "Media File is required" }),
   name: z.string().min(1, { message: "Name is required" }),
+});
+
+export const CanvasFormSchema = z.object({
+  title: z.string().min(1),
 });
 
 export const BoardFormSchema = z.object({

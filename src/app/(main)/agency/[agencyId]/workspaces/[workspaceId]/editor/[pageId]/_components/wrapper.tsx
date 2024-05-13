@@ -7,7 +7,7 @@ export const Wrapper = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     if (!mounted) setMounted(true);
-  }, []);
+  }, [mounted]);
 
   if (!mounted) return null;
 

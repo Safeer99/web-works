@@ -36,11 +36,11 @@ model User {
 }
 
 model Agency {
-  id           String @id @default(uuid())
+  id           String  @id @default(uuid())
   ownerId      String
   name         String
-  agencyLogo   String @db.Text
-  companyEmail String @db.Text
+  agencyLogo   String? @db.Text
+  companyEmail String  @db.Text
   companyPhone String
   address      String
   city         String
@@ -83,6 +83,7 @@ model Associate {
 model Invitation {
   id       String           @id @default(uuid())
   email    String           @unique
+  token    String           @unique
   agencyId String
   agency   Agency           @relation(fields: [agencyId], references: [id], onDelete: Cascade)
   status   InvitationStatus @default(PENDING)

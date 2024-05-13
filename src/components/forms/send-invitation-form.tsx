@@ -73,8 +73,8 @@ export const SendInvitation: React.FC<SendInvitationProps> = ({ agencyId }) => {
         <CardTitle>Invitation</CardTitle>
         <CardDescription>
           An invitation will be sent to the user. Users who already have an
-          invitation sent out to their email, will not receive another
-          invitation.
+          invitation sent out to their email, will receive another invitation
+          and the older one will be disabled.
         </CardDescription>
       </CardHeader>
       <CardContent>

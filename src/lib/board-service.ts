@@ -1,8 +1,9 @@
 "use server";
 
 import { v4 } from "uuid";
-import { Lane, Prisma, Tag, Ticket } from "@prisma/client";
+import { Lane, Prisma, Role, Tag, Ticket } from "@prisma/client";
 import { db } from "@/lib/db";
+import { getAssociatedAccount } from "./auth-service";
 
 export const getBoardDetails = async (boardId: string) => {
   const res = await db.board.findUnique({
@@ -35,18 +36,24 @@ export const getLanesWithTicketAndTags = async (boardId: string) => {
 };
 
 export const upsertBoard = async (board: Prisma.BoardUncheckedCreateInput) => {
+  const currentAccount = await getAssociatedAccount(board.agencyId);
+  if (currentAccount.role === Role.AGENCY_USER)
+    throw new Error("Unauthorized access!!!");
+
   const res = await db.board.upsert({
     where: { id: board.id || v4() },
     update: board,
     create: board,
   });
 
-  if (!res.id) throw new Error("Something went wrong!");
-
   return res;
 };
 
-export const deleteBoard = async (id: string) => {
+export const deleteBoard = async (id: string, agencyId: string) => {
+  const currentAccount = await getAssociatedAccount(agencyId);
+  if (currentAccount.role === Role.AGENCY_USER)
+    throw new Error("Unauthorized access!!!");
+
   const res = await db.board.delete({
     where: { id },
   });

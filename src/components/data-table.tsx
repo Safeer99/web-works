@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Plus, Search } from "lucide-react";
+import { Role } from "@prisma/client";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -25,8 +26,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useModal } from "@/hooks/use-modals";
+import { useCurrentUser } from "@/hooks/use-current-user";
 
 interface DataTableProps<TData, TValue> {
+  agencyId: string;
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   buttonText: string;
@@ -34,12 +37,14 @@ interface DataTableProps<TData, TValue> {
 }
 
 export function DataTable<TData, TValue>({
+  agencyId,
   columns,
   data,
   buttonText,
   modalChildren,
 }: DataTableProps<TData, TValue>) {
   const modal = useModal();
+  const { role } = useCurrentUser(agencyId);
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
@@ -72,17 +77,19 @@ export function DataTable<TData, TValue>({
           />
           <Search />
         </div>
-        <Button
-          className="flex items-center gap-2 ml-2"
-          onClick={() => {
-            if (modalChildren) {
-              modal.onOpen(modalChildren);
-            }
-          }}
-        >
-          <Plus size={18} />
-          {buttonText}
-        </Button>
+        {role !== Role.AGENCY_USER && (
+          <Button
+            className="flex items-center gap-2 ml-2"
+            onClick={() => {
+              if (modalChildren) {
+                modal.onOpen(modalChildren);
+              }
+            }}
+          >
+            <Plus size={18} />
+            {buttonText}
+          </Button>
+        )}
       </div>
       <div className="rounded-md border">
         <Table>

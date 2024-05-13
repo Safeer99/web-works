@@ -1,8 +1,8 @@
 "use server";
 
 import * as z from "zod";
-import { db } from "./db";
-import { mediaFormSchema } from "./types";
+import { db } from "@/lib/db";
+import { mediaFormSchema } from "@/lib/types";
 
 export const createMedia = async (
   agencyId: string,

@@ -29,9 +29,10 @@ interface Props {
   agencyId: string;
   boardId: string;
   boards: Board[];
+  isAdmin: boolean;
 }
 
-export const BoardInfo = ({ agencyId, boardId, boards }: Props) => {
+export const BoardInfo = ({ agencyId, boardId, boards, isAdmin }: Props) => {
   const router = useRouter();
   const modal = useModal();
   const [open, setOpen] = useState(false);
@@ -101,14 +102,18 @@ export const BoardInfo = ({ agencyId, boardId, boards }: Props) => {
                   ))}
                 </CommandGroup>
               </CommandList>
-              <CommandSeparator />
-              <Button
-                className="flex gap-2 w-full mt-2"
-                onClick={handleClickCreateboard}
-              >
-                <Plus size={15} />
-                Create board
-              </Button>
+              {isAdmin && (
+                <>
+                  <CommandSeparator />
+                  <Button
+                    className="flex gap-2 w-full mt-2"
+                    onClick={handleClickCreateboard}
+                  >
+                    <Plus size={15} />
+                    Create board
+                  </Button>
+                </>
+              )}
             </Command>
           </PopoverContent>
         </Popover>

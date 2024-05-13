@@ -1,22 +1,19 @@
-import { getInvitationByIdAndEmail } from "@/lib/invitation";
 import { redirect } from "next/navigation";
-import { InvitaionDialog } from "./_components/dialog";
+import { getInvitationByToken } from "@/lib/invitation";
 import { getSelf } from "@/lib/auth-service";
 import { db } from "@/lib/db";
+import { InvitaionDialog } from "./_components/dialog";
 
 interface Props {
   searchParams: {
-    agency: string;
+    token: string;
   };
 }
 
 const InvitationPage = async ({ searchParams }: Props) => {
   const self = await getSelf();
 
-  const invitation = await getInvitationByIdAndEmail({
-    agencyId: searchParams.agency,
-    email: self.email,
-  });
+  const invitation = await getInvitationByToken(searchParams.token);
 
   if (!invitation) return redirect("/agency");
 

@@ -3,13 +3,19 @@
 import { v4 } from "uuid";
 import { Prisma, Role } from "@prisma/client";
 import { db } from "@/lib/db";
-import { getSelf } from "@/lib/auth-service";
-import { AssociateWithUser } from "./types";
+import { getAssociatedAccount, getSelf } from "@/lib/auth-service";
+import { AssociateWithUser } from "@/lib/types";
 
 export const upsertAgency = async (
   agency: Prisma.AgencyUncheckedCreateInput
 ) => {
   const self = await getSelf();
+
+  if (agency.id) {
+    const account = await getAssociatedAccount(agency.id);
+    if (account.role === Role.AGENCY_USER)
+      throw new Error("Unauthorized access!!!");
+  }
 
   const res = await db.agency.upsert({
     where: {
@@ -25,14 +31,16 @@ export const upsertAgency = async (
     },
   });
 
-  if (!res.id) throw new Error("Something went wrong!");
-
   return res;
 };
 
 export const deleteAgency = async (id: string) => {
-  const res = await db.agency.delete({ where: { id } });
-  return res;
+  const account = await getAssociatedAccount(id);
+
+  if (account.role !== Role.AGENCY_OWNER)
+    throw new Error("Unauthorized access!!!");
+
+  return await db.agency.delete({ where: { id } });
 };
 
 export const getAllTeamMembers = async (id: string) => {
@@ -47,6 +55,11 @@ export const getAllTeamMembers = async (id: string) => {
 };
 
 export const updateAssociatedAccount = async (account: AssociateWithUser) => {
+  const currentAccount = await getAssociatedAccount(account.id);
+
+  if (currentAccount.role === Role.AGENCY_USER)
+    throw new Error("Unauthorized access!!!");
+
   const res = await db.associate.update({
     where: { id: account.id },
     data: {
@@ -56,9 +69,19 @@ export const updateAssociatedAccount = async (account: AssociateWithUser) => {
   return res;
 };
 
-export const deleteAssociatedAccount = async (id: string) => {
-  const res = await db.associate.delete({
+export const deleteAssociatedAccount = async (id: string, agencyId: string) => {
+  const currentAccount = await getAssociatedAccount(agencyId);
+
+  if (currentAccount.role === Role.AGENCY_USER)
+    throw new Error("Unauthorized access!!!");
+
+  const account = await db.associate.findUnique({ where: { id } });
+
+  if (account && account.role === Role.AGENCY_OWNER) throw new Error("");
+
+  await db.associate.delete({
     where: { id },
   });
-  return res;
+
+  return;
 };

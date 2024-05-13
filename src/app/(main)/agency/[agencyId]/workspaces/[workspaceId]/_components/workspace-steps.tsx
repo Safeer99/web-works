@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import clsx from "clsx";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { DragDropContext, DropResult, Droppable } from "@hello-pangea/dnd";
@@ -34,7 +35,7 @@ export const WorkspaceSteps = ({
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
     if (!mounted) setMounted(true);
-  }, []);
+  }, [mounted]);
 
   const modal = useModal();
   const [pagesState, setPagesState] = useState(pages);
@@ -177,7 +178,13 @@ export const WorkspaceSteps = ({
                 <Link
                   target="_blank"
                   href={`${process.env.NEXT_PUBLIC_SCHEME}${workspace.subDomainName}.${process.env.NEXT_PUBLIC_DOMAIN}/${clickedPage.pathName}`}
-                  className="group flex items-center justify-start p-2 gap-2 hover:text-primary transition-colors duration-200"
+                  className={clsx(
+                    "group flex items-center justify-start p-2 gap-2 hover:text-primary transition-colors duration-200",
+                    {
+                      "pointer-events-none text-muted-foreground":
+                        !workspace.published,
+                    }
+                  )}
                 >
                   <ExternalLink size={15} />
                   <div className="w-64 text-sm overflow-hidden overflow-ellipsis ">

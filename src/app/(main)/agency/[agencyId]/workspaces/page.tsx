@@ -1,8 +1,8 @@
-import { DataTable } from "@/components/data-table";
-import { columns } from "./_components/columns";
-import { Modal } from "@/components/modal";
-import { WorkspaceForm } from "@/components/forms/workspace-form";
 import { db } from "@/lib/db";
+import { WorkspaceForm } from "@/components/forms/workspace-form";
+import { DataTable } from "@/components/data-table";
+import { Modal } from "@/components/modal";
+import { columns } from "./_components/columns";
 
 interface Props {
   params: {
@@ -17,6 +17,7 @@ const WorkspacesPage = async ({ params }: Props) => {
 
   return (
     <DataTable
+      agencyId={params.agencyId}
       columns={columns}
       data={data}
       buttonText="Create Workspace"

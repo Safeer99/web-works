@@ -7,6 +7,8 @@ import { WorkspaceForm } from "@/components/forms/workspace-form";
 import { getWorkspace } from "@/lib/workspace-service";
 import { WorkspaceSteps } from "./_components/workspace-steps";
 import { Actions } from "./_components/actions";
+import { getAssociatedAccount } from "@/lib/auth-service";
+import { Role } from "@prisma/client";
 
 interface Props {
   params: {
@@ -16,6 +18,7 @@ interface Props {
 }
 
 const WorkspaceIdPage = async ({ params }: Props) => {
+  const account = await getAssociatedAccount(params.agencyId);
   const workspacePages = await getWorkspace(params.workspaceId);
 
   if (!workspacePages) return redirect(`/agency/${params.agencyId}/workspace`);
@@ -31,12 +34,15 @@ const WorkspaceIdPage = async ({ params }: Props) => {
       </Link>
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl">{workspacePages.name}</h1>
-        <Actions
-          isPublished={workspacePages.published}
-          agencyId={params.agencyId}
-          workspaceId={params.workspaceId}
-          disabled={workspacePages.workspacePages.length === 0}
-        />
+        {(account.role === Role.AGENCY_OWNER ||
+          account.role === Role.AGENCY_ADMIN) && (
+          <Actions
+            isPublished={workspacePages.published}
+            agencyId={params.agencyId}
+            workspaceId={params.workspaceId}
+            disabled={workspacePages.workspacePages.length === 0}
+          />
+        )}
       </div>
       <Tabs defaultValue="steps" className="w-full">
         <TabsList className="grid  grid-cols-2 w-[50%] bg-transparent ">

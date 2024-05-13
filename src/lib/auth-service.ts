@@ -1,8 +1,8 @@
 "use server";
 
+import { redirect } from "next/navigation";
 import { currentUser } from "@clerk/nextjs";
 import { db } from "@/lib/db";
-import { redirect } from "next/navigation";
 
 export const getSelf = async () => {
   const self = await currentUser();
@@ -35,6 +35,10 @@ export const getAssociatedAccount = async (agencyId: string) => {
       user: true,
     },
   });
+
+  if (!account) {
+    throw new Error("Unauthorized access.");
+  }
 
   return account;
 };

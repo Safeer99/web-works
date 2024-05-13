@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
+import { Role } from "@prisma/client";
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { getAssociatedAccount } from "@/lib/auth-service";
 import {
   getBoardDetails,
   getLanesWithTicketAndTags,
@@ -9,6 +10,7 @@ import {
 } from "@/lib/board-service";
 import { db } from "@/lib/db";
 import { LaneDetailsType } from "@/lib/types";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BoardInfo } from "./_components/board-info";
 import { BoardSettings } from "./_components/board-settings";
 import { BoardView } from "./_components/board-view";
@@ -21,6 +23,8 @@ interface Props {
 }
 
 const KanbanIdPage = async ({ params }: Props) => {
+  const account = await getAssociatedAccount(params.agencyId);
+
   const boardDetails = await getBoardDetails(params.boardId);
 
   if (!boardDetails) {
@@ -42,6 +46,10 @@ const KanbanIdPage = async ({ params }: Props) => {
           agencyId={params.agencyId}
           boardId={params.boardId}
           boards={boards}
+          isAdmin={
+            account.role === Role.AGENCY_OWNER ||
+            account.role === Role.AGENCY_ADMIN
+          }
         />
         <div>
           <TabsTrigger value="view">Board View</TabsTrigger>
@@ -63,6 +71,10 @@ const KanbanIdPage = async ({ params }: Props) => {
           agencyId={params.agencyId}
           boardId={params.boardId}
           boards={boards}
+          isAdmin={
+            account.role === Role.AGENCY_OWNER ||
+            account.role === Role.AGENCY_ADMIN
+          }
         />
       </TabsContent>
     </Tabs>

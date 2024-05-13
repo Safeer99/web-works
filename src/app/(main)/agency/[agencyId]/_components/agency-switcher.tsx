@@ -62,7 +62,7 @@ export const AgencySwitcher = ({ data }: Props) => {
     <div className="mt-6">
       <AspectRatio ratio={16 / 5}>
         <Image
-          src={currentAgency?.agencyLogo}
+          src={currentAgency?.agencyLogo || "/logo.svg"}
           alt="Agency logo"
           fill
           className="rounded-md object-contain"

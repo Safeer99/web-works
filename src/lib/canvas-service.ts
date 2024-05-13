@@ -1,6 +1,8 @@
 "use server";
 
-import { db } from "./db";
+import { Canvas, Role } from "@prisma/client";
+import { db } from "@/lib/db";
+import { getAssociatedAccount } from "@/lib/auth-service";
 
 export const getCanvas = async (id: string) => {
   const res = await db.canvas.findUnique({
@@ -10,6 +12,11 @@ export const getCanvas = async (id: string) => {
 };
 
 export const createCanvas = async (agencyId: string) => {
+  const currentAccount = await getAssociatedAccount(agencyId);
+
+  if (currentAccount.role === Role.AGENCY_USER)
+    throw new Error("Unauthorized access!!!");
+
   const res = await db.canvas.create({
     data: {
       agencyId,
@@ -20,20 +27,23 @@ export const createCanvas = async (agencyId: string) => {
   return res;
 };
 
-export const updateCanvas = async (id: string, title: string) => {
+export const updateCanvas = async (data: Canvas) => {
   const res = await db.canvas.update({
     where: {
-      id,
+      id: data.id,
     },
-    data: {
-      title,
-    },
+    data: data,
   });
 
   return res;
 };
 
-export const deleteCanvas = async (id: string) => {
-  const res = await db.canvas.delete({ where: { id } });
-  return res;
+export const deleteCanvas = async (id: string, agencyId: string) => {
+  const currentAccount = await getAssociatedAccount(agencyId);
+
+  if (currentAccount.role === Role.AGENCY_USER)
+    throw new Error("Unauthorized access!!!");
+
+  await db.canvas.delete({ where: { id } });
+  return;
 };

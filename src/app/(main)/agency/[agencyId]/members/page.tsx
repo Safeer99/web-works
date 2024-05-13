@@ -34,6 +34,7 @@ const MembersPage = async ({ params: { agencyId } }: Props) => {
 
   return (
     <DataTable
+      agencyId={agencyId}
       columns={columns}
       data={data}
       buttonText="Invite members"

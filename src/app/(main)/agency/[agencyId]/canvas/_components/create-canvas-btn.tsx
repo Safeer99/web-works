@@ -20,6 +20,7 @@ export const CreateCanvasButton = ({ agencyId }: Props) => {
       createCanvas(agencyId)
         .then((res) => {
           toast.success("Canvas created successfully.");
+          router.refresh();
           router.push(`/agency/${agencyId}/canvas/${res.id}`);
         })
         .catch(() => toast.error("Something went wrong!"));

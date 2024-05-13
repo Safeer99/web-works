@@ -1,23 +1,14 @@
 "use server";
 
-import { redirect } from "next/navigation";
+import crypto from "crypto";
 import { Role } from "@prisma/client";
 import { db } from "@/lib/db";
 import { getSelf } from "@/lib/auth-service";
 import { sendInvitaionMail } from "@/lib/mail";
 
-export const getInvitationByIdAndEmail = async ({
-  agencyId,
-  email,
-}: {
-  agencyId: string;
-  email: string;
-}) => {
+export const getInvitationByToken = async (token: string) => {
   const existingInvitation = await db.invitation.findUnique({
-    where: {
-      agencyId,
-      email,
-    },
+    where: { token },
     include: {
       agency: true,
     },
@@ -31,11 +22,13 @@ export const sendInvitation = async (
   email: string,
   agencyId: string
 ) => {
-  const expires = new Date(new Date().getTime() + 3600 * 1000);
-
-  const existingInvitation = await getInvitationByIdAndEmail({
-    agencyId,
-    email,
+  const existingInvitation = await db.invitation.findUnique({
+    where: {
+      agencyId_email: {
+        agencyId,
+        email,
+      },
+    },
   });
 
   if (existingInvitation) {
@@ -46,23 +39,26 @@ export const sendInvitation = async (
     });
   }
 
+  const expires = new Date(new Date().getTime() + 3600 * 1000);
+  const token = crypto.randomInt(100000, 1000000).toString();
+
   const res = await db.invitation.create({
-    data: { email, agencyId, role, expires },
+    data: { token, email, agencyId, role, expires },
   });
 
-  await sendInvitaionMail(email, res.agencyId);
+  await sendInvitaionMail(email, token);
 
   return res;
 };
 
-export const acceptInvitation = async (id: string) => {
+export const acceptInvitation = async (token: string) => {
   const self = await getSelf();
-  const invitation = await getInvitationByIdAndEmail({
-    agencyId: id,
-    email: self.email,
-  });
+  const invitation = await getInvitationByToken(token);
 
-  if (!invitation) throw Error(`Invitation not found`);
+  if (!invitation) throw new Error(`Invitation not found`);
+  if (invitation.email !== self.email)
+    throw new Error("Unauthorized access!!!");
+
   const createAccount = await db.associate.create({
     data: {
       userId: self.id,
@@ -73,14 +69,20 @@ export const acceptInvitation = async (id: string) => {
 
   await db.invitation.delete({ where: { id: invitation.id } });
 
-  return redirect(`/agency/${createAccount.agencyId}`);
+  return createAccount;
 };
 
-export const rejectInvitation = async (id: string) => {
-  const data = await db.invitation.delete({
+export const rejectInvitation = async (token: string) => {
+  const self = await getSelf();
+  const invitation = await getInvitationByToken(token);
+
+  if (!invitation) throw new Error(`Invitation not found`);
+  if (invitation.email !== self.email)
+    throw new Error("Unauthorized access!!!");
+
+  return await db.invitation.delete({
     where: {
-      id,
+      token,
     },
   });
-  return redirect("/agency");
 };

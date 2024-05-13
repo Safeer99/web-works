@@ -1,6 +1,5 @@
-import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
-import React from "react";
+import { db } from "@/lib/db";
 
 interface Props {
   params: {

@@ -1,6 +1,7 @@
 "use client";
 
-import { RenameModal } from "@/components/rename-modal";
+import { CanvasForm } from "@/components/forms/canvas-form";
+import { Modal } from "@/components/modal";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useModal } from "@/hooks/use-modals";
@@ -47,7 +48,11 @@ export const Info = ({ data }: InfoProps) => {
         variant="canvas"
         className="px-2 text-base font-normal"
         onClick={() => {
-          modal.onOpen(<RenameModal id={data.id} title={data.title} />);
+          modal.onOpen(
+            <Modal title="Edit canvas details" description="">
+              <CanvasForm defaultData={data} agencyId={data.agencyId} />
+            </Modal>
+          );
         }}
       >
         {data.title}

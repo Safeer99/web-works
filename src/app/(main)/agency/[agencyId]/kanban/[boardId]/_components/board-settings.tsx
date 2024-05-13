@@ -14,13 +14,19 @@ interface SettingsProps {
   agencyId: string;
   boardId: string;
   boards: Board[];
+  isAdmin: boolean;
 }
 
-export const BoardSettings = ({ boardId, agencyId, boards }: SettingsProps) => {
+export const BoardSettings = ({
+  boardId,
+  agencyId,
+  boards,
+  isAdmin,
+}: SettingsProps) => {
   const router = useRouter();
 
   const handleDelete = () => {
-    deleteBoard(boardId)
+    deleteBoard(boardId, agencyId)
       .then(() => {
         toast.success("Board deleted successfully.");
         router.push(`/agency/${agencyId}/kanban`);
@@ -39,12 +45,14 @@ export const BoardSettings = ({ boardId, agencyId, boards }: SettingsProps) => {
           agencyId={agencyId}
           defaultData={boards.find((p) => p.id === boardId)}
         />
-        <div className="w-full flex items-center justify-between my-4 border-destructive border-2 p-8 rounded-md">
-          <h5 className="text-xl font-semibold">Danger zone</h5>
-          <AlertDialogTrigger asChild>
-            <Button variant={"destructive"}>Delete Pipeline</Button>
-          </AlertDialogTrigger>
-        </div>
+        {isAdmin && (
+          <div className="w-full flex items-center justify-between my-4 border-destructive border-2 p-8 rounded-md">
+            <h5 className="text-xl font-semibold">Danger zone</h5>
+            <AlertDialogTrigger asChild>
+              <Button variant={"destructive"}>Delete Pipeline</Button>
+            </AlertDialogTrigger>
+          </div>
+        )}
       </div>
     </CustomAlertDialog>
   );

@@ -28,7 +28,8 @@ import {
   CommandList,
   CommandSeparator,
 } from "@/components/ui/command";
-import { TagComponent } from "./tag";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { TagComponent } from "@/components/tag";
 
 type Props = {
   agencyId: string;
@@ -154,47 +155,49 @@ export const TagCreator = ({
           />
         </div>
         <CommandList>
-          <CommandSeparator />
-          <CommandGroup heading="Tags">
-            {tags.map((tag) => (
-              <CommandItem
-                key={tag.id}
-                className="hover:!bg-secondary !bg-transparent flex items-center justify-between !font-light cursor-pointer"
-              >
-                <div onClick={() => handleAddSelections(tag)}>
-                  <TagComponent title={tag.name} colorName={tag.color} />
-                </div>
+          <ScrollArea className="w-full h-52">
+            <CommandSeparator />
+            <CommandGroup heading="Tags">
+              {tags.map((tag) => (
+                <CommandItem
+                  key={tag.id}
+                  className="hover:!bg-secondary !bg-transparent flex items-center justify-between !font-light cursor-pointer"
+                >
+                  <div onClick={() => handleAddSelections(tag)}>
+                    <TagComponent title={tag.name} colorName={tag.color} />
+                  </div>
 
-                <AlertDialogTrigger>
-                  <TrashIcon
-                    size={16}
-                    className="cursor-pointer text-muted-foreground hover:text-rose-400  transition-all"
-                  />
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle className="text-left">
-                      Are you absolutely sure?
-                    </AlertDialogTitle>
-                    <AlertDialogDescription className="text-left">
-                      This action cannot be undone. This will permanently delete
-                      your the tag and remove it from our servers.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter className="items-center">
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction
-                      className="bg-destructive"
-                      onClick={() => handleDeleteTag(tag.id)}
-                    >
-                      Delete Tag
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </CommandItem>
-            ))}
-          </CommandGroup>
-          <CommandEmpty>No results found.</CommandEmpty>
+                  <AlertDialogTrigger>
+                    <TrashIcon
+                      size={16}
+                      className="cursor-pointer text-muted-foreground hover:text-rose-400  transition-all"
+                    />
+                  </AlertDialogTrigger>
+                  <AlertDialogContent className="z-[600]">
+                    <AlertDialogHeader>
+                      <AlertDialogTitle className="text-left">
+                        Are you absolutely sure?
+                      </AlertDialogTitle>
+                      <AlertDialogDescription className="text-left">
+                        This action cannot be undone. This will permanently
+                        delete your the tag and remove it from our servers.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter className="items-center">
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction
+                        className="bg-destructive"
+                        onClick={() => handleDeleteTag(tag.id)}
+                      >
+                        Delete Tag
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </CommandItem>
+              ))}
+            </CommandGroup>
+            <CommandEmpty>No results found.</CommandEmpty>
+          </ScrollArea>
         </CommandList>
       </Command>
     </AlertDialog>

@@ -70,7 +70,7 @@ export const WorkspacePageForm = ({
     if (order !== 0 && !values.pathName) {
       return form.setError("pathName", {
         message:
-          "Pages other than the first page in the funnel require a path name example 'secondstep'.",
+          "Pages other than the first page in the workspace require a path name example 'secondstep'.",
       });
     }
 

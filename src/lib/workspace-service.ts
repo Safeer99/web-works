@@ -1,19 +1,24 @@
 "use server";
 
 import { v4 } from "uuid";
-import { Prisma } from "@prisma/client";
+import { Prisma, Role } from "@prisma/client";
 import { db } from "@/lib/db";
+import { getAssociatedAccount } from "@/lib/auth-service";
 
 export const upsertWorkspace = async (
   workspace: Prisma.WorkspaceUncheckedCreateInput
 ) => {
+  if (!workspace.id) {
+    const currentAccount = await getAssociatedAccount(workspace.agencyId);
+    if (currentAccount.role === Role.AGENCY_USER)
+      throw new Error("Unauthorized access!!!");
+  }
+
   const res = await db.workspace.upsert({
     where: { id: workspace.id || v4() },
     update: workspace,
     create: workspace,
   });
-
-  if (!res.id) throw new Error("Something went wrong!");
 
   return res;
 };
@@ -35,7 +40,12 @@ export const getWorkspace = async (workspaceId: string) => {
   return workspace;
 };
 
-export const publishWorkspace = async (id: string) => {
+export const publishWorkspace = async (id: string, agencyId: string) => {
+  const currentAccount = await getAssociatedAccount(agencyId);
+
+  if (currentAccount.role === Role.AGENCY_USER)
+    throw new Error("Unauthorized access!!!");
+
   const res = await db.workspace.update({
     where: {
       id,
@@ -47,7 +57,12 @@ export const publishWorkspace = async (id: string) => {
   return res;
 };
 
-export const unPublishWorkspace = async (id: string) => {
+export const unPublishWorkspace = async (id: string, agencyId: string) => {
+  const currentAccount = await getAssociatedAccount(agencyId);
+
+  if (currentAccount.role === Role.AGENCY_USER)
+    throw new Error("Unauthorized access!!!");
+
   const res = await db.workspace.update({
     where: {
       id,
@@ -59,9 +74,14 @@ export const unPublishWorkspace = async (id: string) => {
   return res;
 };
 
-export const deleteWorkspace = async (id: string) => {
-  const res = await db.workspace.delete({ where: { id } });
-  return res;
+export const deleteWorkspace = async (id: string, agencyId: string) => {
+  const currentAccount = await getAssociatedAccount(agencyId);
+
+  if (currentAccount.role === Role.AGENCY_USER)
+    throw new Error("Unauthorized access!!!");
+
+  await db.workspace.delete({ where: { id } });
+  return;
 };
 
 export const getWorkspaceByDomain = async (subDomainName: string) => {

@@ -46,8 +46,8 @@ export const WorkspaceForm = ({
     defaultValues: {
       name: defaultData?.name || "",
       description: defaultData?.description || "",
-      favicon: defaultData?.favicon || "",
-      subDomainName: defaultData?.subDomainName || "",
+      favicon: defaultData?.favicon || undefined,
+      subDomainName: defaultData?.subDomainName || undefined,
     },
   });
 
@@ -55,9 +55,9 @@ export const WorkspaceForm = ({
     if (defaultData) {
       form.reset({
         description: defaultData.description || "",
-        favicon: defaultData.favicon || "",
         name: defaultData.name || "",
-        subDomainName: defaultData.subDomainName || "",
+        favicon: defaultData.favicon || undefined,
+        subDomainName: defaultData.subDomainName || undefined,
       });
     }
   }, [defaultData, form]);

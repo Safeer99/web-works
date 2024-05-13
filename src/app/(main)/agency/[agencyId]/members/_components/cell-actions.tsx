@@ -39,7 +39,7 @@ export const CellActions: React.FC<CellActionsProps> = ({ rowData }) => {
 
   const handleRemove = () => {
     startTransition(() => {
-      deleteAssociatedAccount(rowData.id)
+      deleteAssociatedAccount(rowData.id, rowData.agencyId)
         .then(() => {
           toast.success(`Kick ${rowData.name} successfully.`);
           router.refresh();

@@ -1,5 +1,10 @@
 "use client";
 
+import { useEffect, useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { Agency, Invitation, Role } from "@prisma/client";
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -11,15 +16,13 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { acceptInvitation, rejectInvitation } from "@/lib/invitation";
-import { Agency, Invitation, Role } from "@prisma/client";
-import { useEffect, useState, useTransition } from "react";
-import { toast } from "sonner";
 
 interface Props {
   invitation: Invitation & { agency: Agency };
 }
 
 export const InvitaionDialog = ({ invitation }: Props) => {
+  const router = useRouter();
   const [isLoading, startTransition] = useTransition();
   const [mounted, setMounted] = useState(false);
 
@@ -28,7 +31,7 @@ export const InvitaionDialog = ({ invitation }: Props) => {
 
   useEffect(() => {
     if (!mounted) setMounted(true);
-  }, []);
+  }, [mounted]);
 
   if (!mounted) return null;
 
@@ -36,16 +39,18 @@ export const InvitaionDialog = ({ invitation }: Props) => {
     if (status === "REJECT") {
       startTransition(() => {
         rejectInvitation(invitation.id)
-          .then(() => {
+          .then((res) => {
             toast.success("Invitation rejected successfully.");
+            router.replace(`/agency/${res.agencyId}`);
           })
           .catch(() => toast.error("Something went wrong!"));
       });
     } else if (status === "ACCEPT") {
       startTransition(() => {
-        acceptInvitation(invitation.agencyId)
-          .then((data) => {
+        acceptInvitation(invitation.token)
+          .then(() => {
             toast.success("Invitation accepted successfully.");
+            router.replace("/agency");
           })
           .catch(() => toast.error("Something went wrong!"));
       });
@@ -70,19 +75,25 @@ export const InvitaionDialog = ({ invitation }: Props) => {
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel
-            className="mr-2"
-            disabled={isLoading}
-            onClick={() => handleClick("REJECT")}
-          >
-            {isExpired ? "Continue" : "Reject Invitation"}
-          </AlertDialogCancel>
-          <AlertDialogAction
-            disabled={isLoading}
-            onClick={() => handleClick("ACCEPT")}
-          >
-            Accept Invitation
-          </AlertDialogAction>
+          {isExpired ? (
+            <AlertDialogAction>Continue</AlertDialogAction>
+          ) : (
+            <>
+              <AlertDialogCancel
+                className="mr-2"
+                disabled={isLoading}
+                onClick={() => handleClick("REJECT")}
+              >
+                Reject Invitation
+              </AlertDialogCancel>
+              <AlertDialogAction
+                disabled={isLoading}
+                onClick={() => handleClick("ACCEPT")}
+              >
+                Accept Invitation
+              </AlertDialogAction>
+            </>
+          )}
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

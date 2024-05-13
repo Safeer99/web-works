@@ -34,14 +34,14 @@ export const Actions = ({
   const onClick = () => {
     startTransition(() => {
       if (isPublished) {
-        unPublishWorkspace(workspaceId)
+        unPublishWorkspace(workspaceId, agencyId)
           .then((res) => {
             toast.success("Workspace unpublished");
             router.refresh();
           })
           .catch(() => toast.error("Something went wrong"));
       } else {
-        publishWorkspace(workspaceId)
+        publishWorkspace(workspaceId, agencyId)
           .then((res) => {
             toast.success("Workspace published");
             confetti.onOpen();
@@ -54,8 +54,8 @@ export const Actions = ({
 
   const onDelete = async () => {
     startTransition(() => {
-      deleteWorkspace(workspaceId)
-        .then((res) => {
+      deleteWorkspace(workspaceId, agencyId)
+        .then(() => {
           toast.success("Workspace deleted");
           router.replace(`/agency/${agencyId}/workspaces`);
         })
