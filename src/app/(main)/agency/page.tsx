@@ -17,7 +17,7 @@ const AgencyPage = async () => {
   });
 
   if (agency) {
-    return redirect(`/agency/${agency.id}/workspaces`);
+    return redirect(`/agency/${agency.id}`);
   }
 
   return (

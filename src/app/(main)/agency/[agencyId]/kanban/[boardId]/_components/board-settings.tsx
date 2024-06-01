@@ -40,13 +40,13 @@ export const BoardSettings = ({
       description="This action cannot be undone. This will permanently delete your
     data and remove it from our servers."
     >
-      <div>
+      <div className="bg-background p-5 rounded-xl">
         <BoardForm
           agencyId={agencyId}
           defaultData={boards.find((p) => p.id === boardId)}
         />
         {isAdmin && (
-          <div className="w-full flex items-center justify-between my-4 border-destructive border-2 p-8 rounded-md">
+          <div className="w-full flex items-center justify-between mt-4 border-destructive border-2 p-8 rounded-md">
             <h5 className="text-xl font-semibold">Danger zone</h5>
             <AlertDialogTrigger asChild>
               <Button variant={"destructive"}>Delete Pipeline</Button>

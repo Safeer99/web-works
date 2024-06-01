@@ -12,11 +12,11 @@ import {
 import { SidebarItem } from "./sidebar-item";
 
 const routes = [
-  // {
-  //   icon: LayoutDashboard,
-  //   label: "Dashboard",
-  //   href: "/",
-  // },
+  {
+    icon: LayoutDashboard,
+    label: "Dashboard",
+    href: "/",
+  },
   {
     icon: AppWindow,
     label: "Workspaces",
@@ -51,7 +51,7 @@ const routes = [
 
 export const SidebarRoutes = () => {
   return (
-    <div className="flex flex-col w-full">
+    <div className="relative flex flex-col gap-3 px-2 w-full pb-10">
       {routes.map((route) => (
         <SidebarItem
           key={route.href}

@@ -66,14 +66,14 @@ export function DataTable<TData, TValue>({
   return (
     <div>
       <div className="flex items-center justify-between">
-        <div className="flex items-center py-4 gap-2">
+        <div className="flex items-center my-4 pr-3 gap-2 bg-background rounded-md">
           <Input
             placeholder="Filter names..."
             value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
             onChange={(event) =>
               table.getColumn("name")?.setFilterValue(event.target.value)
             }
-            className="max-w-sm"
+            className="max-w-sm border-none outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
           />
           <Search />
         </div>
@@ -91,7 +91,7 @@ export function DataTable<TData, TValue>({
           </Button>
         )}
       </div>
-      <div className="rounded-md border">
+      <div className="rounded-md bg-background overflow-hidden">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -117,6 +117,7 @@ export function DataTable<TData, TValue>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
+                  className="border-none"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell className="pl-8" key={cell.id}>

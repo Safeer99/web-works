@@ -13,11 +13,9 @@ export const Sidebar = async () => {
   });
 
   return (
-    <div className="scrollbar-hidden h-full bg-background border-r flex flex-col overflow-y-auto shadow-sm">
+    <div className="scrollbar-hidden h-full bg-background border-r flex flex-col shadow-sm">
       <AgencySwitcher data={data} />
-      <div className="flex flex-col w-full">
-        <SidebarRoutes />
-      </div>
+      <SidebarRoutes />
     </div>
   );
 };

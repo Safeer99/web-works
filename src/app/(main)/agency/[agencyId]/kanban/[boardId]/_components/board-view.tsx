@@ -133,7 +133,7 @@ export const BoardView = ({
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <div className="dark:bg-muted/20 bg-slate-300/30 rounded-xl p-4 use-automation-zoom-in">
+      <div className="dark:bg-background bg-background rounded-xl p-4 use-automation-zoom-in">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl">{boardDetails.name}</h1>
           <Button className="flex items-center gap-2" onClick={handleAddLane}>

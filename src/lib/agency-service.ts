@@ -85,3 +85,34 @@ export const deleteAssociatedAccount = async (id: string, agencyId: string) => {
 
   return;
 };
+
+export const getStatsCardData = async (id: string) => {
+  const data = await db.agency.findUnique({
+    where: { id },
+    select: {
+      _count: {
+        select: {
+          workspaces: true,
+          associates: true,
+        },
+      },
+    },
+  });
+
+  const publishedCount = await db.agency.findUnique({
+    where: { id },
+    select: {
+      _count: {
+        select: {
+          workspaces: {
+            where: {
+              published: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  return { ...data?._count, published: publishedCount?._count.workspaces };
+};

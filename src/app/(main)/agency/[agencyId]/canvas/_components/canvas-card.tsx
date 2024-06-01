@@ -18,8 +18,8 @@ export const CanvasCard = ({ data, isAdmin }: Props) => {
   });
 
   return (
-    <div className="w-full h-full group aspect-video border rounded-lg flex flex-col justify-between overflow-hidden">
-      <div className="relative flex-1 bg-violet-300">
+    <div className="w-full h-full group aspect-video bg-background shadow-md rounded-lg flex flex-col justify-between overflow-hidden">
+      <div className="relative flex-1 dark:bg-violet-500 bg-violet-300">
         <Link href={`/agency/${data.agencyId}/canvas/${data.id}`}>
           <Image
             src={data.snapshot || "/placeholders/1.png"}

@@ -43,21 +43,21 @@ export const MediaCard = ({ file }: Props) => {
     file will no longer have access to it!"
     >
       <DropdownMenu>
-        <article className="border w-full rounded-lg bg-slate-900">
+        <article className="w-full rounded-lg bg-background shadow-md">
           <div className="relative w-full h-40">
             <Image
               src={file.link}
               alt="preview image"
               fill
-              className="object-cover rounded-lg"
+              className="object-cover rounded-t-lg"
             />
           </div>
-          <div className="p-4 relative">
+          <div className="p-4 relative text-foreground">
             <p className="text-xs text-muted-foreground">
               {file.createdAt.toDateString()}
             </p>
             <p>{file.name}</p>
-            <div className="absolute top-4 right-4 p-[1px] cursor-pointer ">
+            <div className="absolute top-3 right-3 p-[1px] cursor-pointer ">
               <DropdownMenuTrigger disabled={isLoading}>
                 <MoreHorizontal />
               </DropdownMenuTrigger>
