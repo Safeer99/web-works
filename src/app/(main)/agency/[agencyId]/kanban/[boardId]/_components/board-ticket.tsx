@@ -1,6 +1,13 @@
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { Edit, MoreHorizontalIcon, Trash, User2 } from "lucide-react";
+import {
+  CalendarClock,
+  CalendarDays,
+  Edit,
+  MoreHorizontalIcon,
+  Trash,
+  User2,
+} from "lucide-react";
 import { format } from "date-fns";
 import { Draggable } from "@hello-pangea/dnd";
 
@@ -40,6 +47,18 @@ export const BoardTicket = ({ ticket, index, agencyId }: TicketProps) => {
   const router = useRouter();
   const onOpen = useModal((state) => state.onOpen);
 
+  const date = new Date();
+
+  const today = ticket.due ? date.getDate() === ticket.due.getDate() : false;
+  const tomorrow = ticket.due
+    ? date.getDate() + 1 === ticket.due.getDate()
+    : false;
+  const overdue =
+    !tomorrow && !today && ticket.due
+      ? date.getDate() > ticket.due.getDate() ||
+        date.getMonth() >= ticket.due.getMonth()
+      : false;
+
   const handleClickEdit = async () => {
     onOpen(
       <Modal title="Update Ticket Details" description="">
@@ -78,8 +97,16 @@ export const BoardTicket = ({ ticket, index, agencyId }: TicketProps) => {
                       the ticket and remove it from our servers."
             >
               <DropdownMenu>
-                <Card className="my-4 dark:bg-slate-900 bg-slate-100 shadow-md transition-all">
-                  <CardHeader className="p-[12px]">
+                <Card className="overflow-hidden my-4 dark:bg-slate-950 bg-card shadow-md transition-all">
+                  {(today || tomorrow || overdue) && (
+                    <div className="py-2 px-3 bg-[#ffeccf] text-orange-500 text-sm flex items-center gap-2">
+                      <CalendarClock className="size-4" />
+                      {today && "Due today"}
+                      {tomorrow && "Due tomorrow"}
+                      {overdue && "Overdue"}
+                    </div>
+                  )}
+                  <CardHeader className="p-3">
                     <CardTitle className="flex items-center justify-between">
                       <span className="text-lg w-full">{ticket.name}</span>
                       <DropdownMenuTrigger>
@@ -87,7 +114,7 @@ export const BoardTicket = ({ ticket, index, agencyId }: TicketProps) => {
                       </DropdownMenuTrigger>
                     </CardTitle>
                     <span className="text-muted-foreground text-xs">
-                      {format(ticket.updatedAt, "dd MMM yyyy")}
+                      {format(ticket.createdAt, "dd MMM yyyy")}
                     </span>
                     <div className="flex items-center flex-wrap gap-2">
                       {ticket.tags.map((tag) => (
@@ -127,6 +154,12 @@ export const BoardTicket = ({ ticket, index, agencyId }: TicketProps) => {
                         )}
                       </div>
                     </div>
+                    {ticket.due && (
+                      <span className="text-orange-400 text-xs flex items-center gap-1">
+                        <CalendarDays size={15} />
+                        {format(ticket.due, "PP")}
+                      </span>
+                    )}
                   </CardFooter>
                   <DropdownMenuContent>
                     <DropdownMenuLabel>Options</DropdownMenuLabel>

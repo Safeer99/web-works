@@ -65,6 +65,7 @@ export const LaneFormSchema = z.object({
 export const TicketFormSchema = z.object({
   name: z.string().min(1),
   description: z.string().optional(),
+  due: z.date().optional(),
 });
 
 export type AssociateWithUser = {

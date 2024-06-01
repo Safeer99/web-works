@@ -189,10 +189,11 @@ model Lane {
 }
 
 model Ticket {
-  id          String  @id @default(uuid())
+  id          String    @id @default(uuid())
   name        String
   description String?
-  order       Int     @default(0)
+  order       Int       @default(0)
+  due         DateTime?
 
   laneId String
   lane   Lane   @relation(fields: [laneId], references: [id], onDelete: Cascade)

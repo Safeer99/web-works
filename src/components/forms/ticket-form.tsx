@@ -2,17 +2,19 @@
 
 import { z } from "zod";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { addDays, format } from "date-fns";
 import { useForm } from "react-hook-form";
-import { User2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { CalendarDays, User2 } from "lucide-react";
+import { useEffect, useState, useTransition } from "react";
 import { Tag, User } from "@prisma/client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState, useTransition } from "react";
 
 import { useModal } from "@/hooks/use-modals";
 import { TicketAndTags, TicketFormSchema } from "@/lib/types";
 import { getAllTeamMembers } from "@/lib/agency-service";
 import { upsertTicket } from "@/lib/board-service";
+import { cn } from "@/lib/utils";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -25,6 +27,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Select,
   SelectContent,
@@ -32,7 +35,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
 import { Loading } from "@/components/loading";
 import { TagCreator } from "@/components/tag-creator";
@@ -62,6 +70,7 @@ export const TicketForm = ({
     defaultValues: {
       name: defaultData?.name || "",
       description: defaultData?.description || "",
+      due: defaultData?.due || undefined,
     },
   });
 
@@ -81,6 +90,7 @@ export const TicketForm = ({
       form.reset({
         name: defaultData.name || "",
         description: defaultData.description || "",
+        due: defaultData.due || undefined,
       });
     }
   }, [defaultData, form]);
@@ -146,6 +156,47 @@ export const TicketForm = ({
               agencyId={agencyId}
               getSelectedTags={setTags}
               defaultTags={defaultData?.tags || []}
+            />
+            <FormField
+              control={form.control}
+              name="due"
+              render={({ field }) => (
+                <FormItem>
+                  <Popover>
+                    <FormLabel>Due Date</FormLabel>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant={"outline"}
+                          className={cn(
+                            "w-full pl-3 text-left font-normal",
+                            !field.value && "text-muted-foreground"
+                          )}
+                        >
+                          {field.value ? (
+                            format(field.value, "PPP")
+                          ) : (
+                            <span>Pick a date</span>
+                          )}
+                          <CalendarDays className="ml-auto h-4 w-4 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent
+                      className="w-auto p-0 z-[600]"
+                      align="start"
+                    >
+                      <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        disabled={(date) => addDays(date, 1) < new Date()}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </FormItem>
+              )}
             />
             <FormLabel>Assigned To Team Member</FormLabel>
             <Select onValueChange={setAssignedTo} defaultValue={assignedTo}>
