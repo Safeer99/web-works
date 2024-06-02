@@ -16,7 +16,7 @@ enum Role {
 
 enum InvitationStatus {
   ACCEPTED
-  REVOKED
+  REJECTED
   PENDING
 }
 
@@ -89,6 +89,9 @@ model Invitation {
   status   InvitationStatus @default(PENDING)
   role     Role             @default(AGENCY_USER)
   expires  DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@unique([agencyId, email])
   @@index([agencyId])

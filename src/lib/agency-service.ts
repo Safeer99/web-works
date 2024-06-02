@@ -109,10 +109,19 @@ export const getStatsCardData = async (id: string) => {
               published: true,
             },
           },
+          invitations: {
+            where: {
+              status: "PENDING",
+            },
+          },
         },
       },
     },
   });
 
-  return { ...data?._count, published: publishedCount?._count.workspaces };
+  return {
+    ...data?._count,
+    published: publishedCount?._count.workspaces,
+    pendingInvitations: publishedCount?._count.invitations,
+  };
 };

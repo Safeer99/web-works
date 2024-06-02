@@ -27,7 +27,7 @@ export const RecentActivity = ({ data }: Props) => {
     <div className="border-[1px] rounded-lg shadow shadow-primary p-2 overflow-hidden bg-background">
       <h2 className="p-2 text-xl">Recently Joined</h2>
       <ScrollArea>
-        <Command className="w-full min-w-[600px] mb-2">
+        <Command className="w-full min-w-[600px] min-h-[150px] mb-2">
           <CommandList>
             <CommandGroup>
               {filteredData.map((item) => (

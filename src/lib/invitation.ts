@@ -1,10 +1,23 @@
 "use server";
 
 import crypto from "crypto";
-import { Role } from "@prisma/client";
+import { InvitationStatus, Role } from "@prisma/client";
 import { db } from "@/lib/db";
-import { getSelf } from "@/lib/auth-service";
+import { getAssociatedAccount, getSelf } from "@/lib/auth-service";
 import { sendInvitaionMail } from "@/lib/mail";
+
+export const getAllInvitations = async (agencyId: string) => {
+  const invitations = await db.invitation.findMany({
+    where: {
+      agencyId,
+    },
+    orderBy: {
+      updatedAt: "desc",
+    },
+  });
+
+  return invitations;
+};
 
 export const getInvitationByToken = async (token: string) => {
   const existingInvitation = await db.invitation.findUnique({
@@ -67,7 +80,12 @@ export const acceptInvitation = async (token: string) => {
     },
   });
 
-  await db.invitation.delete({ where: { id: invitation.id } });
+  const updatedInvitation = await db.invitation.update({
+    where: { id: invitation.id },
+    data: {
+      status: InvitationStatus.ACCEPTED,
+    },
+  });
 
   return createAccount;
 };
@@ -80,9 +98,22 @@ export const rejectInvitation = async (token: string) => {
   if (invitation.email !== self.email)
     throw new Error("Unauthorized access!!!");
 
-  return await db.invitation.delete({
-    where: {
-      token,
+  const updatedInvitation = await db.invitation.update({
+    where: { id: invitation.id },
+    data: {
+      status: InvitationStatus.REJECTED,
     },
   });
+
+  return updatedInvitation;
+};
+
+export const deleteInvitation = async (id: string, agencyId: string) => {
+  const currentAccount = await getAssociatedAccount(agencyId);
+
+  if (currentAccount.role === Role.AGENCY_USER)
+    throw new Error("Unauthorized access!!!");
+
+  await db.invitation.delete({ where: { id } });
+  return;
 };
