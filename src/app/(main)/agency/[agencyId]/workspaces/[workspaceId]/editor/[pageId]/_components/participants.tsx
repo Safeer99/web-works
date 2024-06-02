@@ -13,7 +13,7 @@ export const Participants = () => {
   const hasMoreUsers = otherUsers ? otherUsers.length > MAX_SHOWN_USERS : false;
 
   return (
-    <div className="p-3 h-12 flex items-center shadow-md">
+    <div className="p-3 h-12 flex items-center">
       <div className="flex gap-x-2 mr-4">
         {currentUser && (
           <UserAvatar

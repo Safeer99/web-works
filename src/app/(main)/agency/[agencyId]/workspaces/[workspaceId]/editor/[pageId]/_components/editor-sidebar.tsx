@@ -106,7 +106,6 @@ export const EditorSidebar = ({ agencyId }: Props) => {
               <Button
                 variant={"ghost"}
                 size={"icon"}
-                className="hover:bg-slate-800"
                 onClick={handlePreviewClick}
               >
                 <EyeIcon />
@@ -118,7 +117,6 @@ export const EditorSidebar = ({ agencyId }: Props) => {
                 onClick={undo}
                 variant={"ghost"}
                 size={"icon"}
-                className="hover:bg-slate-800"
               >
                 <Undo2 />
               </Button>
@@ -134,7 +132,6 @@ export const EditorSidebar = ({ agencyId }: Props) => {
                 onClick={redo}
                 variant={"ghost"}
                 size={"icon"}
-                className="hover:bg-slate-800"
               >
                 <Redo2 />
               </Button>

@@ -2,8 +2,7 @@
 
 import clsx from "clsx";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import ContentEditable, { ContentEditableEvent } from "react-contenteditable";
 
 import { compareValues, targetToXYWH } from "@/lib/utils";
@@ -20,20 +19,13 @@ interface Props {
 export const LinkComponent = ({ element }: Props) => {
   const { styles, id, content } = element;
 
+  const [editMode, setEditMode] = useState(false);
+
   const { state, dispatch } = useEditor();
   const updateElement = useUpdateElement();
-  const router = useRouter();
 
-  const handleOnClick = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleOnClick = (e: React.MouseEvent<HTMLParagraphElement>) => {
     e.stopPropagation();
-
-    if (
-      (state.editor.previewMode || state.editor.liveMode) &&
-      !Array.isArray(content) &&
-      content.href
-    ) {
-      return router.push(content.href);
-    }
 
     if (state.editor.selectedElement.id === id) return;
 
@@ -65,7 +57,7 @@ export const LinkComponent = ({ element }: Props) => {
     [state.editor.selectedElement]
   );
 
-  const ref = useResizeObserver<HTMLDivElement>(handleOnResizeBody);
+  const ref = useResizeObserver<HTMLParagraphElement>(handleOnResizeBody);
 
   const handleOnChange = (e: ContentEditableEvent) => {
     updateElement({
@@ -84,35 +76,48 @@ export const LinkComponent = ({ element }: Props) => {
 
   if (Array.isArray(content)) return;
 
+  const containsHttps = content.href?.includes("https://");
+
+  const link = containsHttps ? content.href : `https://${content.href}`;
+
   return (
-    // <Link
-    //   aria-disabled={!state.editor.previewMode && !state.editor.liveMode}
-    //   href={content.href || "#"}
-    //   onClick={(e) => {
-    //     if (!state.editor.previewMode && !state.editor.liveMode)
-    //       e.preventDefault();
-    //   }}
-    //   className={clsx("whitespace-pre", {
-    //     "pointer-events-none":
-    //       !state.editor.previewMode && !state.editor.liveMode,
-    //   })}
-    // >
-    <ContentEditable
-      innerRef={ref}
-      tagName="p"
-      html={content.innerText || ""}
-      disabled={state.editor.previewMode || state.editor.liveMode}
-      onClick={handleOnClick}
-      onChange={handleOnChange}
-      className={clsx(
-        "relative transition-all whitespace-pre pointer-events-auto",
-        {
-          "outline-dashed outline-slate-400 outline-[1px]":
-            !state.editor.previewMode && !state.editor.liveMode,
-        }
+    <>
+      {state.editor.previewMode || state.editor.liveMode ? (
+        <Link target="_blank" href={link || "#"}>
+          <p className="relative text-wrap whitespace-pre" style={styles}>
+            {content.innerText}
+          </p>
+        </Link>
+      ) : (
+        <p
+          ref={ref}
+          style={styles}
+          onClick={handleOnClick}
+          onDoubleClick={() => {
+            setEditMode(true);
+          }}
+          onBlur={() => {
+            setEditMode(false);
+          }}
+          className={clsx(
+            "relative text-wrap transition-all whitespace-pre",
+            {
+              "outline-dashed outline-slate-400 outline-[1px] cursor-auto":
+                !state.editor.previewMode && !state.editor.liveMode,
+            }
+          )}
+        >
+          <ContentEditable
+            tagName="span"
+            html={content.innerText || ""}
+            onChange={handleOnChange}
+            disabled={
+              !editMode || state.editor.previewMode || state.editor.liveMode
+            }
+            className="focus:outline-none"
+          />
+        </p>
       )}
-      style={styles}
-    />
-    // </Link>
+    </>
   );
 };

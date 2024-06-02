@@ -18,6 +18,7 @@ import { DeviceTypes } from "@/components/providers/editor/editor-types";
 import { Hint } from "@/components/hint";
 import { Participants } from "./participants";
 import { upsertWorkspacePage } from "@/lib/workspace-service";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 interface Props {
   agencyId: string;
@@ -157,6 +158,7 @@ export const EditorNavigation = ({
         <Button onClick={handleOnSave} size="sm">
           Save
         </Button>
+        <ThemeToggle />
       </aside>
     </nav>
   );

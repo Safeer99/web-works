@@ -1,7 +1,7 @@
 "use client";
 
 import clsx from "clsx";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import ContentEditable, { ContentEditableEvent } from "react-contenteditable";
 
 import { compareValues, targetToXYWH } from "@/lib/utils";
@@ -18,6 +18,8 @@ interface Props {
 
 export const LabelComponent = ({ element }: Props) => {
   const { styles, id, content } = element;
+
+  const [editMode, setEditMode] = useState(false);
 
   const { state, dispatch } = useEditor();
   const updateElement = useUpdateElement();
@@ -79,6 +81,12 @@ export const LabelComponent = ({ element }: Props) => {
       htmlFor={content.id}
       style={styles}
       onClick={handleOnClick}
+      onDoubleClick={() => {
+        setEditMode(true);
+      }}
+      onBlur={() => {
+        setEditMode(false);
+      }}
       className={clsx("relative transition-all whitespace-pre", {
         "outline-dashed outline-slate-400 outline-[1px]":
           !state.editor.previewMode && !state.editor.liveMode,
@@ -87,8 +95,11 @@ export const LabelComponent = ({ element }: Props) => {
       <ContentEditable
         tagName="span"
         html={content.label || ""}
-        disabled={state.editor.previewMode || state.editor.liveMode}
         onChange={handleOnChange}
+        disabled={
+          !editMode || state.editor.previewMode || state.editor.liveMode
+        }
+        className="focus:outline-none"
       />
     </Label>
   );

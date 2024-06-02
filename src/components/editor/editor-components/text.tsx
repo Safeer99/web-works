@@ -1,7 +1,8 @@
 "use client";
 
 import clsx from "clsx";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
+import ContentEditable, { ContentEditableEvent } from "react-contenteditable";
 
 import { compareValues, targetToXYWH } from "@/lib/utils";
 import { useUpdateElement } from "@/hooks/use-editor-socket";
@@ -9,7 +10,6 @@ import { useResizeObserver } from "@/hooks/use-resize-observer";
 
 import { useEditor } from "@/components/providers/editor";
 import { EditorElement } from "@/components/providers/editor/editor-types";
-import ContentEditable, { ContentEditableEvent } from "react-contenteditable";
 
 interface Props {
   element: EditorElement;
@@ -18,11 +18,14 @@ interface Props {
 export const TextComponent = ({ element }: Props) => {
   const { styles, id, content } = element;
 
+  const [editMode, setEditMode] = useState(false);
+
   const { state, dispatch } = useEditor();
   const updateElement = useUpdateElement();
 
-  const handleOnClick = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleOnClick = (e: React.MouseEvent<HTMLParagraphElement>) => {
     e.stopPropagation();
+
     if (state.editor.selectedElement.id === id) return;
 
     const position = targetToXYWH(e.target as HTMLElement);
@@ -53,7 +56,7 @@ export const TextComponent = ({ element }: Props) => {
     [state.editor.selectedElement]
   );
 
-  const ref = useResizeObserver<HTMLDivElement>(handleOnResizeBody);
+  const ref = useResizeObserver<HTMLParagraphElement>(handleOnResizeBody);
 
   const handleOnChange = (e: ContentEditableEvent) => {
     updateElement({
@@ -73,18 +76,30 @@ export const TextComponent = ({ element }: Props) => {
   if (Array.isArray(content)) return;
 
   return (
-    <ContentEditable
-      innerRef={ref}
-      tagName="p"
-      html={content.innerText || ""}
-      disabled={state.editor.previewMode || state.editor.liveMode}
+    <p
+      ref={ref}
+      style={styles}
       onClick={handleOnClick}
-      onChange={handleOnChange}
-      className={clsx("relative transition-all whitespace-pre", {
+      onDoubleClick={() => {
+        setEditMode(true);
+      }}
+      onBlur={() => {
+        setEditMode(false);
+      }}
+      className={clsx("relative text-wrap transition-all whitespace-pre", {
         "outline-dashed outline-slate-400 outline-[1px]":
           !state.editor.previewMode && !state.editor.liveMode,
       })}
-      style={styles}
-    />
+    >
+      <ContentEditable
+        tagName="span"
+        html={content.innerText || ""}
+        onChange={handleOnChange}
+        disabled={
+          !editMode || state.editor.previewMode || state.editor.liveMode
+        }
+        className="focus:outline-none"
+      />
+    </p>
   );
 };

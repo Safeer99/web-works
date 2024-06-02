@@ -31,13 +31,23 @@ export const CustomSection = ({ onChange: handleChange, state }: Props) => {
             wFull
           />
         )}
+        {type === "link" && (
+          <CustomInput
+            id="href"
+            label="href"
+            value={content.href}
+            onChange={handleChange}
+            placeholder="www.google.com"
+            wFull
+          />
+        )}
         {type === "navigate" && (
           <CustomInput
             id="route"
             label="Route"
             value={content.route}
             onChange={handleChange}
-            placeholder="/contact"
+            placeholder="contact"
             wFull
           />
         )}

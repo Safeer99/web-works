@@ -94,65 +94,70 @@ export const BorderSection = ({ state, onChange: handleChange }: Props) => {
                 className={clsx(
                   "col-start-2 col-end-3 row-start-1 row-end-2 rounded cursor-pointer size-5 p-1",
                   {
-                    "bg-muted": selectedBorder === "borderTop",
+                    "dark:bg-muted bg-muted-foreground/40":
+                      selectedBorder === "borderTop",
                   }
                 )}
                 onClick={() => setSelectedBorder("borderTop")}
               >
                 <Hint label="Border Top">
-                  <div className="w-full h-full border-[1px] border-slate-400 border-t-2 border-t-slate-100" />
+                  <div className="w-full h-full border-[1px] dark:border-slate-400 border-slate-500 border-t-2 dark:border-t-slate-100 border-t-slate-800" />
                 </Hint>
               </div>
               <div
                 className={clsx(
                   "col-start-1 col-end-2 row-start-2 row-end-3 rounded cursor-pointer size-5 p-1",
                   {
-                    "bg-muted": selectedBorder === "borderLeft",
+                    "dark:bg-muted bg-muted-foreground/40":
+                      selectedBorder === "borderLeft",
                   }
                 )}
                 onClick={() => setSelectedBorder("borderLeft")}
               >
                 <Hint label="Border Left">
-                  <div className="w-full h-full border-[1px] border-slate-400 border-l-2 border-l-slate-100" />
+                  <div className="w-full h-full border-[1px] dark:border-slate-400 border-slate-500 border-l-2 dark:border-l-slate-100 border-l-slate-800" />
                 </Hint>
               </div>
               <div
                 className={clsx(
                   "col-start-2 col-end-3 row-start-2 row-end-3 rounded cursor-pointer size-5 p-1",
                   {
-                    "bg-muted": selectedBorder === "border",
+                    "dark:bg-muted bg-muted-foreground/40":
+                      selectedBorder === "border",
                   }
                 )}
                 onClick={() => setSelectedBorder("border")}
               >
                 <Hint label="All Borders">
-                  <div className="w-full h-full border-[1.5px] border-slate-100" />
+                  <div className="w-full h-full border-[1.5px] dark:border-slate-100 border-slate-600" />
                 </Hint>
               </div>
               <div
                 className={clsx(
                   "col-start-3 col-end-4 row-start-2 row-end-3 rounded cursor-pointer size-5 p-1",
                   {
-                    "bg-muted": selectedBorder === "borderRight",
+                    "dark:bg-muted bg-muted-foreground/40":
+                      selectedBorder === "borderRight",
                   }
                 )}
                 onClick={() => setSelectedBorder("borderRight")}
               >
                 <Hint label="Border Right">
-                  <div className="w-full h-full border-[1px] border-slate-400 border-r-2 border-r-slate-100" />
+                  <div className="w-full h-full border-[1px] dark:border-slate-400 border-slate-500 border-r-2 dark:border-r-slate-100 border-r-slate-800" />
                 </Hint>
               </div>
               <div
                 className={clsx(
                   "col-start-2 col-end-3 row-start-3 row-end-4 rounded cursor-pointer size-5 p-1",
                   {
-                    "bg-muted": selectedBorder === "borderBottom",
+                    "dark:bg-muted bg-muted-foreground/40":
+                      selectedBorder === "borderBottom",
                   }
                 )}
                 onClick={() => setSelectedBorder("borderBottom")}
               >
                 <Hint label="Border Bottom">
-                  <div className="w-full h-full border-[1px] border-slate-400 border-b-2 border-b-slate-100" />
+                  <div className="w-full h-full border-[1px] dark:border-slate-400 border-slate-500 border-b-2 dark:border-b-slate-100 border-b-slate-800" />
                 </Hint>
               </div>
             </div>

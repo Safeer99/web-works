@@ -16,14 +16,14 @@ export const SpacingSection = ({ state, onChange: handleChange }: Props) => {
   return (
     <AccordionContent>
       <div className="relative w-full flex flex-col items-center gap-0.5">
-        <p className="absolute left-1 -top-0.5 z-[100] text-white text-[8px] select-none">
+        <p className="absolute left-1 -top-0.5 z-[100] text-foreground text-[8px] select-none">
           Margin
         </p>
-        <div className="absolute inset-0 border-t-[#464e5b] border-l-[#323b49] border-b-[#1f2937] border-r-[#323b49]  border-x-[36px] border-y-[22px] p-0.5 rounded-sm">
-          <p className="absolute left-1 -top-0.5 text-white text-[8px] select-none">
+        <div className="absolute inset-0 dark:border-t-[#464e5b] dark:border-l-[#323b49] dark:border-b-[#1f2937] dark:border-r-[#323b49] border-t-[#d7d9dc] border-l-[#a7abb2] border-b-[#868c95] border-r-[#a7abb2]  border-x-[36px] border-y-[22px] p-0.5 rounded-sm">
+          <p className="absolute left-1 -top-0.5 text-foreground text-[8px] select-none">
             Padding
           </p>
-          <div className="w-full h-full border-b-[#464e5b] border-l-[#323b49] border-t-[#1f2937] border-r-[#323b49] border-x-[36px] border-y-[22px]"></div>
+          <div className="w-full h-full dark:border-b-[#464e5b] dark:border-l-[#323b49] dark:border-t-[#1f2937] dark:border-r-[#323b49] border-b-[#d7d9dc] border-l-[#a7abb2] border-t-[#868c95] border-r-[#a7abb2] border-x-[36px] border-y-[22px]"></div>
         </div>
 
         <CustomSpacingInput

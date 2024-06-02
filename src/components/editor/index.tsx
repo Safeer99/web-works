@@ -1,6 +1,5 @@
 "use client";
 
-import clsx from "clsx";
 import { useEffect } from "react";
 import { WorkspacePage } from "@prisma/client";
 
@@ -42,34 +41,17 @@ export const Editor = ({ pageDetails, liveMode }: Props) => {
     });
   }, [pageDetails, dispatch, liveMode]);
 
-  const handleClick = () => {
-    dispatch({
-      type: "CHANGE_CLICKED_ELEMENT",
-      payload: {},
-    });
-  };
+  if (
+    !Array.isArray(state.editor.elements) ||
+    !Array.isArray(state.editor.elements[0].content)
+  )
+    return;
 
   return (
-    <div
-      className={clsx(
-        "use-automation-zoom-in h-full mt-16 mr-[320px] p-5 rounded-md",
-        {
-          "!p-0 !m-0 !w-full":
-            state.editor.previewMode || state.editor.liveMode,
-          "!w-[850px]": state.editor.device === "Tablet",
-          "!w-[420px]": state.editor.device === "Mobile",
-          "!w-full": state.editor.device === "Desktop",
-        }
-      )}
-      onClick={handleClick}
-    >
-      {Array.isArray(state.editor.elements) &&
-        state.editor.elements.map((childElement) => (
-          <Recursive key={childElement.id} element={childElement} />
-        ))}
-      {!state.editor.previewMode && !state.editor.liveMode && (
-        <div className="h-10" />
-      )}
+    <div className="h-[100vh] w-full p-0 m-0">
+      {state.editor.elements.map((childElement) => (
+        <Recursive key={childElement.id} element={childElement} />
+      ))}
     </div>
   );
 };

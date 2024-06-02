@@ -173,11 +173,11 @@ const Placeholder = ({ icon: Icon, type }: PlaceholderProps) => {
     <div
       draggable
       onDragStart={(e) => handleDragStart(e, type)}
-      className=" h-14 w-14 hover:bg-muted rounded-lg flex items-center justify-center border-2 hover:border-primary cursor-grab transition-all group/placeholder"
+      className="h-14 w-14 hover:bg-muted rounded-lg flex items-center justify-center border-2 hover:border-primary cursor-grab transition-all group/placeholder"
     >
       <Icon
         size={30}
-        className="text-muted-foreground group-hover/placeholder:text-white"
+        className="text-muted-foreground group-hover/placeholder:text-primary"
       />
     </div>
   );

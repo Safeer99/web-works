@@ -2,6 +2,7 @@
 
 import clsx from "clsx";
 import { useCallback } from "react";
+import ContentEditable, { ContentEditableEvent } from "react-contenteditable";
 
 import { compareValues, targetToXYWH } from "@/lib/utils";
 import { useUpdateElement } from "@/hooks/use-editor-socket";
@@ -9,7 +10,6 @@ import { useResizeObserver } from "@/hooks/use-resize-observer";
 
 import { useEditor } from "@/components/providers/editor";
 import { EditorElement } from "@/components/providers/editor/editor-types";
-import ContentEditable, { ContentEditableEvent } from "react-contenteditable";
 import { Button } from "@/components/ui/button";
 
 interface Props {
@@ -89,6 +89,7 @@ export const SubmitButtonComponent = ({ element }: Props) => {
         html={content.innerText || ""}
         disabled={state.editor.previewMode || state.editor.liveMode}
         onChange={handleOnChange}
+        className="focus:outline-none"
       />
     </Button>
   );

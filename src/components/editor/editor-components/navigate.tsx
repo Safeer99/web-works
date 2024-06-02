@@ -2,7 +2,7 @@
 
 import clsx from "clsx";
 import { useRouter } from "next/navigation";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import ContentEditable, { ContentEditableEvent } from "react-contenteditable";
 
 import { compareValues, targetToXYWH } from "@/lib/utils";
@@ -19,11 +19,13 @@ interface Props {
 export const NavigateComponent = ({ element }: Props) => {
   const { styles, id, content } = element;
 
+  const [editMode, setEditMode] = useState(false);
+
   const { state, dispatch } = useEditor();
   const updateElement = useUpdateElement();
   const router = useRouter();
 
-  const handleOnClick = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleOnClick = (e: React.MouseEvent<HTMLParagraphElement>) => {
     e.stopPropagation();
 
     if (
@@ -31,7 +33,7 @@ export const NavigateComponent = ({ element }: Props) => {
       !Array.isArray(content) &&
       content.route
     ) {
-      return router.push(content.route);
+      return router.push(`/${content.route}`);
     }
 
     if (state.editor.selectedElement.id === id) return;
@@ -64,7 +66,7 @@ export const NavigateComponent = ({ element }: Props) => {
     [state.editor.selectedElement]
   );
 
-  const ref = useResizeObserver<HTMLDivElement>(handleOnResizeBody);
+  const ref = useResizeObserver<HTMLParagraphElement>(handleOnResizeBody);
 
   const handleOnChange = (e: ContentEditableEvent) => {
     updateElement({
@@ -84,21 +86,33 @@ export const NavigateComponent = ({ element }: Props) => {
   if (Array.isArray(content)) return;
 
   return (
-    <ContentEditable
-      innerRef={ref}
-      tagName="p"
-      html={content.innerText || ""}
-      disabled={state.editor.previewMode || state.editor.liveMode}
+    <p
+      ref={ref}
+      style={styles}
       onClick={handleOnClick}
-      onChange={handleOnChange}
+      onDoubleClick={() => {
+        setEditMode(true);
+      }}
+      onBlur={() => {
+        setEditMode(false);
+      }}
       className={clsx(
-        "relative transition-all whitespace-pre pointer-events-auto",
+        "relative transition-all whitespace-pre pointer-events-auto cursor-pointer",
         {
           "outline-dashed outline-slate-400 outline-[1px]":
             !state.editor.previewMode && !state.editor.liveMode,
         }
       )}
-      style={styles}
-    />
+    >
+      <ContentEditable
+        tagName="span"
+        html={content.innerText || ""}
+        onChange={handleOnChange}
+        disabled={
+          !editMode || state.editor.previewMode || state.editor.liveMode
+        }
+        className="focus:outline-none"
+      />
+    </p>
   );
 };
