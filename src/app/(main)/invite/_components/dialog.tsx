@@ -27,7 +27,7 @@ export const InvitaionDialog = ({ invitation }: Props) => {
   const [mounted, setMounted] = useState(false);
 
   const isExpired =
-    invitation.expires.getMilliseconds() < new Date().getMilliseconds();
+    invitation.expires.getMilliseconds() > new Date().getMilliseconds();
 
   useEffect(() => {
     if (!mounted) setMounted(true);
